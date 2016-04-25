@@ -1,0 +1,32 @@
+name: openstack/nova/nova-consoleauth
+enabled: {{ enable_nova | bool }}
+container:
+  image: "{{ nova_consoleauth_image }}:{{ nova_consoleauth_tag }}"
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+service:
+  daemon:
+    dependencies:
+     - path: nova-api/db_sync
+     - path: nova_ansible_tasks/create_user
+    command: nova-consoleauth --config-file /etc/nova/nova.conf --config-file /etc/nova/nova-override.conf
+    files:
+      nova-override.conf:
+        source: ["/etc/kolla-mesos/config/global.conf",
+                 "/etc/kolla-mesos/config/database.conf",
+                 "/etc/kolla-mesos/config/messaging.conf",
+                 "/etc/kolla-mesos/config/nova.conf",
+                 "/etc/kolla-mesos/config/nova/nova-consoleauth.conf"]
+        dest: /etc/nova/nova-override.conf
+        owner: nova
+        perm: "0600"
+      nova.conf.j2:
+        source: "config/nova/templates/nova.conf.j2"
+        dest: /etc/nova/nova.conf
+        owner: nova
+        perm: "0600"
+  mem: {{ nova_consoleauth_mem }}
+  cpus: {{ nova_consoleauth_cpus }}
+  instances: {{ controller_nodes }}
+  constraints: {{ controller_constraints }}

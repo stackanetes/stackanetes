@@ -1,0 +1,46 @@
+name: openstack/nova/nova-api
+enabled: {{ enable_nova | bool }}
+container:
+  image: "{{ nova_api_image }}:{{ nova_api_tag }}"
+  privileged: true
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+service:
+  daemon:
+    dependencies:
+     - path: nova-api/db_sync
+     - path: nova_ansible_tasks/create_user
+    command: nova-api --config-file /etc/nova/nova.conf --config-file /etc/nova/nova-override.conf
+  mem: {{ nova_api_mem }}
+  cpus: {{ nova_api_cpus }}
+  instances: {{ controller_nodes }}
+  constraints: {{ controller_constraints }}
+commands:
+  db_sync:
+    env:
+      KOLLA_BOOTSTRAP:
+    dependencies:
+     - path: nova_ansible_tasks/create_database
+     - path: nova_ansible_tasks/database_user_create
+     - path: glance-api/daemon
+     {% if enable_memcached | bool %}
+     - path: memcached/daemon
+     {% endif %}
+    command: kolla_extend_start
+    run_once: True
+    files:
+      nova-override.conf:
+        source: ["/etc/kolla-mesos/config/global.conf",
+                 "/etc/kolla-mesos/config/database.conf",
+                 "/etc/kolla-mesos/config/messaging.conf",
+                 "/etc/kolla-mesos/config/nova.conf",
+                 "/etc/kolla-mesos/config/nova/nova-api.conf"]
+        dest: /etc/nova/nova-override.conf
+        owner: nova
+        perm: "0600"
+      nova.conf.j2:
+        source: "config/nova/templates/nova.conf.j2"
+        dest: /etc/nova/nova.conf
+        owner: nova
+        perm: "0600"

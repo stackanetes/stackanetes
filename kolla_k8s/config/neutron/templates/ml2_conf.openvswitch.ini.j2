@@ -1,0 +1,16 @@
+[default]
+debug = true
+[ml2]
+mechanism_drivers = openvswitch,l2population
+
+[securitygroup]
+firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+
+[agent]
+tunnel_types = vxlan
+l2_population = true
+arp_responder = true
+
+[ovs]
+bridge_mappings = physnet1:{{ neutron_bridge_name }}
+local_ip = {{ get_ip_address() }}

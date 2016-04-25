@@ -1,0 +1,40 @@
+name: openstack/nova/nova-libvirt
+enabled: {{ enable_nova | bool }}
+container:
+  image: "{{ nova_libvirt_image }}:{{ nova_libvirt_tag }}"
+  privileged: true
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+  volumes:
+    - containerPath: "/lib/modules"
+      hostPath: "/lib/modules"
+      mode: RO
+    - containerPath: "/var/lib/nova"
+      hostPath: "/var/lib/nova"
+      mode: RW
+    - containerPath: "/var/lib/libvirt"
+      hostPath: "/var/lib/libvirt"
+      mode: RW
+    - containerPath: "/run"
+      hostPath: "/run"
+      mode: RW
+service:
+  mem: {{ nova_libvirt_mem }}
+  taskRateLimit: 600.0
+  cpus: {{ nova_libvirt_cpus }}
+  daemon:
+    dependencies:
+     - path: nova-api/db_sync
+    command: libvirtd --listen
+    files:
+      libvirtd.conf.j2:
+        source: "config/nova/templates/libvirtd.conf.j2"
+        dest: /etc/libvirt/libvirtd.conf
+        owner: root
+        perm: "0644"
+  instances: {{ compute_nodes }}
+  constraints: {{ compute_constraints }}
+commands:
+  extend_start:
+    command: kolla_extend_start

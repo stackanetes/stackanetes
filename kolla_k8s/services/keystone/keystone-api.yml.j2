@@ -1,0 +1,36 @@
+{% set keystone_cmd = 'apache2' if kolla_base_distro in ['ubuntu', 'debian'] else 'httpd' %}
+{% set keystone_dir = 'apache2/conf-enabled' if kolla_base_distro in ['ubuntu', 'debian'] else 'httpd/conf.d' %}
+name: openstack/keystone/keystone-api
+enabled: {{ enable_keystone | bool }}
+container:
+  image: "{{ keystone_image }}:{{ keystone_tag }}"
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+service:
+  daemon:
+    dependencies:
+     - path: keystone-db-sync/db_sync
+    command: /usr/local/bin/kolla_apache_wrapper.sh
+    env:
+      OS_TOKEN: "password"
+    files:
+      wsgi-keystone.conf.j2:
+        source: config/keystone/templates/wsgi-keystone.conf.j2
+        dest: /etc/{{ keystone_dir }}/keystone.conf
+        owner: keystone
+        perm: "0600"
+      apache_wrapper.sh:
+        source: config/common/apache_wrapper.sh.j2
+        dest: /usr/local/bin/kolla_apache_wrapper.sh
+        owner: keystone
+        perm: "0755"
+      keystone.conf.j2:
+        source: ["/etc/kolla-mesos/config/global.conf",
+                 "/etc/kolla-mesos/config/database.conf",
+                 "/etc/kolla-mesos/config/messaging.conf",
+                 "config/keystone/templates/keystone.conf.j2",
+                 "/etc/kolla-mesos/config/keystone.conf"]
+        dest: /etc/keystone/keystone.conf
+        owner: keystone
+        perm: "0600"

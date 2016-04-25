@@ -1,0 +1,43 @@
+{% set apache_dir = 'apache2/conf-enabled' if kolla_base_distro in ['ubuntu', 'debian'] else 'httpd/conf.d' %}
+{% set apache_conf = 'horizon.conf' if kolla_base_distro in ['ubuntu', 'debian'] else '000-default.conf' %}
+name: openstack/horizon/horizon_memcached
+enabled: {{ enable_horizon | bool }}
+container:
+  image: "{{ horizon_image }}:{{ horizon_tag }}"
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+service:
+  daemon:
+    command: /usr/local/bin/kolla_apache_wrapper.sh
+    dependencies:
+      - path: horizon/bootstrap
+    {% if enable_memcached | bool %}
+      - path: memcached/daemon
+    {% endif %}
+    files:
+      apache_wrapper.sh:
+        source: config/common/apache_wrapper.sh.j2
+        dest: /usr/local/bin/kolla_apache_wrapper.sh
+        owner: horizon
+        perm: "0755"
+  mem: {{ horizon_mem }}
+  cpus: {{ horizon_cpus }}
+  instances: {{ controller_nodes }}
+  constraints: {{ controller_constraints }}
+commands:
+  bootstrap:
+    command: kolla_extend_start
+    env:
+      KOLLA_BOOTSTRAP:
+    files:
+      000-default.conf:
+        source: config/horizon/templates/horizon.conf.j2
+        dest: /etc/{{ apache_dir }}/{{ apache_conf }}
+        owner: horizon
+        perm: "0644"
+      local_settings:
+        source: config/horizon/templates/local_settings_memcached.j2
+        dest: /etc/openstack-dashboard/local_settings
+        owner: horizon
+        perm: "0644"

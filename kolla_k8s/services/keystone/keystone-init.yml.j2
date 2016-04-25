@@ -1,0 +1,43 @@
+name: openstack/keystone/keystone_ansible_tasks
+enabled: {{ enable_keystone | bool }}
+container:
+  image: "{{ kolla_toolbox_image }}:{{ kolla_toolbox_tag }}"
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+task:
+  mem: {{ keystone_init_mem }}
+  cpus: {{ keystone_init_cpus }}
+commands:
+  create_database:
+    run_once: True
+    retries: 3
+    delay: 5
+    dependencies:
+     - path: mariadb/daemon
+    command: {{ ansible_task_cmd }}
+      -m mysql_db
+      -a "login_host='{{ database_address }}'
+          login_port='{{ mariadb_port }}'
+          login_user='{{ database_user }}'
+          login_password='{{ database_password }}'
+          name='{{ keystone_database_name }}'"
+  database_user_create:
+    run_once: True
+    retries: 3
+    delay: 5
+    dependencies:
+     - path: keystone_ansible_tasks/create_database
+    command: {{ ansible_task_cmd }}
+      -m mysql_user
+      -a "login_host='{{ database_address }}'
+          login_port='{{ mariadb_port }}'
+          login_user='{{ database_user }}'
+          login_password='{{ database_password }}'
+          name='{{ keystone_database_name }}'
+          password='{{ keystone_database_password }}'
+          host='%'
+          priv='{{ keystone_database_name }}.*:ALL'
+          append_privs='yes'"
+  extend_start:
+    command: kolla_extend_start

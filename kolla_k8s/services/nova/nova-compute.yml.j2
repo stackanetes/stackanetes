@@ -1,0 +1,60 @@
+name: openstack/nova/nova-compute
+enabled: {{ enable_nova | bool }}
+container:
+  image: "{{ nova_compute_image }}:{{ nova_compute_tag }}"
+  privileged: true
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+  volumes:
+    - containerPath: "/lib/modules"
+      hostPath: "/lib/modules"
+      mode: RO
+    - containerPath: "/var/lib/nova"
+      hostPath: "/var/lib/nova"
+      mode: RW
+    - containerPath: "/var/lib/libvirt"
+      hostPath: "/var/lib/libvirt"
+      mode: RW
+    - containerPath: "/run"
+      hostPath: "/run"
+      mode: RW
+service:
+  mem: {{ nova_compute_mem }}
+  taskRateLimit: 600.0
+  cpus: {{ nova_compute_cpus }}
+  daemon:
+    dependencies:
+     - path: nova-api/db_sync
+     - path: nova-libvirt/daemon
+       scope: local
+     - path: nova_ansible_tasks/create_user
+     - path: keystone-api/daemon
+     - path: nova-compute/bootstrap
+    command: nova-compute --config-file /etc/nova/nova.conf --config-file /etc/nova/nova-override.conf
+    files:
+      nova-override.conf.j2:
+        source: ["/etc/kolla-mesos/config/global.conf",
+                 "/etc/kolla-mesos/config/database.conf",
+                 "/etc/kolla-mesos/config/messaging.conf",
+                 "/etc/kolla-mesos/config/nova.conf",
+                 "/etc/kolla-mesos/config/nova/nova-compute.conf"]
+        dest: /etc/nova/nova-override.conf
+        owner: nova
+        perm: "0600"
+      nova.conf.j2:
+        source: "config/nova/templates/nova.conf.j2"
+        dest: /etc/nova/nova.conf
+        owner: nova
+        perm: "0600"
+  instances: {{ compute_nodes }}
+  constraints: {{ compute_constraints }}
+commands:
+  disable-netfilter-4:
+    command: "echo sudo sysctl net.bridge.bridge-nf-call-iptables=1"
+  disable-netfilter-6:
+    command: "echo sudo sysctl net.bridge.bridge-nf-call-ip6tables=1"
+  bootstrap:
+    command: kolla_extend_start
+    env:
+      KOLLA_BOOTSTRAP:

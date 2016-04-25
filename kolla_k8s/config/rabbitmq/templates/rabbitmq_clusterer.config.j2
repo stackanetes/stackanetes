@@ -1,0 +1,5 @@
+[
+  {version, 1},
+  {nodes, [{{ list_ips_by_service('infra/rabbitmq/rabbitmq', prefix='rabbit@') }}]},
+  {gospel, {node, rabbit@{{ list_ips_by_service('infra/rabbitmq/rabbitmq')[0] }}}}
+].

@@ -1,0 +1,43 @@
+name: openstack/neutron/neutron-openvswitch-agent
+enabled: {{ enable_neutron | bool and neutron_plugin_agent == 'openvswitch' }}
+container:
+  image: "{{ neutron_openvswitch_agent_image }}:{{ neutron_openvswitch_agent_tag }}"
+  privileged: true
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+  volumes:
+    - containerPath: "/run"
+      hostPath: "/run"
+      mode: RW
+    - containerPath: "/lib/modules"
+      hostPath: "/lib/modules"
+      mode: RO
+service:
+  daemon:
+    dependencies:
+     - path: neutron-server/db_sync
+     - path: neutron_ansible_tasks/create_user
+     - path: rabbitmq/daemon
+     - path: openvswitch-vswitchd/daemon
+    command: neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+    files:
+      neutron.conf.j2:
+        source: ["config/neutron/templates/neutron.conf.j2",
+                 "config/neutron/templates/neutron.openvswitch.conf.j2"]
+        dest: /etc/neutron/neutron.conf
+        owner: neutron
+        perm: "0600"
+      ml2_conf.ini.j2:
+        source: ["config/neutron/templates/ml2_conf.ini.j2",
+                 "config/neutron/templates/ml2_conf.openvswitch.ini.j2"]
+        dest: /etc/neutron/plugins/ml2/ml2_conf.ini
+        owner: neutron
+        perm: "0600"
+  mem: {{ neutron_openvswitch_agent_mem }}
+  cpus: {{ neutron_openvswitch_agent_cpus }}
+  instances: {{ all_nodes }}
+  constraints: {{ controller_compute_constraints }}
+commands:
+  extend_start:
+    command: kolla_extend_start

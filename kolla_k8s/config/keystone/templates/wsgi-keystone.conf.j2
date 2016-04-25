@@ -1,0 +1,29 @@
+{% set apache_dir = 'apache2' if kolla_base_distro in ['ubuntu', 'debian'] else 'httpd' %}
+Listen {{ get_ip_address(api_interface) }}:{{ keystone_public_port }}
+Listen {{ get_ip_address(api_interface) }}:{{ keystone_admin_port }}
+
+<VirtualHost *:{{ keystone_public_port }}>
+    WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+    WSGIProcessGroup keystone-public
+    WSGIScriptAlias / /var/www/cgi-bin/keystone/main
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIPassAuthorization On
+    <IfVersion >= 2.4>
+      ErrorLogFormat "%{cu}t %M"
+    </IfVersion>
+    ErrorLog "|/usr/bin/logger -t keystone-error"
+    CustomLog "|/usr/bin/logger -t keystone-access" combined
+</VirtualHost>
+
+<VirtualHost *:{{ keystone_admin_port }}>
+    WSGIDaemonProcess keystone-admin processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+    WSGIProcessGroup keystone-admin
+    WSGIScriptAlias / /var/www/cgi-bin/keystone/admin
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIPassAuthorization On
+    <IfVersion >= 2.4>
+      ErrorLogFormat "%{cu}t %M"
+    </IfVersion>
+    ErrorLog "|/usr/bin/logger -t keystone-error"
+    CustomLog "|/usr/bin/logger -t keystone-access" combined
+</VirtualHost>

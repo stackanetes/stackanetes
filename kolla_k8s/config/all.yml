@@ -1,0 +1,228 @@
+---
+# The options in this file can be overridden in 'globals.yml'
+
+# The "temp" files that are created before merge need to stay persistent due
+# to the fact that ansible will register a "change" if it has to create them
+# again. Persistent files allow for idempotency
+node_templates_directory: "/usr/share/kolla/templates"
+container_config_directory: "/var/lib/kolla/config_files"
+
+# The directory to store the config files on the destination node
+node_config_directory: "/etc/kolla"
+
+
+###################
+# Kolla options
+###################
+# Valid options are [ COPY_ONCE, COPY_ALWAYS ]
+config_strategy: "COPY_ONCE"
+
+# Valid options are [ centos, fedora, oraclelinux, ubuntu ]
+kolla_base_distro: "centos"
+# Valid options are [ binary, source ]
+kolla_install_type: "binary"
+
+# Value set in the public_url endpoint in Keystone
+kolla_external_address: "{{ kolla_internal_address }}"
+
+####################
+# Rabbitmq options
+####################
+rabbitmq_address: "rabbitmq-rabbitmq-infra-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+
+
+####################
+# Database options
+####################
+database_address: "mariadb-mariadb-infra-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+database_user: "root"
+
+
+####################
+# Docker options
+####################
+docker_registry:
+docker_namespace: "kollaglue"
+docker_registry_username:
+docker_insecure_registry: "False"
+
+# Valid options are [ missing, always ]
+docker_pull_policy: "always"
+
+# Valid options are [ no, on-failure, always ]
+docker_restart_policy: "always"
+
+# '0' means unlimited retries
+docker_restart_policy_retry: "10"
+
+# kolla anisble image name
+kolla_toolbox_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-kolla-toolbox"
+kolla_toolbox_tag: "{{ openstack_release }}"
+ansible_task_cmd: "/usr/bin/ansible localhost"
+
+# loglevel for the container init script
+init_log_level: "info"
+
+####################
+# Networking options
+####################
+api_interface: "{{ network_interface }}"
+storage_interface: "{{ network_interface }}"
+tunnel_interface: "{{ network_interface }}"
+
+# Valid options are [ openvswitch, linuxbridge ]
+neutron_plugin_agent: "openvswitch"
+
+# The default ports used by each service.
+mariadb_port: "3306"
+mariadb_wsrep_port: "4567"
+mariadb_ist_port: "4568"
+mariadb_sst_port: "4444"
+
+rabbitmq_port: "5672"
+rabbitmq_management_port: "15672"
+rabbitmq_cluster_port: "25672"
+rabbitmq_epmd_port: "4369"
+
+haproxy_stats_port: "1984"
+
+keystone_public_port: "5000"
+keystone_admin_port: "35357"
+
+glance_api_port: "9292"
+glance_registry_port: "9191"
+
+nova_api_port: "8774"
+nova_api_ec2_port: "8773"
+nova_metadata_port: "8775"
+nova_novncproxy_port: "6080"
+nova_spicehtml5proxy_port: "6082"
+
+neutron_server_port: "9696"
+
+cinder_api_port: "8776"
+
+memcached_port: "11211"
+
+swift_proxy_server_port: "8080"
+swift_object_server_port: "6000"
+swift_account_server_port: "6001"
+swift_container_server_port: "6002"
+
+heat_api_port: "8004"
+heat_api_cfn_port: "8000"
+
+murano_api_port: "8082"
+
+ironic_api_port: "6385"
+
+
+####################
+# Openstack options
+####################
+openstack_release: "2.0.0"
+openstack_logging_verbose: "True"
+openstack_logging_debug: "False"
+openstack_use_syslog: "False"
+openstack_use_stderr: "True"
+
+openstack_region_name: "RegionOne"
+
+# Valid options are [ novnc, spice ]
+nova_console: "novnc"
+
+
+####################
+# Constraints
+####################
+controller_constraints: '[["hostname", "UNIQUE"], ["openstack_role", "CLUSTER", "controller"]]'
+compute_constraints: '[["hostname", "UNIQUE"], ["openstack_role", "CLUSTER", "compute"]]'
+controller_compute_constraints: '[["hostname", "UNIQUE"], ["openstack_role", "LIKE", "(controller|compute)"]]'
+storage_constraints: '[["hostname", "UNIQUE"], ["openstack_role", "CLUSTER", "storage"]]'
+
+
+####################
+# Mesos-dns hosts
+####################
+keystone_auth_host: "keystone-api-keystone-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+neutron_server_host: "neutron-server-neutron-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+glance_api_host: "glance-api-glance-api-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+cinder_api_host: "cinder-api-cinder-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+nova_api_host: "nova-api-nova-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+ironic_api_host: "ironic-api-ironic-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+
+
+####################
+# OpenStack auth
+####################
+# Openstack authentication string. You should only need to override these if you
+# are changing the admin tenant/project or user.
+openstack_auth_url: "http://{{ keystone_auth_host }}:{{ keystone_admin_port }}"
+openstack_username: "admin"
+openstack_password: "{{ keystone_admin_password }}"
+openstack_project_name: "admin"
+
+
+####################
+# OpenStack services
+####################
+# Core services are required for Kolla to be operation.
+enable_mariadb: "yes"
+enable_keystone: "yes"
+enable_rabbitmq: "yes"
+enable_glance: "yes"
+enable_nova: "yes"
+enable_neutron: "yes"
+
+# Additional optional OpenStack services are specified here
+enable_cinder: "no"
+enable_horizon: "no"
+enable_memcached: "no"
+enable_haproxy: "no"
+enable_ceph: "no"
+enable_heat: "no"
+enable_swift: "no"
+enable_murano: "no"
+enable_ironic: "no"
+
+ironic_keystone_user: "ironic"
+
+
+####################
+# RabbitMQ options
+####################
+rabbitmq_user: "openstack"
+
+
+####################
+# HAProxy options
+####################
+haproxy_user: "openstack"
+
+#################################
+# Cinder - Block Storage options
+#################################
+cinder_volume_driver: "{{ 'ceph' if enable_ceph | bool else 'lvm' }}"
+
+
+###################
+# Ceph options
+###################
+# Ceph can be setup with a caching to improve performance. To use the cache you
+# must provide seperate disks than those for the OSDs
+ceph_enable_cache: "no"
+# Valid options are [ forward, none, writeback ]
+ceph_cache_mode: "writeback"
+
+# A requirement for using the erasure-coded pools is you must setup a cache tier
+# Valid options are [ erasure, replicated ]
+ceph_pool_type: "replicated"
+
+ceph_cinder_pool_name: "volumes"
+ceph_cinder_backup_pool_name: "backups"
+ceph_glance_pool_name: "images"
+ceph_nova_pool_name: "vms"
+
+ceph_erasure_profile: "k=4 m=2 ruleset-failure-domain=host"
+ceph_rule: "default host {{ 'indep' if ceph_pool_type == 'erasure' else 'firstn' }}"
+ceph_cache_rule: "cache host firstn"

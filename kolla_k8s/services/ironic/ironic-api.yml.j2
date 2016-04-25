@@ -1,0 +1,42 @@
+name: openstack/ironic/ironic-api
+enabled: {{ enable_ironic | bool }}
+container:
+  image: "{{ ironic_api_image }}:{{ ironic_api_tag }}"
+  privileged: true
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+service:
+  daemon:
+    dependencies:
+     - path: ironic-api/db_sync
+     - path: ironic_ansible_tasks/create_user
+    command: ironic-api --config-file /etc/ironic/ironic.conf --config-file /etc/ironic/ironic-override.conf
+  mem: {{ ironic_api_mem }}
+  cpus: {{ ironic_api_cpus }}
+  instances: {{ controller_nodes }}
+  constraints: {{ controller_constraints }}
+commands:
+  db_sync:
+    env:
+      KOLLA_BOOTSTRAP:
+    dependencies:
+     - path: ironic_ansible_tasks/create_database
+     - path: ironic_ansible_tasks/database_user_create
+    command: kolla_extend_start
+    run_once: True
+    files:
+      ironic-override.conf:
+        source: ["/etc/kolla-mesos/config/global.conf",
+                 "/etc/kolla-mesos/config/database.conf",
+                 "/etc/kolla-mesos/config/messaging.conf",
+                 "/etc/kolla-mesos/config/ironic.conf",
+                 "/etc/kolla-mesos/config/ironic/ironic-api.conf"]
+        dest: /etc/ironic/ironic-override.conf
+        owner: ironic
+        perm: "0600"
+      ironic.conf.j2:
+        source: "config/ironic/templates/ironic.conf.j2"
+        dest: /etc/ironic/ironic.conf
+        owner: ironic
+        perm: "0600"

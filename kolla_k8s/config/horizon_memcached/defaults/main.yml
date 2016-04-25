@@ -1,0 +1,15 @@
+---
+project_name: "horizon"
+
+####################
+# Docker
+####################
+horizon_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-horizon"
+horizon_tag: "{{ openstack_release }}"
+
+
+####################
+# Resources
+####################
+horizon_mem: "{{ horizon_mem|default('128') }}"
+horizon_cpus: "{{ horizon_cpus|default('0.3') }}"

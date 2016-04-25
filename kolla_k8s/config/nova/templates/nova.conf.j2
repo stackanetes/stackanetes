@@ -1,0 +1,157 @@
+# nova.conf
+[DEFAULT]
+debug = {{ nova_logging_debug }}
+
+api_paste_config = /etc/nova/api-paste.ini
+state_path = /var/lib/nova
+
+osapi_compute_listen = {{ get_ip_address() }}
+osapi_compute_listen_port = {{ nova_api_port }}
+osapi_compute_workers = 8
+
+workers = 8
+
+metadata_listen = {{ get_ip_address() }}
+metadata_listen_port = {{ nova_metadata_port }}
+metadata_workers = 8
+
+ec2_listen = {{ get_ip_address() }}
+ec2_listen_port = {{ nova_api_ec2_port }}
+ec2_workers = 8
+
+notification_driver = noop
+
+use_neutron = True
+security_group_api = neutron
+network_api_class = nova.network.neutronv2.api.API
+firewall_driver = nova.virt.firewall.NoopFirewallDriver
+
+{% if neutron_plugin_agent == "openvswitch" %}
+linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
+{% elif neutron_plugin_agent == "linuxbridge" %}
+linuxnet_interface_driver = nova.network.linux_net.BridgeInterfaceDriver
+{% endif %}
+
+allow_resize_to_same_host = true
+
+{% if enable_ironic | bool %}
+scheduler_host_manager = nova.scheduler.ironic_host_manager.IronicHostManager
+{% endif %}
+
+{% if service_name == "openstack/nova/nova-compute-ironic" %}
+compute_driver = nova.virt.ironic.IronicDriver
+vnc_enabled = False
+ram_allocation_ratio = 1.0
+reserved_host_memory_mb = 0
+{% elif enable_nova_fake | bool %}
+scheduler_default_filters = RetryFilter,AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter
+host = {{ get_hostname() }}_{{ item }}
+compute_driver = fake.FakeDriver
+{% else %}
+compute_driver = libvirt.LibvirtDriver
+{% endif %}
+
+memcached_servers = {{ memcached_address }}
+
+
+# Though my_ip is not used directly, lots of other variables use $my_ip
+my_ip = {{ get_ip_address() }}
+
+{% if nova_console == 'novnc' %}
+novncproxy_host = {{ get_ip_address() }}
+novncproxy_port = {{ nova_novncproxy_port }}
+[vnc]
+vncserver_listen = {{ get_ip_address() }}
+vncserver_proxyclient_address = {{ get_ip_address() }}
+{% if service_name == "openstack/nova/nova-compute" %}
+novncproxy_base_url = http://{{ get_ip_address() }}:31313/vnc_auto.html
+{% endif %}
+{% elif nova_console == 'spice' %}
+[vnc]
+# We have to turn off vnc to use spice
+enabled = false
+[spice]
+server_listen = {{ get_ip_address() }}
+server_proxyclient_address = {{ get_ip_address() }}
+{% if service_name == "openstack/nova/nova-compute" %}
+html5proxy_base_url = http://{{ nova_spicehtml5proxy_host }}:{{ nova_spicehtml5proxy_port }}/spice_auto.html
+{% endif %}
+html5proxy_host = {{ get_ip_address() }}
+html5proxy_port = {{ nova_spicehtml5proxy_port }}
+{% endif %}
+
+{% if service_name == "openstack/nova/nova-compute-ironic" %}
+[ironic]
+#(TODO) remember to update this once discoverd is replaced by inspector
+admin_username = {{ ironic_keystone_user }}
+admin_password = {{ ironic_keystone_password }}
+admin_url = {{ openstack_auth_url }}
+admin_tenant_name = service
+api_endpoint = http://{{ kolla_internal_address }}:{{ ironic_api_port }}/v1
+{% endif %}
+
+[oslo_messaging_rabbit]
+rabbit_userid = {{ rabbitmq_user }}
+rabbit_password = {{ rabbitmq_password }}
+rabbit_ha_queues = true
+rabbit_hosts = {{ rabbitmq_address }}
+
+[oslo_concurrency]
+lock_path = /var/lib/nova/tmp
+
+[conductor]
+workers = 8
+
+[glance]
+api_servers = {{ glance_api_host }}:{{ glance_api_port }}
+num_retries = 3
+
+[cinder]
+catalog_info = volume:cinder:internalURL
+
+[neutron]
+url = http://{{ neutron_server_host }}:{{ neutron_server_port }}
+auth_strategy = keystone
+metadata_proxy_shared_secret = {{ metadata_secret }}
+service_metadata_proxy = true
+
+auth_url = http://{{ keystone_auth_host }}:{{ keystone_admin_port }}
+auth_plugin = password
+project_domain_name = default
+user_domain_id = default
+project_name = service
+username = neutron
+password = {{ neutron_keystone_password }}
+
+[database]
+connection = mysql+pymysql://{{ nova_database_user }}:{{ nova_database_password }}@{{ nova_database_address }}/{{ nova_database_name }}
+
+[api_database]
+connection = mysql+pymysql://{{ nova_api_database_user }}:{{ nova_api_database_password }}@{{ nova_api_database_address }}/{{ nova_api_database_name }}
+
+[keystone_authtoken]
+auth_uri = http://{{ keystone_auth_host }}:{{ keystone_public_port }}
+auth_url = http://{{ keystone_auth_host }}:{{ keystone_admin_port }}
+auth_plugin = password
+project_domain_id = default
+user_domain_id = default
+project_name = service
+username = nova
+password = {{ nova_keystone_password }}
+
+[libvirt]
+connection_uri = "qemu+tcp://{{ get_ip_address() }}/system"
+{% if enable_ceph | bool %}
+images_type = rbd
+images_rbd_pool = {{ ceph_nova_pool_name }}
+images_rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_user = nova
+rbd_secret_uuid = {{ rbd_secret_uuid }}
+disk_cachemodes="network=writeback"
+live_migration_flag="VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED"
+hw_disk_discard = unmap
+{% endif %}
+
+[upgrade_levels]
+compute = auto
+

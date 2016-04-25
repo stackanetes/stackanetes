@@ -1,0 +1,86 @@
+---
+project_name: "cinder"
+
+####################
+# Ceph
+####################
+ceph_cinder_pool_type: "{{ ceph_pool_type }}"
+ceph_cinder_cache_mode: "{{ ceph_cache_mode }}"
+ceph_cinder_backup_pool_type: "{{ ceph_pool_type }}"
+ceph_cinder_backup_cache_mode: "{{ ceph_cache_mode }}"
+
+# Due to Ansible issues on include, you cannot override these variables. Please
+# override the variables they refernce instead.
+cinder_pool_name: "{{ ceph_cinder_pool_name }}"
+cinder_pool_type: "{{ ceph_cinder_pool_type }}"
+cinder_cache_mode: "{{ ceph_cinder_cache_mode }}"
+cinder_backup_pool_name: "{{ ceph_cinder_backup_pool_name }}"
+cinder_backup_pool_type: "{{ ceph_cinder_backup_pool_type }}"
+cinder_backup_cache_mode: "{{ ceph_cinder_backup_cache_mode }}"
+
+
+####################
+# Database
+####################
+cinder_database_name: "cinder"
+cinder_database_user: "cinder"
+cinder_database_address: "{{ database_address }}"
+
+
+####################
+# Docker
+####################
+cinder_volume_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-cinder-volume"
+cinder_volume_tag: "{{ openstack_release }}"
+cinder_volume_image_full: "{{ cinder_volume_image }}:{{ cinder_volume_tag }}"
+
+cinder_scheduler_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-cinder-scheduler"
+cinder_scheduler_tag: "{{ openstack_release }}"
+cinder_scheduler_image_full: "{{ cinder_scheduler_image }}:{{ cinder_scheduler_tag }}"
+
+cinder_backup_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-cinder-backup"
+cinder_backup_tag: "{{ openstack_release }}"
+cinder_backup_image_full: "{{ cinder_backup_image }}:{{ cinder_backup_tag }}"
+
+cinder_api_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-cinder-api"
+cinder_api_tag: "{{ openstack_release }}"
+cinder_api_image_full: "{{ cinder_api_image }}:{{ cinder_api_tag }}"
+
+cinder_data_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-data"
+cinder_data_image_tag: "{{ openstack_release }}"
+cinder_data_image_full: "{{ cinder_data_image }}:{{ cinder_data_image_tag }}"
+
+
+####################
+# Openstack
+####################
+cinder_public_endpoint: "{{ cinder_api_host }}:{{ cinder_api_port }}"
+cinder_admin_endpoint: "{{ cinder_api_host }}:{{ cinder_api_port }}"
+cinder_internal_endpoint: "{{ cinder_api_host }}:{{ cinder_api_port }}"
+
+cinder_logging_verbose: "{{ openstack_logging_verbose }}"
+cinder_logging_debug: "{{ openstack_logging_debug }}"
+
+cinder_keystone_user: "cinder"
+
+openstack_cinder_auth: "{'auth_url':'{{ openstack_auth_url }}','username':'{{ openstack_username }}','password':'{{ openstack_password }}','project_name':'{{ openstack_project_name }}'}"
+
+
+####################
+# Resources
+####################
+# cinder-api
+cinder_api_mem: "{{ cinder_api_mem|default('128') }}"
+cinder_api_cpus: "{{ cinder_api_cpus|default('0.3') }}"
+# cinder-backup
+cinder_backup_mem: "{{ cinder_backup_mem|default('128') }}"
+cinder_backup_cpus: "{{ cinder_backup_cpus|default('0.3') }}"
+# cinder-init
+cinder_init_mem: "{{ cinder_init_mem|default('512') }}"
+cinder_init_cpus: "{{ cinder_init_cpus|default('0.3') }}"
+# cinder-scheduler
+cinder_scheduler_mem: "{{ cinder_scheduler_mem|default('128') }}"
+cinder_scheduler_cpus: "{{ cinder_scheduler_cpus|default('0.3') }}"
+# cinder-volume
+cinder_volume_mem: "{{ cinder_volume_mem|default('128') }}"
+cinder_volume_cpus: "{{ cinder_volume_cpus|default('0.3') }}"

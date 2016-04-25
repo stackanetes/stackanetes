@@ -1,0 +1,38 @@
+name: infra/rabbitmq/rabbitmq
+enabled: {{ enable_rabbitmq | bool }}
+container:
+  image: "{{ rabbitmq_image }}:{{ rabbitmq_tag }}"
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+service:
+  daemon:
+    command: rabbitmq-server
+    dependencies:
+     - path: rabbitmq/bootstrap
+    files:
+      rabbitmq-env.conf.j2:
+        source: config/rabbitmq/templates/rabbitmq-env.conf.j2
+        dest: /etc/rabbitmq/rabbitmq-env.conf
+        owner: rabbitmq
+        perm: "0600"
+      rabbitmq.config.j2:
+        source: config/rabbitmq/templates/rabbitmq.config.j2
+        dest: /etc/rabbitmq/rabbitmq.config
+        owner: rabbitmq
+        perm: "0600"
+      rabbitmq_clusterer.config.j2:
+        source: config/rabbitmq/templates/rabbitmq_clusterer.config.j2
+        dest: /etc/rabbitmq/rabbitmq_clusterer.config
+        owner: rabbitmq
+        perm: "0600"
+  mem: {{ rabbitmq_mem }}
+  cpus: {{ rabbitmq_cpus }}
+  instances: {{ controller_nodes }}
+  constraints: {{ controller_constraints }}
+commands:
+  bootstrap:
+    command: kolla_extend_start
+    env:
+      KOLLA_BOOTSTRAP:
+      RABBITMQ_CLUSTER_COOKIE: "{{ rabbitmq_cluster_cookie }}"

@@ -1,0 +1,59 @@
+name: openstack/neutron/neutron-dhcp-agent
+enabled: {{ enable_neutron | bool }}
+container:
+  image: "{{ neutron_dhcp_agent_image }}:{{ neutron_dhcp_agent_tag }}"
+  privileged: true
+  parameters:
+    - key: volume
+      value: "/run/:/run/"
+    - key: volume
+      value: "/run/netns:/run/netns:shared"
+    - key: volume
+      value: "neutron_metadata_socket_{{ deployment_id }}_{{ timestamp }}:/var/lib/neutron/kolla/"
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+service:
+  daemon:
+    dependencies:
+     - path: neutron-server/db_sync
+     - path: neutron_ansible_tasks/create_user
+     - path: rabbitmq/daemon
+    command: neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/dhcp_agent.ini
+    files:
+      neutron.conf.j2:
+        source: ["config/neutron/templates/neutron.conf.j2",
+                 {% if neutron_plugin_agent == 'linuxbridge' %}
+                 "config/neutron/templates/neutron.linuxbridge.conf.j2"
+                 {% elif neutron_plugin_agent == 'openvswitch' %}
+                 "config/neutron/templates/neutron.openvswitch.conf.j2"
+                 {% endif %}]
+        dest: /etc/neutron/neutron.conf
+        owner: neutron
+        perm: "0600"
+      ml2_conf.ini.j2:
+        source: ["config/neutron/templates/ml2_conf.ini.j2",
+                 {% if neutron_plugin_agent == 'linuxbridge' %}
+                 "config/neutron/templates/ml2_conf.linuxbridge.ini.j2"
+                 {% elif neutron_plugin_agent == 'openvswitch' %}
+                 "config/neutron/templates/ml2_conf.openvswitch.ini.j2"
+                 {% endif %}]
+        dest: /etc/neutron/plugins/ml2/ml2_conf.ini
+        owner: neutron
+        perm: "0600"
+      dhcp_agent.ini.j2:
+        source: ["config/neutron/templates/dhcp_agent.ini.j2"]
+        dest: /etc/neutron/dhcp_agent.ini
+        owner: neutron
+        perm: "0600"
+      dnsmasq.conf.j2:
+        source: "config/neutron/templates/dnsmasq.conf.j2"
+        dest: /etc/neutron/dnsmasq.conf
+        owner: neutron
+        perm: "0600"
+  mem: {{ neutron_dhcp_agent_mem }}
+  cpus: {{ neutron_dhcp_agent_cpus }}
+  constraints: {{ controller_constraints }}
+  instances: {{ controller_nodes }}
+commands:
+  extend_start:
+    command: kolla_extend_start

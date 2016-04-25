@@ -1,0 +1,9 @@
+[DEFAULT]
+default_volume_type = lvmdriver-1
+enabled_backends = lvmdriver-1
+
+[lvmdriver-1]
+lvm_type = default
+volume_group = cinder-volumes
+volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
+volume_backend_name = lvmdriver-1

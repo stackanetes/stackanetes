@@ -1,0 +1,24 @@
+export OS_PROJECT_DOMAIN_ID=default
+export OS_USER_DOMAIN_ID=default
+
+if [[ -n "$1" ]]; then
+    OS_USERNAME=$1
+fi
+if [[ -n "$2" ]]; then
+    OS_PROJECT_NAME=$2
+fi
+
+export OS_PROJECT_NAME=${OS_PROJECT_NAME:-admin}
+export OS_USERNAME=${OS_USERNAME:-admin}
+
+if [ $OS_USERNAME == "admin" ]; then
+    export OS_PASSWORD={{ keystone_admin_password }}
+fi
+
+export OS_AUTH_URL=http://{{ keystone_auth_host }}:{{ keystone_admin_port }}
+export OS_REGION_NAME={{ openstack_region_name }}
+
+export NOVA_VERSION=${NOVA_VERSION:-1.1}
+export COMPUTE_API_VERSION=${COMPUTE_API_VERSION:-$NOVA_VERSION}
+export CINDER_VERSION=${CINDER_VERSION:-2}
+export OS_VOLUME_API_VERSION=${OS_VOLUME_API_VERSION:-$CINDER_VERSION}

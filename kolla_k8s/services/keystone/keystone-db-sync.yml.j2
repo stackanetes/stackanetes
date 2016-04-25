@@ -1,0 +1,36 @@
+{% set keystone_cmd = 'apache2' if kolla_base_distro in ['ubuntu', 'debian'] else 'httpd' %}
+{% set keystone_dir = 'apache2/conf-enabled' if kolla_base_distro in ['ubuntu', 'debian'] else 'httpd/conf.d' %}
+name: openstack/keystone/keystone-db-sync
+enabled: {{ enable_keystone | bool }}
+container:
+  image: "{{ keystone_image }}:{{ keystone_tag }}"
+  parameters:
+    - key: volume
+      value: "kolla_logs_{{ deployment_id }}_{{ timestamp }}:/var/log/kolla"
+
+commands:
+  db_sync:
+    env:
+      KOLLA_BOOTSTRAP:
+    command: kolla_extend_start
+    run_once: True
+    dependencies:
+     - path: keystone_ansible_tasks/create_database
+     - path: keystone_ansible_tasks/database_user_create
+    files:
+      keystone.conf.j2:
+        source: ["/etc/kolla-mesos/config/global.conf",
+                 "/etc/kolla-mesos/config/database.conf",
+                 "/etc/kolla-mesos/config/messaging.conf",
+                 "config/keystone/templates/keystone.conf.j2",
+                 "/etc/kolla-mesos/config/keystone.conf"]
+        dest: /etc/keystone/keystone.conf
+        owner: keystone
+        perm: "0600"
+  bootstrap:
+    run_once: True
+    retries: 10
+    delay: 5
+    dependencies:
+     - path: keystone-db-sync/db_sync
+    command: kolla_keystone_bootstrap {{ openstack_username }} {{ openstack_password }} {{ openstack_project_name }} admin {{ keystone_admin_endpoint }} {{ keystone_internal_endpoint }} {{ keystone_public_endpoint }} {{ openstack_region_name }}
