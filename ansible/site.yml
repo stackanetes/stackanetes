@@ -1,0 +1,3 @@
+- hosts: machine
+  roles:
+    - templating_ymls

@@ -1,0 +1,66 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: glance-api
+spec:
+  ports:
+  - name: glance-api1
+    port: 9292
+    protocol: TCP
+    targetPort: 9292
+  selector:
+    app: glance-api
+
+---
+
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: glance-api
+spec:
+  replicas: 1
+  selector:
+    app: glance-api
+  template:
+    metadata:
+      labels:
+        app: glance-api
+      name: glance-api
+    spec:
+      nodeSelector:
+        app: persistent-control
+      volumes:
+        - name: var-lib
+          hostPath:
+            path: /var/lib/glance
+      containers:
+        - name: glance-api
+          image: {{ docker_registry }}/centos-binary-glance-api:{{ image_version }}
+          env:
+            - name: KOLLA_SKIP_EXTEND_START
+              value: ""
+            - name: KOLLA_CONFIG_STRATEGY
+              value: COPY_ONCE
+            - name: KOLLA_CONFIG
+              value: '{"command": "kolla_mesos_start","config_files":[{"source": "zk://zookeeper:2181/kolla/common/kolla_mesos_start.py","dest": "/usr/local/bin/kolla_mesos_start","owner": "root","perm": "0755"}]}'
+            - name: KOLLA_LOGLEVEL
+              value: info
+            - name: KOLLA_ZK_HOSTS
+              value: zookeeper:2181
+            - name: KOLLA_PRIVATE_INTERFACE
+              value: eth0
+            - name: KOLLA_PUBLIC_INTERFACE
+              value: eth0
+            - name: ZK_APP_ID
+              value: /root/openstack/glance-api/glance-api
+          ports:
+          - containerPort: 9292
+            name: glance-api1
+            protocol: TCP
+          resources:
+            limits:
+              memory: 4000Mi
+          volumeMounts:
+            - mountPath: /var/lib/glance
+              name: var-lib

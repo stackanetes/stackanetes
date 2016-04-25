@@ -1,0 +1,35 @@
+- name: check if dest folder is set
+  fail:
+    msg: "Set destination directory for yml files.Variable name: dest_yml_files_dir "
+  when: dest_yml_files_dir == ""
+
+- name: check if docker registry is set
+  fail:
+    msg: "Set docker registry.Variable name: docker_registry"
+  when: docker_registry == ""
+
+- name: check if image version is set
+  fail:
+    msg: "Set image version.Variable name: image_version"
+  when: image_version == ""
+
+- name: creating directory for ymls
+  file:
+    path: "{{ dest_yml_files_dir }}"
+    state: "directory"
+    recurse: yes
+
+- name: templating all jinja files
+  template:
+    src: "{{ item }}"
+    dest: "{{ dest_yml_files_dir }}/{{ item | basename | regex_replace | regex_replace('.j2','') }}"
+  with_fileglob:
+    - ../templates/*.j2
+
+- name: copy files that do not require templating
+  copy:
+    src: "{{ item }}"
+    dest: "{{ dest_yml_files_dir }}/{{ item | basename }}"
+  with_fileglob:
+    - ../templates/*.yml
+

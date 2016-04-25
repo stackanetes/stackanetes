@@ -1,0 +1,5 @@
+#Default values
+docker_registry: ""
+dest_yml_files_dir: ""
+host_interface: "{{ ansible_default_ipv4.interface }}"
+image_version: ""
