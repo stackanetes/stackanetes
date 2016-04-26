@@ -16,4 +16,4 @@ import pbr.version
 
 
 __version__ = pbr.version.VersionInfo(
-    'kolla-mesos').version_string()
+    'kolla-k8s').version_string()
