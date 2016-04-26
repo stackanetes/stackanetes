@@ -4,7 +4,11 @@
 
 ## Overview
 
-This project aims to create an easy way to deploy OpenStack on Kubernetes. In order to achieve that first version of Stackanetes is heavily based on [Kolla-Mesos](https://github.com/openstack/kolla-mesos) project.
+Stackanetes is an easy way to deploy OpenStack on Kubernetes. This includes the control plane (keystone, nova, etc) and a "nova compute" container that runs virtual machines (VMs) under a hypervisor.
+
+Checkout the video overview:
+
+[![Stackanetes Overview](https://img.youtube.com/vi/DPYJxYulxO4/0.jpg)](https://www.youtube.com/watch?v=DPYJxYulxO4)
 
 ## Requirements
 
