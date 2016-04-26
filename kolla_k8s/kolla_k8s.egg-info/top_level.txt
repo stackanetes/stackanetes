@@ -1,1 +1,0 @@
-kolla_k8s
