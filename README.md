@@ -15,9 +15,8 @@ This project aims to create an easy way to deploy OpenStack on Kubernetes. In or
 
  - Make sure following packages are available git, python2.7, pip
  - Download [kubectl](https://github.com/kubernetes/kubernetes/releases) 1.2 binary
- - Download this repository: ```
- git clone https://github.com/stackanetes/stackanetes
- ```
+ - Download this repository: ```git clone https://github.com/stackanetes/stackanetes```
+ 
  - Install all python dependencies from requirements.txt
  - Run: ``` ./generate_config_file_samples.sh``` which generate /etc/kolla-k8s config directory with configs
  - Set following variables in /etc/kolla-k8s/kolla-k8s.conf:
