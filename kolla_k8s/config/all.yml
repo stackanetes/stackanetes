@@ -10,7 +10,7 @@ container_config_directory: "/var/lib/kolla/config_files"
 # The directory to store the config files on the destination node
 node_config_directory: "/etc/kolla"
 
-
+#test
 ###################
 # Kolla options
 ###################
@@ -28,13 +28,13 @@ kolla_external_address: "{{ kolla_internal_address }}"
 ####################
 # Rabbitmq options
 ####################
-rabbitmq_address: "rabbitmq-rabbitmq-infra-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+rabbitmq_address: "rabbitmq"
 
 
 ####################
 # Database options
 ####################
-database_address: "mariadb-mariadb-infra-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+database_address: "mariadb"
 database_user: "root"
 
 
@@ -122,7 +122,7 @@ ironic_api_port: "6385"
 ####################
 openstack_release: "2.0.0"
 openstack_logging_verbose: "True"
-openstack_logging_debug: "False"
+openstack_logging_debug: "True"
 openstack_use_syslog: "False"
 openstack_use_stderr: "True"
 
@@ -144,12 +144,12 @@ storage_constraints: '[["hostname", "UNIQUE"], ["openstack_role", "CLUSTER", "st
 ####################
 # Mesos-dns hosts
 ####################
-keystone_auth_host: "keystone-api-keystone-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
-neutron_server_host: "neutron-server-neutron-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
-glance_api_host: "glance-api-glance-api-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
-cinder_api_host: "cinder-api-cinder-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
-nova_api_host: "nova-api-nova-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
-ironic_api_host: "ironic-api-ironic-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+keystone_auth_host: "keystone-api"
+neutron_server_host: "neutron-server"
+glance_api_host: "glance-api"
+cinder_api_host: "cinder-api"
+nova_api_host: "nova-api"
+ironic_api_host: "ironic-api"
 
 
 ####################
