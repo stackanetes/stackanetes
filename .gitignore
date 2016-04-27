@@ -22,3 +22,9 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+kolla_k8s/AUTHORS
+kolla_k8s/ChangeLog
+kolla_k8s/build/
+kolla_k8s/etc/kolla-k8s.conf.sample
+ansible/site.retry
