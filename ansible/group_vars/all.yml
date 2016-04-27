@@ -1,4 +1,4 @@
-dest_yml_file_dir: 
-docker_registry: 
-host_interface: 
-image_version: 
+dest_yml_file_dir: /var/lib/kolla-k8s //absolute path to dir with manifests
+docker_registry: quay.io/stackanetes
+host_interface: eno1 // name of interface for nova-compute in hostNetwork mode
+image_version: 2.0.0 // check current version on quay.io/stackanetes
