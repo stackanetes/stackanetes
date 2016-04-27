@@ -23,10 +23,11 @@ Make sure following packages are installed on the system building the configurat
 
 Clone this repo: `git clone https://github.com/stackanetes/stackanetes` and move into the kolla directory `cd stackanetes/kolla_k8s`.
 
-Install all python dependencies from requirements.txt and generate the `etc/kolla-k8s` config directory.
+Install all python dependencies from requirements.txt, build and install kolla_k8s and generate the `etc/kolla-k8s` config directory.
 
 ```
 pip install -r requirements.txt
+python setup.py build && python setup.py install
 ./generate_config_file_sample.sh
 ```
 
@@ -51,7 +52,6 @@ image_version: 2.0.0 // check current version on quay.io/stackanetes
 ```
 
 -  Run  ```ansible-playbook -i inventory site.yml```
-- Build and install kolla_k8s: ```python setup.py build && python setup.py install```
 - Label kubernetes nodes as  :
 - ```kubectl label node minion1 app=persistent-control ``` // Persistent data stored on separate node
 - ```kubectl label node minion2 app=non-persistent-control ``` // Non-persistent data stored on separate node preferable more than 1 node
