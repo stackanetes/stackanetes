@@ -40,7 +40,7 @@ then
      cp etc/kolla-k8s.conf.sample /etc/kolla-k8s/kolla-k8s.conf
 fi
 
-if [ ! -f /etc/kolla-k8s/kolla-k8s.conf ]
+if [ ! -f /etc/kolla-k8s/passwords.yml ]
 then
     cp etc/passwords.yml /etc/kolla-k8s/passwords.yml
 fi
