@@ -25,4 +25,24 @@ for file in `ls etc/oslo-config-generator/*`; do
     $GEN_CMD --config-file=$file
 done
 
+if [ ! -d /etc/kolla-k8s ]
+then
+    mkdir /etc/kolla-k8s
+fi
+
+if [ ! -f /etc/kolla-k8s/globals.yml ]
+then
+    cp etc/globals.yml /etc/kolla-k8s/globals.yml
+fi
+
+if  [ ! -f /etc/kolla-k8s/kolla-k8s.conf ]
+then
+     cp etc/kolla-k8s.conf.sample /etc/kolla-k8s/kolla-k8s.conf
+fi
+
+if [ ! -f /etc/kolla-k8s/kolla-k8s.conf ]
+then
+    cp etc/passwords.yml /etc/kolla-k8s/passwords.yml
+fi
+
 set -x
