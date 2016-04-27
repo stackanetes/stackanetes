@@ -41,19 +41,10 @@ yml_dir_path = /var/lib/kolla-k8s/ // absolute path to dir with manifests
 host = 10.10.10.11:30000 //zookeeper address
 ```
 
-Customize the ansible inventory as needed to list all of the kubernetes machines in the cluster:
+Run ansible-playbook to generate the configuration, ansible is only being used as a templating system:
 
 ```
 cd ../ansible
-```
-
-```
-cat inventory/inventory
-[machine]
-172.17.4.99 ansible_user=core
-```
-
-```
 ansible-playbook -i inventory site.yml
 ```
 
