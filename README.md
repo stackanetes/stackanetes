@@ -45,7 +45,7 @@ Run ansible-playbook to generate the configuration, ansible is only being used a
 
 ```
 cd ../ansible
-ansible-playbook -i inventory site.yml
+ansible-playbook site.yml
 ```
 
 Label kubernetes nodes as their roles:
