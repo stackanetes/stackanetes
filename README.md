@@ -37,8 +37,15 @@ Now, set the following variables in /etc/kolla-k8s/kolla-k8s.conf:
 host = 10.10.10.10:8080 // k8s API
 kubectl_path = /opt/bin/kubectl // absolute path to kubectl binary
 yml_dir_path = /var/lib/kolla-k8s/ // absolute path to dir with manifests
+[kolla]
+deployment_id = root
 [zookeeper]
 host = 10.10.10.11:30000 //zookeeper address
+```
+
+In /etc/kolla-k8s/globals.yml change `enable_horizon` to yes:
+```
+enable_horizon: "yes"
 ```
 
 Run ansible-playbook to generate the configuration, ansible is only being used as a templating system:
@@ -94,6 +101,9 @@ Non-persistent control:
  - neutron
   - neutron-init
   - neutron-server
+ - horizon
+  - horizon-filebased
+  - horizon-memcached
  - network-node // As a k8s daemon-set
 
 Compute:
