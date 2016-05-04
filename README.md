@@ -19,7 +19,7 @@ Checkout the video overview:
 
 Ensure the following packages are installed on the workstation that controls the Kubernetes cluster: git, python2.7, pip, [kubectl](https://github.com/kubernetes/kubernetes/releases) v1.2+.
 
-Clone this repo: `git clone https://github.com/stackanetes/stackanetes` and move into the kolla directory `cd stackanetes/kolla_k8s`.
+Clone this repo: `git clone https://github.com/stackanetes/stackanetes` and move into the kolla directory `cd stackanetes`.
 
 Install all python dependencies from requirements.txt and generate the `etc/kolla-k8s` config directory.
 
@@ -44,7 +44,7 @@ host = 10.10.10.11:30000 //zookeeper address
 Run ansible-playbook to generate the configuration, ansible is only being used as a templating system:
 
 ```
-cd ../ansible
+cd ansible
 ansible-playbook site.yml
 ```
 

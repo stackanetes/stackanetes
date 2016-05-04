@@ -33,7 +33,7 @@ kolla_opts = [
                default='binary',
                help='The method of the OpenStack install'),
     cfg.StrOpt('deployment-id',
-               default=utils.env('USER', default='default'),
+               default=utils.env('USER', default='root'),
                help='Uniq name for deployment'),
     cfg.StrOpt('profile',
                default='default',
