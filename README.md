@@ -43,8 +43,18 @@ deployment_id = root
 host = 10.10.10.11:30000 //zookeeper address
 ```
 
-In /etc/kolla-k8s/globals.yml change `enable_horizon` to yes:
+In /etc/kolla-k8s/globals.yml change `enable_horizon` to yes and set the name of host interface for compute-node and network node:
 ```
+####################
+Networking options
+####################
+network_interface: "eno2" // name of physical interface                  
+neutron_external_interface: "eno2" // name of physical interface
+
+####################
+OpenStack options
+###################
+
 enable_horizon: "yes"
 ```
 
@@ -74,6 +84,8 @@ Compute node will run nova-compute, the VMs
 ```
 kubectl label node minion3 app=compute
 ```
+
+Remember to create /var/lib/nova and /var/lib/libvirt on compute node.
 
 Deploy OpenStack services with the kolla-k8s tool the currently supported services include:
 
