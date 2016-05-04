@@ -16,7 +16,7 @@ from oslo_config import cfg
 CONF = cfg.CONF
 k8s_opts = [
     cfg.StrOpt('host', default=''),
-    cfg.StrOpt('kubectl_path', default='/usr/bin/kubect'),
+    cfg.StrOpt('kubectl_path', default='/usr/bin/kubectl'),
     cfg.StrOpt('kubeconfig_path', default=''),
     cfg.StrOpt('yml_dir_path', default='rc/')
 ]
