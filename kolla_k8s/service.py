@@ -250,7 +250,6 @@ def _load_variables_from_zk(zk):
 
 # Public API below
 ##################
-
 def run_service(service_name, service_dir, variables=None):
     # generate zk variables
     if service_name == 'nova-compute':
@@ -259,7 +258,7 @@ def run_service(service_name, service_dir, variables=None):
     elif service_name == 'network-node':
         service_list = ['neutron-openvswitch-agent', 'neutron-dhcp-agent',
                         'neutron-metadata-agent', 'openvswitch-vswitchd',
-                        'openvswitch-db neutron-l3-agent']
+                        'openvswitch-db', 'neutron-l3-agent']
     #TODO: load this service _list from config 
     elif service_name == 'all':
         service_list = ['keystone-init', 'keystone-api', 'keystone-db-sync',
@@ -270,7 +269,7 @@ def run_service(service_name, service_dir, variables=None):
                         'nova-libvirt', 'openvswitch-vswitchd',
                         'neutron-openvswitch-agent', 'openvswitch-db',
                         'neutron-dhcp-agent', 'neutron-metadata-agent',
-                        'openvswitch-db neutron-l3-agent']
+                        'openvswitch-db', 'neutron-l3-agent', 'nova-novncproxy']
     elif service_name == 'zookeeper':
         service_list = []
     else:
@@ -290,12 +289,18 @@ def kill_service(service_name):
 
 
 def _deploy_instance(service_name):
-    server = "--server=" + CONF.k8s.host
     if service_name == 'all':
-        service_path = CONF.k8s.yml_dir_path
+        service_path = os.path.join(CONF.k8s.yml_dir_path, "")
     else:
-        service_path = CONF.k8s.yml_dir_path + service_name + ".yml"
-    cmd = [CONF.k8s.kubectl_path, server, "create", "-f", service_path]
+        service_path = os.path.join(CONF.k8s.yml_dir_path, service_name + ".yml")
+    cmd = [CONF.k8s.kubectl_path]
+    if CONF.k8s.host:
+        server = "--server=" + CONF.k8s.host
+        cmd.append(server)
+    if CONF.k8s.kubeconfig_path:
+        kubeconfig_path = "--kubeconfig=" + CONF.k8s.kubeconfig_path
+        cmd.append(kubeconfig_path)
+    cmd.extend(["create", "-f", service_path])
     print cmd
     subprocess.call(cmd)
 
@@ -305,7 +310,6 @@ def _delete_instance(service_name):
     if service_name == 'all':
         service_path = CONF.k8s.yml_dir_path
     else:
-        service_path = CONF.k8s.yml_dir_path + service_name + ".yml"
+        service_path = os.path.join(CONF.k8s.yml_dir_path, service_name + ".yml")
     cmd = [CONF.k8s.kubectl_path, server, "delete", "-f", service_path]
     subprocess.call(cmd)
-

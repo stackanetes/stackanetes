@@ -191,7 +191,8 @@ class TemplateFunctions(object):
         self._zk = zk
 
     def get_ip_address(self, ifname=PUBLIC_INTERFACE):
-        ifname = PUBLIC_INTERFACE if ifname is None else ifname
+        if not ifname:
+            ifname = PUBLIC_INTERFACE
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         address = str(socket.inet_ntoa(fcntl.ioctl(
             s.fileno(),

@@ -19,7 +19,7 @@ Checkout the video overview:
 
 Ensure the following packages are installed on the workstation that controls the Kubernetes cluster: git, python2.7, pip, [kubectl](https://github.com/kubernetes/kubernetes/releases) v1.2+.
 
-Clone this repo: `git clone https://github.com/stackanetes/stackanetes` and move into the kolla directory `cd stackanetes/kolla_k8s`.
+Clone this repo: `git clone https://github.com/stackanetes/stackanetes` and move into the kolla directory `cd stackanetes`.
 
 Install all python dependencies from requirements.txt and generate the `etc/kolla-k8s` config directory.
 
@@ -37,14 +37,31 @@ Now, set the following variables in /etc/kolla-k8s/kolla-k8s.conf:
 host = 10.10.10.10:8080 // k8s API
 kubectl_path = /opt/bin/kubectl // absolute path to kubectl binary
 yml_dir_path = /var/lib/kolla-k8s/ // absolute path to dir with manifests
+[kolla]
+deployment_id = root
 [zookeeper]
 host = 10.10.10.11:30000 //zookeeper address
+```
+
+In /etc/kolla-k8s/globals.yml change `enable_horizon` to yes and set the name of host interface for compute-node and network node:
+```
+####################
+Networking options
+####################
+network_interface: "eno2" // name of physical interface                  
+neutron_external_interface: "eno2" // name of physical interface
+
+####################
+OpenStack options
+###################
+
+enable_horizon: "yes"
 ```
 
 Run ansible-playbook to generate the configuration, ansible is only being used as a templating system:
 
 ```
-cd ../ansible
+cd ansible
 ansible-playbook site.yml
 ```
 
@@ -67,6 +84,8 @@ Compute node will run nova-compute, the VMs
 ```
 kubectl label node minion3 app=compute
 ```
+
+Remember to create /var/lib/nova and /var/lib/libvirt on compute node.
 
 Deploy OpenStack services with the kolla-k8s tool the currently supported services include:
 
@@ -94,6 +113,9 @@ Non-persistent control:
  - neutron
   - neutron-init
   - neutron-server
+ - horizon
+  - horizon-filebased
+  - horizon-memcached
  - network-node // As a k8s daemon-set
 
 Compute:
