@@ -258,7 +258,7 @@ def run_service(service_name, service_dir, variables=None):
     elif service_name == 'network-node':
         service_list = ['neutron-openvswitch-agent', 'neutron-dhcp-agent',
                         'neutron-metadata-agent', 'openvswitch-vswitchd',
-                        'openvswitch-db neutron-l3-agent']
+                        'openvswitch-db', 'neutron-l3-agent']
     #TODO: load this service _list from config 
     elif service_name == 'all':
         service_list = ['keystone-init', 'keystone-api', 'keystone-db-sync',
