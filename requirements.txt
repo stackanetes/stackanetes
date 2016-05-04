@@ -19,3 +19,4 @@ retrying!=1.3.0,>=1.2.3 # Apache-2.0
 six>=1.9.0 # MIT
 cmd2 >= 0.6.8 #MIT
 markupsafe
+setuptools >= 11
