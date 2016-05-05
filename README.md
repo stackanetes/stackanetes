@@ -4,6 +4,8 @@
 
 Stackanetes is an easy way to deploy OpenStack on Kubernetes. This includes the control plane (keystone, nova, etc) and a "nova compute" container that runs virtual machines (VMs) under a hypervisor.
 
+***_This code is heavily experimental and should only be used for demo purposes. The architecture of this project will change significantly._***
+
 Checkout the video overview:
 
 [![Stackanetes Overview](https://img.youtube.com/vi/DPYJxYulxO4/0.jpg)](https://www.youtube.com/watch?v=DPYJxYulxO4)
@@ -65,66 +67,58 @@ cd ansible
 ansible-playbook site.yml
 ```
 
-Label kubernetes nodes as their roles:
+### Label kubernetes nodes
 
-Persistent data stored on separate node
+Persistent data (mariadb, zookeeper, rabbitmq) will be labeled as such:
 
 ```
 kubectl label node minion1 app=persistent-control
 ```
 
-Non-persistent data stored on separate node preferable more than 1 node
+Non-persistent data stored on separate node preferable more than 1 node:
 
 ```
 kubectl label node minion2 app=non-persistent-control
 ```
 
-Compute node will run nova-compute, the VMs
+Compute node will run nova-compute, the VMs. Currently you need to dedicate the host to these:
 
 ```
 kubectl label node minion3 app=compute
 ```
 
-Remember to create /var/lib/nova and /var/lib/libvirt on compute node.
+### Final host dependencies
 
-Deploy OpenStack services with the kolla-k8s tool the currently supported services include:
+There are a few temporary hacks in place to allow `nova-compute` run with full host privileges. 
 
-Persistent control:
- - zookeeper
- - mariadb
- - rabbitmq
- - glance
-  - glance-init
-  - glance-api
-  - glance-registry
-
-Non-persistent control:
- - keystone
-  - keystone-init
-  - keystone-db-sync
-  - keystone-api
- - nova
-  - nova-init
-  - nova-api
-  - nova-conductor
-  - nova-consoleauth
-  - nova-scheduler
-  - nova-novncproxy
- - neutron
-  - neutron-init
-  - neutron-server
- - horizon
-  - horizon-filebased
-  - horizon-memcached
- - network-node // As a k8s daemon-set
-
-Compute:
- - nova-compute // As a k8s daemon-set
+On all machines you must create the directories `/var/lib/nova` and `/var/lib/libvirt`:
 
 ```
-kolla-k8s --config-dir /etc/kolla-k8s/ run <<service_name>>
+mkdir -p /var/lib/nova /var/lib/libvirt
 ```
 
+Additionally, a resolv.conf located at /home/core/resolv.conf must exist on all nodes that you want to be hypervisor nodes.
+
+```
+$ cat /home/core/resolv.conf
+search default.svc.cluster.local svc.cluster.local cluster.local
+nameserver 10.200.0.50
+options ndots:5
+```
+
+## Deploy OpenStack services
+
+First you must deploy zookeeper:
+
+```
+kolla-k8s --config-dir /etc/kolla-k8s run zookeeper
+```
+
+Then you can run everything else:
+
+```
+kolla-k8s --config-dir /etc/kolla-k8s run all
+```
 ## Known issues
 
 Please refer to [issues](https://github.com/stackanetes/stackanetes/issues)
