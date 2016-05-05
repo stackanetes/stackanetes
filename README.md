@@ -36,13 +36,13 @@ Now, set the following variables in /etc/kolla-k8s/kolla-k8s.conf:
 
 ```
 [k8s]
-host = 10.10.10.10:8080 // k8s API
+host = localhost:8001 // k8s API, this can be easily be configured by using 'kubectl proxy'
 kubectl_path = /opt/bin/kubectl // absolute path to kubectl binary
 yml_dir_path = /var/lib/kolla-k8s/ // absolute path to dir with manifests
 [kolla]
 deployment_id = root
 [zookeeper]
-host = 10.10.10.11:30000 //zookeeper address
+host = 10.10.10.11:30000 // this will be the NodePort of the running zookeeper after you deploy it, per below
 ```
 
 In /etc/kolla-k8s/globals.yml change `enable_horizon` to yes and set the name of host interface for compute-node and network node:
@@ -119,6 +119,12 @@ Then you can run everything else:
 ```
 kolla-k8s --config-dir /etc/kolla-k8s run all
 ```
+
+If you run into errors, run with the --debug flag for additional information:
+```
+kolla-k8s --debug
+```
+
 ## Known issues
 
 Please refer to [issues](https://github.com/stackanetes/stackanetes/issues)
