@@ -59,6 +59,14 @@ OpenStack options
 
 enable_horizon: "yes"
 ```
+To generate kubernetes manifests please set following variables in ansible/group_vars/all.yml file:
+
+```
+dest_yml_files_dir: /var/lib/kolla-k8s #absolute path to dir with manifests
+docker_registry: quay.io/stackanetes # name of registry with openstack images 
+host_interface: eno1 # name of interface for nova-compute in hostNetwork mode
+image_version: 2.0.0 # check current version on quay.io/stackanetes
+```
 
 Run ansible-playbook to generate the configuration, ansible is only being used as a templating system:
 
