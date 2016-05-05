@@ -50,7 +50,7 @@ In /etc/kolla-k8s/globals.yml change `enable_horizon` to yes and set the name of
 ####################
 Networking options
 ####################
-network_interface: "eno2" // name of physical interface                  
+network_interface: "eth0" // name of interface inside container                  
 neutron_external_interface: "eno2" // name of physical interface
 
 ####################
