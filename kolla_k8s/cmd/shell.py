@@ -31,6 +31,7 @@ CONF = cfg.CONF
 CONF.import_group('k8s', 'kolla_k8s.config.k8s')
 CONF.import_group('kolla', 'kolla_k8s.config.kolla')
 CONF.import_group('profiles', 'kolla_k8s.config.profiles')
+CONF.import_group('service', 'kolla_k8s.config.service')
 CONF.import_group('zookeeper', 'kolla_k8s.config.zookeeper')
 
 log.register_options(CONF)

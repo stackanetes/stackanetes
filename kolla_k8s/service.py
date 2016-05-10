@@ -16,6 +16,7 @@ import os.path
 import subprocess
 import time
 
+from jinja2 import Environment, FileSystemLoader
 from oslo_config import cfg
 from oslo_log import log as logging
 from six.moves import configparser
@@ -30,8 +31,9 @@ from kolla_k8s import service_definition
 
 LOG = logging.getLogger()
 CONF = cfg.CONF
-CONF.import_group('kolla', 'kolla_k8s.config.kolla')
 CONF.import_group('k8s', 'kolla_k8s.config.k8s')
+CONF.import_group('kolla', 'kolla_k8s.config.kolla')
+CONF.import_group('service', 'kolla_k8s.config.service')
 
 
 def execute_if_enabled(f):
@@ -259,7 +261,7 @@ def run_service(service_name, service_dir, variables=None):
         service_list = ['neutron-openvswitch-agent', 'neutron-dhcp-agent',
                         'neutron-metadata-agent', 'openvswitch-vswitchd',
                         'openvswitch-db', 'neutron-l3-agent']
-    #TODO: load this service _list from config 
+    #TODO: load this service _list from config
     elif service_name == 'all':
         service_list = ['keystone-init', 'keystone-api', 'keystone-db-sync',
                         'glance-init', 'mariadb', 'rabbitmq', 'glance-registry',
@@ -288,10 +290,48 @@ def kill_service(service_name):
     _delete_instance(service_name)
 
 
+def _get_mount_path(service_name):
+    try:
+        path = CONF.service.get(service_name.replace("-", "_") + "_mpath")
+    except cfg.NoSuchOptError:
+        return {}
+    host_path, container_path = path.split(":")
+    return {"host_path": host_path,
+            "container_path": container_path}
+
+def _generate_generic_control(service_name):
+    variables = {
+         "service_name": service_name,
+         "service_type": service_name.split("-")[0],
+         "image_version": CONF.kolla.tag,
+         "memory": CONF.service.memory,
+         "ports": CONF.service.get(service_name.replace("-", "_") + "_ports")
+         }
+    variables.update(_get_mount_path(service_name))
+    template_environment = Environment(
+        autoescape=False,
+        loader=FileSystemLoader(CONF.k8s.yml_dir_path),
+        trim_blocks=False)
+    rendered_file = template_environment.get_template("generic-control.yml.j2").render(
+        variables)
+    with open(os.path.join(CONF.k8s.yml_dir_path, "temp.yml"), 'w') as stream:
+        try:
+            stream.write(rendered_file)
+            stream.close()
+        except IOError:
+            LOG.error("Cannot create file: {} ".format(
+                os.path.join(CONF.k8s.yml_dir_path, "temp.yml")))
+
+
 def _deploy_instance(service_name):
     if service_name == 'all':
         service_path = os.path.join(CONF.k8s.yml_dir_path, "")
+    elif service_name in CONF.service.control_services_list:
+        print "s"
+        _generate_generic_control(service_name)
+        service_path = os.path.join(CONF.k8s.yml_dir_path, "temp.yml")
     else:
+        print "else"
         service_path = os.path.join(CONF.k8s.yml_dir_path, service_name + ".yml")
     cmd = [CONF.k8s.kubectl_path]
     if CONF.k8s.host:
