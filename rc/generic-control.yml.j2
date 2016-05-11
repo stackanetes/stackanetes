@@ -5,6 +5,10 @@ kind: Service
 metadata:
   name: {{ service_name }}
 spec:
+{% if external_ip %}
+  externalIPs:
+    - {{ external_ip }}
+{% endif %}
   ports:
 {% for port in ports %}
   - name: {{ service_name.split('-')[0] }}{{ port }}

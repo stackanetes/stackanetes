@@ -15,7 +15,7 @@ from oslo_config import cfg
 CONTROL_SERVICES = ["glance-api", "glance-registry", "horizon-filebased",
                     "keystone-api", "neutron-server", "nova-api", "mariadb",
                     "nova-conductor", "nova-novncproxy", "nova-scheduler",
-                    "rabbitmq"]
+                    "rabbitmq", "horizon"]
 
 CONF = cfg.CONF
 service_opts = [
@@ -23,7 +23,7 @@ service_opts = [
     cfg.ListOpt('control_services_list', default=CONTROL_SERVICES),
     cfg.ListOpt('glance_api_ports', default=["9292"]),
     cfg.ListOpt('glance_registry_ports', default=["9191"]),
-    cfg.ListOpt('horizon_ports', default=["80, 443"]),
+    cfg.ListOpt('horizon_filebased_ports', default=["80, 443"]),
     cfg.ListOpt('keystone_api_ports', default=["5000", "35357"]),
     cfg.ListOpt('mariadb_ports', default=["3306"]),
     cfg.ListOpt('neutron_server_ports', default=["9696"]),
@@ -36,7 +36,9 @@ service_opts = [
     cfg.StrOpt('glance_api_mpath', default="/var/lib/glance:/var/lib/glance"),
     cfg.StrOpt('mariadb_mpath',
                default="/var/lib/openstack-mysql:/var/lib/mysql"),
-    cfg.StrOpt('rabbitmq_mpath', default=":/var/log/rabbitmq")
+    cfg.StrOpt('rabbitmq_mpath', default=":/var/log/rabbitmq"),
+    cfg.StrOpt('horizon_filebased_external_ip', default=None),
+    cfg.StrOpt('nova_novncproxy_external_ip', default=None),
 
 ]
 service_opt_group = cfg.OptGroup(name='service', title="service")

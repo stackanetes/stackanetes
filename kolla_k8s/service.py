@@ -300,6 +300,14 @@ def _get_mount_path(service_name):
             "container_path": container_path}
 
 
+def _get_external_ip(service_name):
+    try:
+        ip = CONF.service.get(service_name.replace("-", "_") + "_external_ip")
+    except cfg.NoSuchOptError:
+        return {}
+    return {"external_ip": ip}
+
+
 def _generate_generic_control(service_name):
     service_type = service_name.split("-")[0] if "-" in service_name else None
     variables = {
@@ -310,12 +318,15 @@ def _generate_generic_control(service_name):
          "ports": CONF.service.get(service_name.replace("-", "_") + "_ports")
          }
     variables.update(_get_mount_path(service_name))
+    variables.update(_get_external_ip(service_name))
+
     template_environment = Environment(
         autoescape=False,
         loader=FileSystemLoader(CONF.k8s.yml_dir_path),
         trim_blocks=False)
-    rendered_file = template_environment.get_template("generic-control.yml.j2").render(
-        variables)
+
+    rendered_file = template_environment.get_template(
+        "generic-control.yml.j2").render(variables)
     from tempfile import mkstemp
     _, file_path = mkstemp(suffix="generic")
     with open(os.path.join(file_path), 'w') as stream:
