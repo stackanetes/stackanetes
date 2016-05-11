@@ -315,7 +315,8 @@ def _generate_generic_control(service_name):
          "service_type": service_type,
          "image_version": CONF.kolla.tag,
          "memory": CONF.service.memory,
-         "ports": CONF.service.get(service_name.replace("-", "_") + "_ports")
+         "ports": CONF.service.get(service_name.replace("-", "_") + "_ports"),
+         "docker_registry": CONF.k8s.docker_registry,
          }
     variables.update(_get_mount_path(service_name))
     variables.update(_get_external_ip(service_name))

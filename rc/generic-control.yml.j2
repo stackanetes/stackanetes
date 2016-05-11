@@ -40,7 +40,7 @@ spec:
       containers:
         - name: {{ service_name }}
           command:
-          image: quay.io/stackanetes/centos-binary-{{ service_name }}:{{ image_version }}
+          image: {{ docker_registry }}/centos-binary-{{ service_name }}:{{ image_version }}
           env:
             - name: KOLLA_SKIP_EXTEND_START
               value: ""
