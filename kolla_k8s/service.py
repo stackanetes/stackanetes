@@ -363,10 +363,24 @@ def _deploy_instance(service_name):
 
 
 def _delete_instance(service_name):
-    server = "--server=" + CONF.k8s.host
+    cmd = [CONF.k8s.kubectl_path]
+    if CONF.k8s.host:
+        server = "--server=" + CONF.k8s.host
+        cmd.append(server)
+    if CONF.k8s.kubeconfig_path:
+        kubeconfig_path = "--kubeconfig=" + CONF.k8s.kubeconfig_path
+        cmd.append(kubeconfig_path)
+
     if service_name == 'all':
         service_path = CONF.k8s.yml_dir_path
+    elif service_name in CONF.service.control_services_list:
+        file_path = _generate_generic_control(service_name)
+        cmd.extend(["delete", "-f", file_path])
+        subprocess.call(cmd)
+        os.remove(file_path)
+        return
     else:
-        service_path = os.path.join(CONF.k8s.yml_dir_path, service_name + ".yml")
-    cmd = [CONF.k8s.kubectl_path, server, "delete", "-f", service_path]
+        service_path = os.path.join(CONF.k8s.yml_dir_path, service_name +
+                                    ".yml")
+    cmd.extend(["delete", "-f", service_path])
     subprocess.call(cmd)
