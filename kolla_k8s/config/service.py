@@ -20,7 +20,6 @@ CONTROL_SERVICES = ["glance-api", "glance-registry", "horizon-filebased",
 CONF = cfg.CONF
 service_opts = [
     cfg.StrOpt('memory', default='4092Mi'),
-    cfg.StrOpt('image_version', default='mitaka'),
     cfg.ListOpt('control_services_list', default=CONTROL_SERVICES),
     cfg.ListOpt('glance_api_ports', default=["9292"]),
     cfg.ListOpt('glance_registry_ports', default=["9191"]),
@@ -35,11 +34,12 @@ service_opts = [
     cfg.ListOpt('nova_scheduler_ports', default=[""]),
     cfg.ListOpt('rabbitmq_ports', default=["5672"]),
     cfg.StrOpt('glance_api_mpath', default="/var/lib/glance:/var/lib/glance"),
-    cfg.StrOpt('mariadb_mpath', default="/var/lib/mysql:/var/lib/mysql"),
+    cfg.StrOpt('mariadb_mpath',
+               default="/var/lib/openstack-mysql:/var/lib/mysql"),
     cfg.StrOpt('rabbitmq_mpath', default=":/var/log/rabbitmq")
 
 ]
-service_opt_group = cfg.OptGroup(name='service', title="test")
+service_opt_group = cfg.OptGroup(name='service', title="service")
 CONF.register_group(service_opt_group)
 CONF.register_cli_opts(service_opts, service_opt_group)
 CONF.register_opts(service_opts, service_opt_group)

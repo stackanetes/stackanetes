@@ -1,4 +1,4 @@
-{% if ports %}
+{% if ports != [''] %}
 ---
 apiVersion: v1
 kind: Service
@@ -6,8 +6,8 @@ metadata:
   name: {{ service_name }}
 spec:
   ports:
-{% for port in ports -%}
-  - name: {{ service_name }}{{ port }}
+{% for port in ports %}
+  - name: {{ service_name.split('-')[0] }}{{ port }}
     port: {{ port }}
     protocol: TCP
     targetPort: {{ port }}
@@ -58,11 +58,11 @@ spec:
 {%- else %}
               value: /root/infra/{{ service_name }}/{{ service_name }}
 {%- endif %}
-{%- if ports %}
+{%- if ports != [''] %}
           ports:
-{%- for port in ports -%}
-          - containerPort: {{ prot }}
-            name: {{ service_name }}
+{%- for port in ports %}
+          - containerPort: {{ port }}
+            name: {{ service_name.split('-')[0] }}{{ port }}
             protocol: TCP
 {%- endfor %}
 {%- endif %}

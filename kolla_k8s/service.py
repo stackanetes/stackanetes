@@ -299,10 +299,12 @@ def _get_mount_path(service_name):
     return {"host_path": host_path,
             "container_path": container_path}
 
+
 def _generate_generic_control(service_name):
+    service_type = service_name.split("-")[0] if "-" in service_name else None
     variables = {
          "service_name": service_name,
-         "service_type": service_name.split("-")[0],
+         "service_type": service_type,
          "image_version": CONF.kolla.tag,
          "memory": CONF.service.memory,
          "ports": CONF.service.get(service_name.replace("-", "_") + "_ports")
@@ -314,25 +316,18 @@ def _generate_generic_control(service_name):
         trim_blocks=False)
     rendered_file = template_environment.get_template("generic-control.yml.j2").render(
         variables)
-    with open(os.path.join(CONF.k8s.yml_dir_path, "temp.yml"), 'w') as stream:
+    from tempfile import mkstemp
+    _, file_path = mkstemp(suffix="generic")
+    with open(os.path.join(file_path), 'w') as stream:
         try:
             stream.write(rendered_file)
             stream.close()
+            return file_path
         except IOError:
-            LOG.error("Cannot create file: {} ".format(
-                os.path.join(CONF.k8s.yml_dir_path, "temp.yml")))
+            LOG.error("Cannot create file: {} ".format(file_path))
 
 
 def _deploy_instance(service_name):
-    if service_name == 'all':
-        service_path = os.path.join(CONF.k8s.yml_dir_path, "")
-    elif service_name in CONF.service.control_services_list:
-        print "s"
-        _generate_generic_control(service_name)
-        service_path = os.path.join(CONF.k8s.yml_dir_path, "temp.yml")
-    else:
-        print "else"
-        service_path = os.path.join(CONF.k8s.yml_dir_path, service_name + ".yml")
     cmd = [CONF.k8s.kubectl_path]
     if CONF.k8s.host:
         server = "--server=" + CONF.k8s.host
@@ -340,8 +335,19 @@ def _deploy_instance(service_name):
     if CONF.k8s.kubeconfig_path:
         kubeconfig_path = "--kubeconfig=" + CONF.k8s.kubeconfig_path
         cmd.append(kubeconfig_path)
+
+    if service_name == 'all':
+        service_path = os.path.join(CONF.k8s.yml_dir_path, "")
+    elif service_name in CONF.service.control_services_list:
+        file_path = _generate_generic_control(service_name)
+        cmd.extend(["create", "-f", file_path])
+        subprocess.call(cmd)
+        os.remove(file_path)
+        return
+    else:
+        service_path = os.path.join(CONF.k8s.yml_dir_path, service_name +
+                                    ".yml")
     cmd.extend(["create", "-f", service_path])
-    print cmd
     subprocess.call(cmd)
 
 
