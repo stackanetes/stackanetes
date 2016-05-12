@@ -259,13 +259,13 @@ def run_service(service_name, service_dir, variables=None):
         service_list = ['neutron-openvswitch-agent', 'neutron-dhcp-agent',
                         'neutron-metadata-agent', 'openvswitch-vswitchd',
                         'openvswitch-db', 'neutron-l3-agent']
-    #TODO: load this service _list from config 
+    #TODO: load this service _list from config
     elif service_name == 'all':
         service_list = ['keystone-init', 'keystone-api', 'keystone-db-sync',
                         'glance-init', 'mariadb', 'rabbitmq', 'glance-registry',
                         'glance-api', 'nova-init', 'nova-api', 'nova-scheduler',
                         'nova-conductor', 'nova-consoleauth', 'neutron-init',
-                        'neutron-server', 'horizon', 'nova-compute',
+                        'neutron-server', 'horizon-filebased', 'nova-compute',
                         'nova-libvirt', 'openvswitch-vswitchd',
                         'neutron-openvswitch-agent', 'openvswitch-db',
                         'neutron-dhcp-agent', 'neutron-metadata-agent',

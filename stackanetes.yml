@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: stackanetes
+  name: stackanetes-deployer
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: stackanetes-base
+    #insert a valid image name
+    image: stackanetes-deployer
+    env:
+    - name: dest_yml_files_dir
+      value: "/var/lib/kolla-k8s"
+    - name: NEUTRON_HOSTIF
+      value: "eno2"
+    - name: KOLLA_K8s_YMLPATH
+      value: "/var/lib/kolla-k8s"
+    - name: host_interface
+      value: "eno2"
+    - name: KUBECONFIG
+      value: ""
+    - name: KUBECONFIG_CONTEXT
+      value: ""
+    - name: KUBEHOST
+      value: ""
+    - name: ZK_HOST
+      value: "zookeeper:2181"
