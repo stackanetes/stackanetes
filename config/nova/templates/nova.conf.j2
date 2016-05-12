@@ -11,9 +11,7 @@ osapi_compute_workers = 8
 
 workers = 8
 
-metadata_listen = {{ get_ip_address() }}
-metadata_listen_port = {{ nova_metadata_port }}
-metadata_workers = 8
+enabled_apis = osapi_compute
 
 ec2_listen = {{ get_ip_address() }}
 ec2_listen_port = {{ nova_api_ec2_port }}

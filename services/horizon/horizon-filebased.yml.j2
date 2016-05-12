@@ -11,7 +11,7 @@ service:
   daemon:
     command: /usr/local/bin/kolla_apache_wrapper.sh
     dependencies:
-      - path: horizon/bootstrap
+      - path: horizon-filebased/bootstrap
     files:
       apache_wrapper.sh:
         source: config/common/apache_wrapper.sh.j2

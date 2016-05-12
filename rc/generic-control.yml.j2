@@ -5,17 +5,17 @@ kind: Service
 metadata:
   name: {{ service_name }}
 spec:
-{% if external_ip %}
+    {%- if external_ip %}
   externalIPs:
     - {{ external_ip }}
-{% endif %}
+    {%- endif %}
   ports:
-{% for port in ports %}
+    {%- for port in ports %}
   - name: {{ service_name.split('-')[0] }}{{ port }}
     port: {{ port }}
     protocol: TCP
     targetPort: {{ port }}
-{% endfor %}
+    {%- endfor %}
   selector:
     app: {{ service_name }}
 {%- endif %}
@@ -64,25 +64,25 @@ spec:
 {%- endif %}
 {%- if ports != [''] %}
           ports:
-{%- for port in ports %}
+    {%- for port in ports %}
           - containerPort: {{ port }}
             name: {{ service_name.split('-')[0] }}{{ port }}
             protocol: TCP
-{%- endfor %}
+    {%- endfor %}
 {%- endif %}
           resources:
             limits:
               memory: {{ memory }}
-{% if container_path %}
+{%- if container_path %}
           volumeMounts:
             - mountPath: {{ container_path }}
               name: {{ service_name }}
       volumes:
         - name: {{ service_name }}
-{%- if host_path %}
+    {%- if host_path %}
           hostPath:
             path: {{ host_path }}
-{%- else %}
+    {%- else %}
           emptyDir: {}
-{%- endif %}
+    {%- endif %}
 {%- endif %}

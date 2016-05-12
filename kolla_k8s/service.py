@@ -347,18 +347,21 @@ def _deploy_instance(service_name):
     if CONF.k8s.kubeconfig_path:
         kubeconfig_path = "--kubeconfig=" + CONF.k8s.kubeconfig_path
         cmd.append(kubeconfig_path)
+    if CONF.k8s.context:
+        context = "--context=" + CONF.k8s.context
+        cmd.append(context)
 
-    if service_name == 'all':
-        service_path = os.path.join(CONF.k8s.yml_dir_path, "")
-    elif service_name in CONF.service.control_services_list:
+    if service_name in CONF.service.control_services_list:
         file_path = _generate_generic_control(service_name)
         cmd.extend(["create", "-f", file_path])
         subprocess.call(cmd)
         os.remove(file_path)
         return
-    else:
-        service_path = os.path.join(CONF.k8s.yml_dir_path, service_name +
-                                    ".yml")
+
+    service_path = os.path.join(CONF.k8s.yml_dir_path, service_name + ".yml")
+    if service_name == 'all':
+        service_path = os.path.join(CONF.k8s.yml_dir_path, "")
+
     cmd.extend(["create", "-f", service_path])
     subprocess.call(cmd)
 
@@ -371,17 +374,20 @@ def _delete_instance(service_name):
     if CONF.k8s.kubeconfig_path:
         kubeconfig_path = "--kubeconfig=" + CONF.k8s.kubeconfig_path
         cmd.append(kubeconfig_path)
+    if CONF.k8s.context:
+        context = "--context=" + CONF.k8s.context
+        cmd.append(context)
 
-    if service_name == 'all':
-        service_path = CONF.k8s.yml_dir_path
-    elif service_name in CONF.service.control_services_list:
+    if service_name in CONF.service.control_services_list:
         file_path = _generate_generic_control(service_name)
         cmd.extend(["delete", "-f", file_path])
         subprocess.call(cmd)
         os.remove(file_path)
         return
-    else:
-        service_path = os.path.join(CONF.k8s.yml_dir_path, service_name +
-                                    ".yml")
+
+    service_path = os.path.join(CONF.k8s.yml_dir_path, service_name + ".yml")
+    if service_name == 'all':
+        service_path = CONF.k8s.yml_dir_path
+
     cmd.extend(["delete", "-f", service_path])
     subprocess.call(cmd)
