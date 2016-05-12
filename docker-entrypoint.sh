@@ -42,18 +42,19 @@ echo Executing ansible playbook
 cd ansible
 ansible-playbook site.yml
 # there seems to be an extra horizon yml file that shouldn't get executed with "kolla-k8s run all"
-while [ true  ]
-do
-    sleep 2
-    zookeeper_service_endpoints=$(kubectl describe svc zookeeper |awk '/Endpoint/ {{print $2}}' |head -1)
-    zookeeper_endpoints=(${zookeeper_service_endpoints//,/ })
-    if [ ${#zookeeper_endpoints[@]} -eq 3 ]; then
-        break
-    fi
-done
 
 echo Deploying Zookeeper
 kolla-k8s --config-dir /etc/kolla-k8s run zookeeper
+
+while [ true  ]                                                                                                                                                                                
+do                                                                                                                                                                                             
+    sleep 2                                                                                                                                                                                    
+    zookeeper_service_endpoints=$(kubectl describe svc zookeeper |awk '/Endpoint/ {{print $2}}' |head -1)                                                                                      
+    zookeeper_endpoints=(${zookeeper_service_endpoints//,/ })                                                                                                                                  
+    if [ ${#zookeeper_endpoints[@]} -eq 3 ]; then                                                                                                                                              
+        break                                                                                                                                                                                  
+    fi                                                                                                                                                                                         
+done 
 
 echo Deploying stackenetes
 kolla-k8s --config-dir /etc/kolla-k8s run all --debug
