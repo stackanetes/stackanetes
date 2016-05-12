@@ -41,7 +41,6 @@ sed -i "s@image_version: 2.0.0@image_version: $image_version@g"  /stackenetes/an
 echo Executing ansible playbook
 cd ansible
 ansible-playbook site.yml
-# there seems to be an extra horizon yml file that shouldn't get executed with "kolla-k8s run all"
 
 echo Deploying Zookeeper
 kolla-k8s --config-dir /etc/kolla-k8s run zookeeper
