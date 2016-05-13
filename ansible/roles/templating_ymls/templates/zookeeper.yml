@@ -62,8 +62,6 @@ spec:
 
       echo "syncLimit=6" >> /opt/zookeeper/conf/zoo.cfg
 
-      sleep 20
-
       /opt/zookeeper/bin/zkServer.sh start-foreground
 
     ports:
@@ -76,6 +74,9 @@ spec:
     - containerPort: 3888
       name: zookeeper3
       protocol: TCP
+    readinessProbe:
+      tcpSocket:
+        port: 2181
   restartPolicy: Never
   nodeSelector:
     app: persistent-control
@@ -144,8 +145,6 @@ spec:
 
       echo "syncLimit=6" >> /opt/zookeeper/conf/zoo.cfg
 
-      sleep 20
-
       /opt/zookeeper/bin/zkServer.sh start-foreground
 
     ports:
@@ -158,6 +157,9 @@ spec:
     - containerPort: 3888
       name: zookeeper3
       protocol: TCP
+    readinessProbe:
+      tcpSocket:
+        port: 2181
   restartPolicy: Never
   nodeSelector:
     app: persistent-control
@@ -226,8 +228,6 @@ spec:
 
       echo "syncLimit=6" >> /opt/zookeeper/conf/zoo.cfg
 
-      sleep 20
-
       /opt/zookeeper/bin/zkServer.sh start-foreground
 
     ports:
@@ -240,6 +240,9 @@ spec:
     - containerPort: 3888
       name: zookeeper3
       protocol: TCP
+    readinessProbe:
+      tcpSocket:
+        port: 2181
   restartPolicy: Never
   nodeSelector:
     app: persistent-control

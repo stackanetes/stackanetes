@@ -135,7 +135,24 @@ If you run into errors, run with the --debug flag for additional information:
 ```
 kolla-k8s --debug
 ```
+## Deploy Stackanetes via stackanetes-deployer POD
 
+To install Stackanetes vis stackanetes-deployer POD you still have to label your nodes
+and finish `Final host dependencies` step.
+
+in `stackanetes-deployer.yml` change `HOST_INTERFACE` environment variable:
+
+```
+    env:
+    - name: HOST_INTERFACE
+      value: "eno2" # name of physical interface for compute node
+
+```
+
+then run:
+```
+kubectl create -f stackanetes-deployer.yml
+```
 ## Known issues
 
 Please refer to [issues](https://github.com/stackanetes/stackanetes/issues)
