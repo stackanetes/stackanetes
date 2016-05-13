@@ -23,7 +23,9 @@ network_opts = [
                help='NIC connected to the public network'),
     cfg.BoolOpt('ipv6',
                 default=False,
-                help='Use IPv6 protocol')
+                help='Use IPv6 protocol'),
+    cfg.StrOpt('host_interface',
+               default='eno1'),
 ]
 network_opt_group = cfg.OptGroup(name='network',
                                  title='Options for network interfaces')

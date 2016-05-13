@@ -21,6 +21,7 @@ from oslo_config import cfg
 from oslo_log import log as logging
 from six.moves import configparser
 from six.moves import cStringIO
+from tempfile import mkstemp
 import yaml
 
 from kolla_k8s.common import file_utils
@@ -35,6 +36,17 @@ CONF.import_group('k8s', 'kolla_k8s.config.k8s')
 CONF.import_group('kolla', 'kolla_k8s.config.kolla')
 CONF.import_group('service', 'kolla_k8s.config.service')
 
+# TODO: load this services lists from config
+COMPUTE_SERVICES = ['nova-compute', 'nova-libvirt', 'openvswitch-vswitchd',
+                    'neutron-openvswitch-agent', 'openvswitch-db']
+NETWORK_SERVICES = ['neutron-openvswitch-agent', 'neutron-dhcp-agent',
+                    'neutron-metadata-agent', 'openvswitch-vswitchd',
+                    'openvswitch-db', 'neutron-l3-agent']
+OTHER_SERVICES = ['keystone-init', 'keystone-api', 'keystone-db-sync',
+                  'glance-init', 'mariadb', 'rabbitmq', 'glance-registry',
+                  'glance-api', 'nova-init', 'nova-api', 'nova-scheduler',
+                  'nova-conductor', 'nova-consoleauth', 'neutron-init',
+                  'neutron-server', 'horizon-filebased']
 
 def execute_if_enabled(f):
     """Decorator for executing methods only if runner is enabled."""
@@ -254,31 +266,33 @@ def _load_variables_from_zk(zk):
 ##################
 def run_service(service_name, service_dir, variables=None):
     # generate zk variables
-    if service_name == 'nova-compute':
-        service_list = ['nova-compute', 'nova-libvirt', 'openvswitch-vswitchd',
-                        'neutron-openvswitch-agent', 'openvswitch-db']
+    if service_name == 'compute-node':
+        service_list = COMPUTE_SERVICES
     elif service_name == 'network-node':
-        service_list = ['neutron-openvswitch-agent', 'neutron-dhcp-agent',
-                        'neutron-metadata-agent', 'openvswitch-vswitchd',
-                        'openvswitch-db', 'neutron-l3-agent']
-    #TODO: load this service _list from config
+        service_list = NETWORK_SERVICES
+
     elif service_name == 'all':
-        service_list = ['keystone-init', 'keystone-api', 'keystone-db-sync',
-                        'glance-init', 'mariadb', 'rabbitmq', 'glance-registry',
-                        'glance-api', 'nova-init', 'nova-api', 'nova-scheduler',
-                        'nova-conductor', 'nova-consoleauth', 'neutron-init',
-                        'neutron-server', 'horizon', 'nova-compute',
-                        'nova-libvirt', 'openvswitch-vswitchd',
-                        'neutron-openvswitch-agent', 'openvswitch-db',
-                        'neutron-dhcp-agent', 'neutron-metadata-agent',
-                        'openvswitch-db', 'neutron-l3-agent', 'nova-novncproxy']
+        service_list = list()
+        service_list.extend(COMPUTE_SERVICES)
+        service_list.extend(NETWORK_SERVICES)
+        service_list.extend(OTHER_SERVICES)
     elif service_name == 'zookeeper':
-        service_list = []
+        service_list = list()
     else:
-        service_list = [service_name]
+        raise NotImplementedError("Service {} is not supported".format(
+            service_name))
     for service in service_list:
         _build_runner(service, service_dir, variables=variables)
-    _deploy_instance(service_name)
+
+    if service_name == "all":
+        service_list = list()
+        service_list.extend(OTHER_SERVICES)
+        service_list.extend(["compute-node", "network-node"])
+    else:
+        service_list = [service_name]
+
+    for service in service_list:
+        _manage_instance(service, "create")
 
 
 def kill_service(service_name):
@@ -287,7 +301,15 @@ def kill_service(service_name):
             status_node = os.path.join('kolla', CONF.kolla.deployment_id,
                                        'status')
             zk.delete(status_node, recursive=True)
-    _delete_instance(service_name)
+    if service_name == "all":
+        service_list = list()
+        service_list.extend(OTHER_SERVICES)
+        service_list.extend(["compute-node", "network-node"])
+    else:
+        service_list = [service_name]
+
+    for service in service_list:
+        _manage_instance(service, "delete")
 
 
 def _get_mount_path(service_name):
@@ -308,38 +330,70 @@ def _get_external_ip(service_name):
     return {"external_ip": ip}
 
 
-def _generate_generic_control(service_name):
-    service_type = service_name.split("-")[0] if "-" in service_name else None
-    variables = {
-         "service_name": service_name,
-         "service_type": service_type,
-         "image_version": CONF.kolla.tag,
-         "memory": CONF.service.memory,
-         "ports": CONF.service.get(service_name.replace("-", "_") + "_ports"),
-         "docker_registry": CONF.k8s.docker_registry,
-         }
-    variables.update(_get_mount_path(service_name))
-    variables.update(_get_external_ip(service_name))
-
+def _render_yml(variables, template_name="generic-control.yml.j2"):
     template_environment = Environment(
         autoescape=False,
         loader=FileSystemLoader(CONF.k8s.yml_dir_path),
         trim_blocks=False)
 
     rendered_file = template_environment.get_template(
-        "generic-control.yml.j2").render(variables)
-    from tempfile import mkstemp
+        template_name).render(variables)
     _, file_path = mkstemp(suffix="generic")
     with open(os.path.join(file_path), 'w') as stream:
         try:
             stream.write(rendered_file)
             stream.close()
-            return file_path
         except IOError:
             LOG.error("Cannot create file: {} ".format(file_path))
+    return file_path
 
 
-def _deploy_instance(service_name):
+def _generate_generic_control(service_name):
+    service_type = service_name.split("-")[0] if "-" in service_name else None
+    variables = {
+        "service_name": service_name,
+        "service_type": service_type,
+        "image_version": CONF.kolla.tag,
+        "memory": CONF.service.memory,
+        "ports": CONF.service.get(service_name.replace("-", "_") + "_ports"),
+        "docker_registry": CONF.k8s.docker_registry,
+        }
+    variables.update(_get_mount_path(service_name))
+    variables.update(_get_external_ip(service_name))
+    return _render_yml(variables)
+
+
+def _generate_generic_init(service_name):
+    variables = {
+        "service": service_name.split("-")[0],
+        "service_name": service_name,
+        "image_version": CONF.kolla.tag,
+        "docker_registry": CONF.k8s.docker_registry,
+        }
+    return _render_yml(variables, "generic-init.yml.j2")
+
+
+def _generate_generic_network_node():
+    variables = {
+        "image_version": CONF.kolla.tag,
+        "docker_registry": CONF.k8s.docker_registry,
+        "memory": CONF.service.memory,
+        "host_interface": CONF.network.host_interface,
+        }
+    return _render_yml(variables, "generic-network-node.yml.j2")
+
+
+def _generate_generic_compute_node():
+    variables = {
+        "image_version": CONF.kolla.tag,
+        "docker_registry": CONF.k8s.docker_registry,
+        "memory": CONF.service.memory,
+        "host_interface": CONF.network.host_interface,
+        }
+    return _render_yml(variables, "generic-compute-node.yml.j2")
+
+
+def _manage_instance(service_name, cmd_type):
     cmd = [CONF.k8s.kubectl_path]
     if CONF.k8s.host:
         server = "--server=" + CONF.k8s.host
@@ -351,43 +405,21 @@ def _deploy_instance(service_name):
         context = "--context=" + CONF.k8s.context
         cmd.append(context)
 
-    if service_name in CONF.service.control_services_list:
-        file_path = _generate_generic_control(service_name)
-        cmd.extend(["create", "-f", file_path])
+    if service_name == "zookeeper":
+        file_path = os.path.join(CONF.k8s.yml_dir_path, "zookeeper.yml")
+        cmd.extend([cmd_type, "-f", file_path])
         subprocess.call(cmd)
-        os.remove(file_path)
         return
-
-    service_path = os.path.join(CONF.k8s.yml_dir_path, service_name + ".yml")
-    if service_name == 'all':
-        service_path = os.path.join(CONF.k8s.yml_dir_path, "")
-
-    cmd.extend(["create", "-f", service_path])
-    subprocess.call(cmd)
-
-
-def _delete_instance(service_name):
-    cmd = [CONF.k8s.kubectl_path]
-    if CONF.k8s.host:
-        server = "--server=" + CONF.k8s.host
-        cmd.append(server)
-    if CONF.k8s.kubeconfig_path:
-        kubeconfig_path = "--kubeconfig=" + CONF.k8s.kubeconfig_path
-        cmd.append(kubeconfig_path)
-    if CONF.k8s.context:
-        context = "--context=" + CONF.k8s.context
-        cmd.append(context)
 
     if service_name in CONF.service.control_services_list:
         file_path = _generate_generic_control(service_name)
-        cmd.extend(["delete", "-f", file_path])
-        subprocess.call(cmd)
-        os.remove(file_path)
-        return
-
-    service_path = os.path.join(CONF.k8s.yml_dir_path, service_name + ".yml")
-    if service_name == 'all':
-        service_path = CONF.k8s.yml_dir_path
-
-    cmd.extend(["delete", "-f", service_path])
+    elif service_name in CONF.service.init_services_list:
+        file_path = _generate_generic_init(service_name)
+    elif service_name == "compute-node":
+        file_path = _generate_generic_compute_node()
+    elif service_name == "network-node":
+        file_path = _generate_generic_network_node()
+    cmd.extend([cmd_type, "-f", file_path])
     subprocess.call(cmd)
+    os.remove(file_path)
+

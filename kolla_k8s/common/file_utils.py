@@ -65,9 +65,6 @@ def find_base_dir():
             return base_dir
         else:
             return get_src_dir()
-    raise exception.KollaDirNotFoundException(
-        'I do not know where your Kolla directory is'
-    )
 
 
 def find_config_file(filename):

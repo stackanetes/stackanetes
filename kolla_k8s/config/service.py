@@ -15,12 +15,15 @@ from oslo_config import cfg
 CONTROL_SERVICES = ["glance-api", "glance-registry", "horizon-filebased",
                     "keystone-api", "neutron-server", "nova-api", "mariadb",
                     "nova-conductor", "nova-novncproxy", "nova-scheduler",
-                    "rabbitmq", "horizon"]
+                    "rabbitmq", "horizon", "nova-consoleauth"]
+INIT_SERVICES = ["glance-init", "keystone-init", "keystone-db-sync",
+                 "nova-init", "neutron-init"]
 
 CONF = cfg.CONF
 service_opts = [
     cfg.StrOpt('memory', default='4092Mi'),
     cfg.ListOpt('control_services_list', default=CONTROL_SERVICES),
+    cfg.ListOpt('init_services_list', default=INIT_SERVICES),
     cfg.ListOpt('glance_api_ports', default=["9292"]),
     cfg.ListOpt('glance_registry_ports', default=["9191"]),
     cfg.ListOpt('horizon_filebased_ports', default=["80, 443"]),
