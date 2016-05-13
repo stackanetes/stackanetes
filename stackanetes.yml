@@ -11,13 +11,11 @@ spec:
     #insert a valid image name
     image: stackanetes-deployer
     env:
-    - name: dest_yml_files_dir
+    - name: DEST_YML_FILES_DIR
       value: "/var/lib/kolla-k8s"
-    - name: NEUTRON_HOSTIF
-      value: "eno2"
-    - name: KOLLA_K8s_YMLPATH
+    - name: KOLLA_K8S_YMLPATH
       value: "/var/lib/kolla-k8s"
-    - name: host_interface
+    - name: HOST_INTERFACE
       value: "eno2"
     - name: KUBECONFIG
       value: ""
