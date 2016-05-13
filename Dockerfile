@@ -1,13 +1,9 @@
 FROM ubuntu:14.04
 
-env KUBEHOST localhost:8001
-env KOLLA_K8S_YMLPATH /stackenetes/rc
-env ZK_HOST zookeeper:30000 
+env KOLLA_K8S_YMLPATH /var/lib/kolla-k8s
+env ZK_HOST zookeeper:2181
 env NEUTRON_CNI eth0
-env NEUTRON_HOSTIF eno2
-env KUBECONFIG /stackenetes/kubeconfig
-env KUBECONFIG_CONTEXT stackpoint
-env DEST_YML_FILES_DIR /stackenetes/rc
+env DEST_YML_FILES_DIR /var/lib/kolla-k8s
 env DOCKER_REGISTRY quay.io/stackanetes
 env HOST_INTERFACE eno1
 env IMAGE_VERSION 2.0.0
