@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: stackanetes
+  name: stackanetes-deployer
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: stackanetes-base
+    #insert a valid image name
+    image: stackanetes-deployer
+    env:
+    - name: HOST_INTERFACE
+      value: "eno2" #name of physical interface for compute-node
+

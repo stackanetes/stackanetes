@@ -270,7 +270,6 @@ def run_service(service_name, service_dir, variables=None):
         service_list = COMPUTE_SERVICES
     elif service_name == 'network-node':
         service_list = NETWORK_SERVICES
-
     elif service_name == 'all':
         service_list = list()
         service_list.extend(COMPUTE_SERVICES)

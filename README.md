@@ -2,6 +2,9 @@
 
 ## Overview
 
+Stackanetes is heavily based on kolla-mesos (project abandoned).
+Link to base [kolla repo](https://github.com/openstack/kolla)
+
 Stackanetes is an easy way to deploy OpenStack on Kubernetes. This includes the control plane (keystone, nova, etc) and a "nova compute" container that runs virtual machines (VMs) under a hypervisor.
 
 ***_This code is heavily experimental and should only be used for demo purposes. The architecture of this project will change significantly._***
@@ -115,7 +118,24 @@ If you run into errors, run with the --debug flag for additional information:
 ```
 kolla-k8s --debug
 ```
+## Deploy Stackanetes via stackanetes-deployer POD
 
+To install Stackanetes vis stackanetes-deployer POD you still have to label your nodes
+and finish `Final host dependencies` step.
+
+in `stackanetes-deployer.yml` change `HOST_INTERFACE` environment variable:
+
+```
+    env:
+    - name: HOST_INTERFACE
+      value: "eno2" # name of physical interface for compute node
+
+```
+
+then run:
+```
+kubectl create -f stackanetes-deployer.yml
+```
 ## Known issues
 
 Please refer to [issues](https://github.com/stackanetes/stackanetes/issues)
