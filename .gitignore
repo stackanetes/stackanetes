@@ -26,8 +26,6 @@ _testmain.go
 *.test
 *.prof
 
-AUTHORS
-ChangeLog
 build/
 etc/kolla-k8s.conf.sample
 ansible/site.retry

@@ -15,14 +15,14 @@ import os
 from oslo_config import cfg
 import yaml
 
-from kolla_k8s.service import _get_mount_path, _get_external_ip, _render_yml,\
-    _generate_generic_control, _generate_generic_init, \
-    _generate_generic_network_node, _generate_generic_compute_node
+from kolla_k8s.service import (_get_mount_path, _get_external_ip, _render_yml,
+    _generate_generic_control, _generate_generic_init,
+    _generate_generic_network_node, _generate_generic_compute_node)
 
 RC_PATH = os.path.join(os.path.dirname(__file__), "../../rc")
 
 
-class test_get_mount_path(unittest.TestCase):
+class TestGetMountPath(unittest.TestCase):
 
     @mock.patch('kolla_k8s.service.CONF.service.get')
     def test_both_path_are_specifed(self, mock_conf):
@@ -64,7 +64,7 @@ class test_get_mount_path(unittest.TestCase):
         mock_conf.assert_called_with("foo_bar_mpath")
 
 
-class test_get_external_ip(unittest.TestCase):
+class TestGetExternalIp(unittest.TestCase):
 
     @mock.patch('kolla_k8s.service.CONF.service.get')
     def test_external_ip_exist(self, mock_conf):
@@ -90,7 +90,7 @@ class test_get_external_ip(unittest.TestCase):
         mock_conf.assert_called_with("foo_bar_external_ip")
 
 
-class test_render_yml(unittest.TestCase):
+class TestRenderYml(unittest.TestCase):
 
     def setUp(self):
         self.control_variables = {
@@ -125,10 +125,8 @@ class test_render_yml(unittest.TestCase):
         yml_path = _render_yml(self.control_variables)
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/one_port.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare services
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -145,10 +143,8 @@ class test_render_yml(unittest.TestCase):
         yml_path = _render_yml(self.control_variables)
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/multiple_ports.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare services
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -165,10 +161,8 @@ class test_render_yml(unittest.TestCase):
         yml_path = _render_yml(self.control_variables)
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/external_ip.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare services
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -185,10 +179,8 @@ class test_render_yml(unittest.TestCase):
         yml_path = _render_yml(self.control_variables)
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/external_ip.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare services
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -206,10 +198,8 @@ class test_render_yml(unittest.TestCase):
         yml_path = _render_yml(self.control_variables)
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/no_service_type.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare services
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -226,10 +216,8 @@ class test_render_yml(unittest.TestCase):
         yml_path = _render_yml(self.control_variables)
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/no_ports.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare ReplicationController
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -245,10 +233,8 @@ class test_render_yml(unittest.TestCase):
         yml_path = _render_yml(self.control_variables)
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/mount_path.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare ReplicationController
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -264,10 +250,8 @@ class test_render_yml(unittest.TestCase):
         yml_path = _render_yml(self.control_variables)
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/emptyDir.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare ReplicationController
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -281,10 +265,8 @@ class test_render_yml(unittest.TestCase):
         yml_path = _render_yml(self.init_variables, "generic-init.yml.j2")
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/simple-init.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare pod
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -299,10 +281,8 @@ class test_render_yml(unittest.TestCase):
                                "generic-compute-node.yml.j2")
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/compute-node.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare pod
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -317,10 +297,8 @@ class test_render_yml(unittest.TestCase):
                                "generic-network-node.yml.j2")
         with open(yml_path, 'r') as stream:
             generated_files = yaml.load_all(stream.read())
-            stream.close()
         with open("./fake_templates/network-node.yml", 'r') as stream:
             expected_files = yaml.load_all(stream.read())
-            stream.close()
         try:
             # compare pod
             self.assertEqual(expected_files.next(), generated_files.next())
@@ -329,7 +307,7 @@ class test_render_yml(unittest.TestCase):
             self.fail("Incorrect type of generated yml")
 
 
-class test_generate_generic_control(unittest.TestCase):
+class TestGenerateGenericControl(unittest.TestCase):
     @mock.patch('kolla_k8s.service.CONF.kolla.tag', "test_image")
     @mock.patch('kolla_k8s.service.CONF.service.memory', "4Mi")
     @mock.patch('kolla_k8s.service.CONF.service.get')
@@ -354,7 +332,7 @@ class test_generate_generic_control(unittest.TestCase):
         mock_render.assert_called_once_with(expected_dir)
 
 
-class test_generate_generic_init(unittest.TestCase):
+class TestGenerateGenericInit(unittest.TestCase):
     @mock.patch('kolla_k8s.service.CONF.kolla.tag', "test_image")
     @mock.patch('kolla_k8s.service.CONF.k8s.docker_registry', "test_registry")
     @mock.patch('kolla_k8s.service._render_yml')
@@ -371,7 +349,7 @@ class test_generate_generic_init(unittest.TestCase):
                                             "generic-init.yml.j2")
 
 
-class test_generate_generic_network_node(unittest.TestCase):
+class TestGenerateGenericNetworkNode(unittest.TestCase):
     @mock.patch('kolla_k8s.service.CONF.kolla.tag', "test_image")
     @mock.patch('kolla_k8s.service.CONF.k8s.docker_registry', "test_registry")
     @mock.patch('kolla_k8s.service.CONF.service.memory', "4Mi")
@@ -390,7 +368,7 @@ class test_generate_generic_network_node(unittest.TestCase):
                                             "generic-network-node.yml.j2")
 
 
-class test_generate_generic_compute_node(unittest.TestCase):
+class TestGenerateGenericComputeNode(unittest.TestCase):
     @mock.patch('kolla_k8s.service.CONF.kolla.tag', "test_image")
     @mock.patch('kolla_k8s.service.CONF.k8s.docker_registry', "test_registry")
     @mock.patch('kolla_k8s.service.CONF.service.memory', "4Mi")
@@ -409,7 +387,7 @@ class test_generate_generic_compute_node(unittest.TestCase):
                                             "generic-compute-node.yml.j2")
 
 
-class test_get_mount_path(unittest.TestCase):
+class TestGetNountPath(unittest.TestCase):
     @mock.patch('kolla_k8s.service.CONF.service.get')
     def test_both_paths(self, mock_get):
         mock_get.return_value = "/foo/bar/host:/foo/bar/container"

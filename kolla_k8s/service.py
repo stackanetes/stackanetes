@@ -340,11 +340,8 @@ def _render_yml(variables, template_name="generic-control.yml.j2"):
         template_name).render(variables)
     _, file_path = mkstemp(suffix="generic")
     with open(os.path.join(file_path), 'w') as stream:
-        try:
-            stream.write(rendered_file)
-            stream.close()
-        except IOError:
-            LOG.error("Cannot create file: {} ".format(file_path))
+        stream.write(rendered_file)
+
     return file_path
 
 

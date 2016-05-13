@@ -65,6 +65,7 @@ def find_base_dir():
             return base_dir
         else:
             return get_src_dir()
+    return '/usr/share/kolla-k8s'
 
 
 def find_config_file(filename):
