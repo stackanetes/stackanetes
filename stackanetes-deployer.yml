@@ -9,11 +9,7 @@ spec:
   containers:
   - name: stackanetes-base
     #insert a valid image name
-    image: dtadrzak/deploter
-    command:
-    -  sleep
-    - inf
+    image: stackanetes-deployer
     env:
     - name: HOST_INTERFACE
       value: "eno2" #name of physical interface for compute-node
-
