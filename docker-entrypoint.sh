@@ -3,16 +3,16 @@ set -eo pipefail
 echo Testing kubectl
 if [[ ! $(kubectl get nodes) ]] ; then 
 	echo Cannot connect to Kubernetes, please make sure you have the correct kubeconfig
-	exit ;	
+	exit 1;
 fi
 if [[ ! $(kubectl get nodes -o json | grep controller ) ]] ; then
 	echo Cannot find a node with app=persistent-control label 
-	exit ;	
+	exit 1;
 fi
 
 if [[ ! $(kubectl get nodes -o json | grep compute ) ]] ; then 
 	echo Cannot find a node with app=compute label 
-	exit ;	
+	exit 1;
 fi
 
 echo Modifying kolla-k8s.conf

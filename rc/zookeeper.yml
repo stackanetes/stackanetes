@@ -160,7 +160,7 @@ spec:
       protocol: TCP
   restartPolicy: Never
   nodeSelector:
-    app: persistent-control
+    app: controller
 ---
 
 apiVersion: v1
@@ -242,7 +242,7 @@ spec:
       protocol: TCP
   restartPolicy: Never
   nodeSelector:
-    app: persistent-control
+    app: controller
 ---
 
 apiVersion: v1
