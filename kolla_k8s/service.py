@@ -340,7 +340,6 @@ def _render_yml(variables, template_name="generic-control.yml.j2"):
     _, file_path = mkstemp(suffix="generic")
     with open(os.path.join(file_path), 'w') as stream:
         stream.write(rendered_file)
-
     return file_path
 
 
