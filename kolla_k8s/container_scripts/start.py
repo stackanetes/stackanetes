@@ -348,8 +348,6 @@ def render_template(zk, templ, variables, var_names):
                 LOG.error('missing required variable %s', var)
 
             variables[var] = value.decode('utf-8')
-    #print "templ = {}".format(templ)
-    #print "variables = {}".format(variables)
     return jinja_render(templ, variables)
 
 

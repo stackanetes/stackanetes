@@ -2,6 +2,7 @@
 *.o
 *.a
 *.so
+*.pyc
 
 # Folders
 _obj
@@ -12,6 +13,7 @@ _test
 *.[568vq]
 [568vq].out
 
+*.egg-info
 *.cgo1.go
 *.cgo2.c
 _cgo_defun.c
@@ -24,8 +26,6 @@ _testmain.go
 *.test
 *.prof
 
-kolla_k8s/AUTHORS
-kolla_k8s/ChangeLog
-kolla_k8s/build/
-kolla_k8s/etc/kolla-k8s.conf.sample
+build/
+etc/kolla-k8s.conf.sample
 ansible/site.retry

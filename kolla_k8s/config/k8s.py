@@ -15,10 +15,12 @@ from oslo_config import cfg
 
 CONF = cfg.CONF
 k8s_opts = [
-    cfg.StrOpt('host', default=''),
+    cfg.StrOpt('context', default=None),
+    cfg.StrOpt('host', default=None),
     cfg.StrOpt('kubectl_path', default='/usr/bin/kubectl'),
-    cfg.StrOpt('kubeconfig_path', default=''),
-    cfg.StrOpt('yml_dir_path', default='rc/')
+    cfg.StrOpt('kubeconfig_path', default=None),
+    cfg.StrOpt('docker_registry', default='quay.io/stackanetes'),
+    cfg.StrOpt('yml_dir_path', default='rc/'),
 ]
 k8s_opt_group = cfg.OptGroup(name='k8s', title="test")
 CONF.register_group(k8s_opt_group)

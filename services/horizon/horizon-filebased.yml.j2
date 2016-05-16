@@ -1,6 +1,6 @@
 {% set apache_dir = 'apache2/conf-enabled' if kolla_base_distro in ['ubuntu', 'debian'] else 'httpd/conf.d' %}
 {% set apache_conf = 'horizon.conf' if kolla_base_distro in ['ubuntu', 'debian'] else '000-default.conf' %}
-name: openstack/horizon/horizon
+name: openstack/horizon/horizon-filebased
 enabled: {{ enable_horizon | bool }}
 container:
   image: "{{ horizon_image }}:{{ horizon_tag }}"
@@ -11,10 +11,7 @@ service:
   daemon:
     command: /usr/local/bin/kolla_apache_wrapper.sh
     dependencies:
-      - path: horizon/bootstrap
-    {% if enable_memcached | bool %}
-      - path: memcached/daemon
-    {% endif %}
+      - path: horizon-filebased/bootstrap
     files:
       apache_wrapper.sh:
         source: config/common/apache_wrapper.sh.j2

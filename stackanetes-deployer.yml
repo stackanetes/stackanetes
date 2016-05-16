@@ -13,4 +13,3 @@ spec:
     env:
     - name: HOST_INTERFACE
       value: "eno2" #name of physical interface for compute-node
-

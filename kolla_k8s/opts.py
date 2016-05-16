@@ -15,6 +15,7 @@ from kolla_k8s.config import kolla
 from kolla_k8s.config import logging
 from kolla_k8s.config import network
 from kolla_k8s.config import profiles
+from kolla_k8s.config import service
 from kolla_k8s.config import zookeeper
 
 
@@ -24,6 +25,7 @@ def list_opts():
         ('kolla', kolla.kolla_opts),
         ('network', network.network_opts),
         ('profiles', profiles.profiles_opts),
+        ('service', service.service_opts),
         ('zookeeper', zookeeper.zookeeper_opts),
         ('', logging.logging_opts)
     ]

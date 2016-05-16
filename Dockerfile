@@ -1,14 +1,16 @@
 FROM ubuntu:14.04
 
-env KOLLA_K8S_YMLPATH /var/lib/kolla-k8s
+env KOLLA_K8S_YMLPATH /stackanetes/rc
 env ZK_HOST zookeeper:2181
 env NEUTRON_CNI eth0
-env DEST_YML_FILES_DIR /var/lib/kolla-k8s
+env DEST_YML_FILES_DIR /stackanetes/rc
 env DOCKER_REGISTRY quay.io/stackanetes
-env HOST_INTERFACE eno1
+env HOST_INTERFACE eno2
 env IMAGE_VERSION 2.0.0
+env KUBECONFIG ''
+env KUBEHOST ''
 
-WORKDIR /stackenetes
+WORKDIR /stackanetes
 
 RUN apt-get update && \
 	apt-get -y install python-pip python-dev libffi-dev libssl-dev git curl 
@@ -19,11 +21,11 @@ RUN pip install --upgrade pip && \
 	mv kubectl /usr/bin/kubectl && \
 	chmod +x /usr/bin/kubectl 
 
-COPY . /stackenetes     
+COPY . /stackanetes
 
 RUN pip install -r requirements.txt && \
 	python setup.py build && python setup.py install && \
 	./generate_config_file_sample.sh && \	
-	rm /stackenetes/Dockerfile
+	rm /stackanetes/Dockerfile
 
-ENTRYPOINT ["/stackenetes/docker-entrypoint.sh"]
+ENTRYPOINT ["/stackanetes/docker-entrypoint.sh"]
