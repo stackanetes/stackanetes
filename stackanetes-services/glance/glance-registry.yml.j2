@@ -1,0 +1,14 @@
+name: glance-registry
+command: glance-registry
+dependencies:
+  job:
+  - glance_ansible_tasks/create_user
+  k8s-svc:
+  - keystone-api/daemon
+
+files:
+- name: glance-registry.conf
+  configmap_name: glance-registry
+  container_path: /etc/glance
+  configs:
+  - config/glance/templates/glance-registry.conf.j2

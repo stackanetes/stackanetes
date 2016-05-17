@@ -1,0 +1,23 @@
+name: keystone-api
+command: /usr/local/bin/kolla_apache_wrapper.sh
+dependencies:
+  job:
+  - keystone-db-sync/db_sync
+files:
+- name: wsgi-keystone.conf
+  configmap_name: wsgi-keystone
+  container_path: etc/httpd/conf.d/
+  configs:
+  - config/keystone/templates/wsgi-keystone.conf.j2
+- name: apache_wrapper.sh
+  configmap_name: apache_wrapper
+  container_path: /usr/local/bin/
+  configs:
+  - /usr/local/bin/kolla_apache_wrapper.sh
+- name: keystone.conf
+  configmap_name: keystone
+  container_path: /etc/keystone
+  configs:
+  - config/keystone/templates/keystone.conf.j2
+envs:
+  OS_TOKEN: "password"

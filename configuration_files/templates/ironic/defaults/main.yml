@@ -1,0 +1,57 @@
+---
+project_name: "ironic"
+
+
+####################
+# Database
+####################
+ironic_database_name: "ironic"
+ironic_database_user: "ironic"
+ironic_database_address: "{{ database_address }}"
+
+ironic_api_database_name: "ironic_api"
+ironic_api_database_user: "ironic_api"
+ironic_api_database_address: "{{ database_address }}"
+
+
+####################
+# Docker
+####################
+ironic_conductor_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-ironic-conductor"
+ironic_conductor_tag: "{{ openstack_release }}"
+ironic_conductor_image_full: "{{ ironic_conductor_image }}:{{ ironic_conductor_tag }}"
+
+ironic_api_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-ironic-api"
+ironic_api_tag: "{{ openstack_release }}"
+ironic_api_image_full: "{{ ironic_api_image }}:{{ ironic_api_tag }}"
+
+####################
+# Openstack
+####################
+ironic_admin_endpoint: "http://{{ ironic_api_host }}:{{ ironic_api_port }}"
+ironic_internal_endpoint: "http://{{ ironic_api_host }}:{{ ironic_api_port }}"
+ironic_public_endpoint: "http://{{ ironic_api_host }}:{{ ironic_api_port }}"
+
+
+ironic_logging_verbose: "{{ openstack_logging_verbose }}"
+ironic_logging_debug: "{{ openstack_logging_debug }}"
+
+ironic_keystone_user: "ironic"
+
+openstack_ironic_auth: "{'auth_url':'{{ openstack_auth.auth_url }}','username':'{{ openstack_auth.username }}','password':'{{ openstack_auth.password }}','project_name':'{{ openstack_auth.project_name }}'}"
+
+####################
+# Resources
+####################
+# ironic-api
+ironic_api_mem: "{{ ironic_api_mem|default('1024') }}"
+ironic_api_cpus: "{{ ironic_api_cpus|default('0.3') }}"
+# ironic-compute
+ironic_compute_mem: "{{ ironic_compute_mem|default('1024') }}"
+ironic_compute_cpus: "{{ ironic_compute_cpus|default('2') }}"
+# ironic-conductor
+ironic_conductor_mem: "{{ ironic_conductor_mem|default('1024') }}"
+ironic_conductor_cpus: "{{ ironic_conductor_cpus|default('0.3') }}"
+# ironic-init
+ironic_init_mem: "{{ ironic_init_mem|default('1024') }}"
+ironic_init_cpus: "{{ ironic_init_cpus|default('0.3') }}"

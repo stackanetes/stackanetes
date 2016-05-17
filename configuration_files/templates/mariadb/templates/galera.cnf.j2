@@ -1,0 +1,29 @@
+{% set wsrep_driver = '/usr/lib/galera/libgalera_smm.so' if kolla_base_distro == 'ubuntu' else '/usr/lib64/galera/libgalera_smm.so' %}
+[mysqld]
+bind-address={{ get_ip_address(api_interface) }}
+port={{ mariadb_port }}
+
+binlog_format=ROW
+default-storage-engine=innodb
+innodb_autoinc_lock_mode=2
+
+datadir=/var/lib/mysql/
+
+wsrep_cluster_address=gcomm://{% if (list_ips_by_service('infra/mariadb/mariadb') | length) > 1 %}{{ list_ips_by_service('infra/mariadb/mariadb', mariadb_wsrep_port) }}{% endif %}
+
+wsrep_provider_options="gmcast.listen_addr=tcp://{{ get_ip_address(api_interface) }}:{{ mariadb_wsrep_port }};ist.recv_addr={{ get_ip_address(api_interface) }}:{{ mariadb_ist_port }}"
+
+wsrep_node_address={{ get_ip_address(api_interface) }}:{{ mariadb_wsrep_port }}
+wsrep_sst_receive_address={{ get_ip_address(api_interface) }}:{{ mariadb_sst_port }}
+
+wsrep_provider={{ wsrep_driver }}
+wsrep_cluster_name="{{ database_cluster_name }}"
+wsrep_node_name={{ get_hostname() }}
+wsrep_sst_method=xtrabackup-v2
+wsrep_sst_auth={{ database_user }}:{{ database_password }}
+wsrep_slave_threads=4
+
+max_connections=1000
+
+[server]
+pid-file=/var/lib/mysql/mariadb.pid

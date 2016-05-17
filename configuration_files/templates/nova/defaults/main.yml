@@ -1,0 +1,113 @@
+---
+project_name: "nova"
+
+####################
+# Ceph
+####################
+ceph_nova_pool_type: "{{ ceph_pool_type }}"
+ceph_nova_cache_mode: "{{ ceph_cache_mode }}"
+
+# Due to Ansible issues on include, you cannot override these variables. Please
+# override the variables they reference instead.
+nova_pool_name: "{{ ceph_nova_pool_name }}"
+nova_pool_type: "{{ ceph_nova_pool_type }}"
+nova_cache_mode: "{{ ceph_nova_cache_mode }}"
+
+
+####################
+# Database
+####################
+nova_database_name: "nova"
+nova_database_user: "nova"
+nova_database_address: "{{ database_address }}"
+
+nova_api_database_name: "nova_api"
+nova_api_database_user: "nova_api"
+nova_api_database_address: "{{ database_address }}"
+
+
+####################
+# Docker
+####################
+nova_libvirt_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-libvirt"
+nova_libvirt_tag: "{{ openstack_release }}"
+nova_libvirt_image_full: "{{ nova_libvirt_image }}:{{ nova_libvirt_tag }}"
+
+nova_conductor_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-conductor"
+nova_conductor_tag: "{{ openstack_release }}"
+nova_conductor_image_full: "{{ nova_conductor_image }}:{{ nova_conductor_tag }}"
+
+nova_consoleauth_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-consoleauth"
+nova_consoleauth_tag: "{{ openstack_release }}"
+nova_consoleauth_image_full: "{{ nova_consoleauth_image }}:{{ nova_consoleauth_tag }}"
+
+nova_novncproxy_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-novncproxy"
+nova_novncproxy_tag: "{{ openstack_release }}"
+nova_novncproxy_image_full: "{{ nova_novncproxy_image }}:{{ nova_novncproxy_tag }}"
+
+nova_spicehtml5proxy_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-spicehtml5proxy"
+nova_spicehtml5proxy_tag: "{{ openstack_release }}"
+nova_spicehtml5proxy_image_full: "{{ nova_spicehtml5proxy_image }}:{{ nova_spicehtml5proxy_tag }}"
+
+nova_scheduler_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-scheduler"
+nova_scheduler_tag: "{{ openstack_release }}"
+nova_scheduler_image_full: "{{ nova_scheduler_image }}:{{ nova_scheduler_tag }}"
+
+nova_compute_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-compute"
+nova_compute_tag: "{{ openstack_release }}"
+nova_compute_image_full: "{{ nova_compute_image }}:{{ nova_compute_tag }}"
+
+nova_api_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-api"
+nova_api_tag: "{{ openstack_release }}"
+nova_api_image_full: "{{ nova_api_image }}:{{ nova_api_tag }}"
+
+nova_compute_ironic_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-nova-compute-ironic"
+nova_compute_ironic_tag: "{{ openstack_release }}"
+nova_compute_ironic_image_full: "{{ nova_compute_ironic_image }}:{{ nova_compute_ironic_tag }}"
+
+####################
+# Openstack
+####################
+nova_admin_endpoint: "http://{{ nova_api_host }}:{{ nova_api_port }}/v2/%(tenant_id)s"
+nova_internal_endpoint: "http://{{ nova_api_host }}:{{ nova_api_port }}/v2/%(tenant_id)s"
+nova_public_endpoint: "http://{{ nova_api_host }}:{{ nova_api_port }}/v2/%(tenant_id)s"
+
+nova_logging_verbose: "{{ openstack_logging_verbose }}"
+nova_logging_debug: "{{ openstack_logging_debug }}"
+
+nova_keystone_user: "nova"
+
+openstack_nova_auth: "{'auth_url':'{{ openstack_auth_url }}','username':'{{ openstack_username }}','password':'{{ openstack_password }}','project_name':'{{ openstack_project_name }}'}"
+
+nova_novncproxy_host: "nova-novncproxy-nova-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+nova_spicehtml5proxy_host: "nova-spicehtml5proxy-nova-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+####################
+# Resources
+####################
+# nova-api
+nova_api_mem: "{{ nova_api_mem|default('128') }}"
+nova_api_cpus: "{{ nova_api_cpus|default('0.3') }}"
+# nova-compute
+nova_compute_mem: "{{ nova_compute_mem|default('1024') }}"
+nova_compute_cpus: "{{ nova_compute_cpus|default('2') }}"
+# nova-conductor
+nova_conductor_mem: "{{ nova_conductor_mem|default('128') }}"
+nova_conductor_cpus: "{{ nova_conductor_cpus|default('0.3') }}"
+# nova-consoleauth
+nova_consoleauth_mem: "{{ nova_consoleauth_mem|default('128') }}"
+nova_consoleauth_cpus: "{{ nova_consoleauth_cpus|default('0.3') }}"
+# nova-init
+nova_init_mem: "{{ nova_init_mem|default('512') }}"
+nova_init_cpus: "{{ nova_init_cpus|default('0.3') }}"
+# nova-libvirt
+nova_libvirt_mem: "{{ nova_libvirt_mem|default('1024') }}"
+nova_libvirt_cpus: "{{ nova_libvirt_cpus|default('2') }}"
+# nova-novncproxy
+nova_novncproxy_mem: "{{ nova_novncproxy_mem|default('128') }}"
+nova_novncproxy_cpus: "{{ nova_novncproxy_cpus|default('0.3') }}"
+# nova-scheduler
+nova_scheduler_mem: "{{ nova_scheduler_mem|default('128') }}"
+nova_scheduler_cpus: "{{ nova_scheduler_cpus|default('0.3') }}"
+# noca-spicehtml3proxy
+nova_spicehtml3proxy_mem: "{{ nova_spicehtml3proxy_mem|default('128') }}"
+nova_spicehtml3proxy_cpus: "{{ nova_spicehtml3proxy_cpus|default('0.3') }}"

@@ -1,0 +1,9 @@
+#!/bin/bash
+{% set apache_cmd = 'apache2' if kolla_base_distro in ['ubuntu', 'debian'] else 'httpd' %}
+
+if [[ "${KOLLA_BASE_DISTRO}" == "ubuntu" || \
+        "${KOLLA_BASE_DISTRO}" == "debian" ]]; then
+    # Loading Apache2 ENV variables
+    source /etc/apache2/envvars
+fi
+/usr/sbin/{{ apache_cmd }} -DFOREGROUND

@@ -22,7 +22,7 @@ service:
     command: neutron-linuxbridge-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
     files:
       neutron.conf.j2:
-        source: ["config/neutron/templates/neutron.conf.j2",
+        source: ["config/neutron/templates/neutron-server.conf.j2",
                  "config/neutron/templates/neutron.linuxbridge.conf.j2"]
         dest: /etc/neutron/neutron.conf
         owner: neutron

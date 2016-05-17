@@ -21,7 +21,7 @@ service:
     command: neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/dhcp_agent.ini
     files:
       neutron.conf.j2:
-        source: ["config/neutron/templates/neutron.conf.j2",
+        source: ["config/neutron/templates/neutron-server.conf.j2",
                  {% if neutron_plugin_agent == 'linuxbridge' %}
                  "config/neutron/templates/neutron.linuxbridge.conf.j2"
                  {% elif neutron_plugin_agent == 'openvswitch' %}

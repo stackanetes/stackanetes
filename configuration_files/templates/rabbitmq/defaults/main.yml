@@ -1,0 +1,27 @@
+---
+project_name: "rabbitmq"
+
+####################
+# Docker
+####################
+rabbitmq_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-rabbitmq"
+rabbitmq_tag: "{{ openstack_release }}"
+rabbitmq_image_full: "{{ rabbitmq_image }}:{{ rabbitmq_tag }}"
+
+rabbitmq_data_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-data"
+rabbitmq_data_tag: "{{ openstack_release }}"
+rabbitmq_data_image_full: "{{ rabbitmq_data_image }}:{{ rabbitmq_data_tag }}"
+
+
+####################
+# Message-Broker
+####################
+rabbitmq_user: "openstack"
+rabbitmq_cluster_name: "openstack"
+
+
+####################
+# Resources
+####################
+rabbitmq_mem: "{{ rabbitmq_mem|default('128') }}"
+rabbitmq_cpus: "{{ rabbitmq_cpus|default('0.3') }}"

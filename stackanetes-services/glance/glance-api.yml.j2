@@ -1,0 +1,14 @@
+name: glance-api
+command: glance-api
+dependencies:
+  job:
+  - glance_ansible_tasks/create_database
+  - glance_ansible_tasks/database_user_create
+  - glance-api/db_sync
+files:
+- name: glance-api.conf
+  configmap_name: glance-api
+  container_path: /etc/glance
+  configs:
+  - config/glance/templates/glance-api.conf.j2
+  - config/glance/templates/glance-file.conf.j2

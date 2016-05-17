@@ -1,0 +1,12 @@
+[ml2]
+mechanism_drivers = linuxbridge,l2population
+
+[securitygroup]
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+
+[linux_bridge]
+physical_interface_mappings = physnet1:{{ neutron_external_interface }}
+
+[vxlan]
+l2_population = true
+local_ip = {{ network_interface }}

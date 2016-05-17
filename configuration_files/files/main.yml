@@ -1,0 +1,95 @@
+---
+project_name: "neutron"
+
+####################
+# Database
+####################
+neutron_database_name: "neutron"
+neutron_database_user: "neutron"
+neutron_database_address: "{{ database_address }}"
+
+
+####################
+# Docker
+####################
+neutron_server_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-server"
+neutron_server_tag: "{{ openstack_release }}"
+neutron_server_image_full: "{{ neutron_server_image }}:{{ neutron_server_tag }}"
+
+neutron_dhcp_agent_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-dhcp-agent"
+neutron_dhcp_agent_tag: "{{ openstack_release }}"
+neutron_dhcp_agent_image_full: "{{ neutron_dhcp_agent_image }}:{{ neutron_dhcp_agent_tag }}"
+
+neutron_l3_agent_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-l3-agent"
+neutron_l3_agent_tag: "{{ openstack_release }}"
+neutron_l3_agent_image_full: "{{ neutron_l3_agent_image }}:{{ neutron_l3_agent_tag }}"
+
+neutron_metadata_agent_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-metadata-agent"
+neutron_metadata_agent_tag: "{{ openstack_release }}"
+neutron_metadata_agent_image_full: "{{ neutron_metadata_agent_image }}:{{ neutron_metadata_agent_tag }}"
+
+neutron_openvswitch_agent_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-openvswitch-agent"
+neutron_openvswitch_agent_tag: "{{ openstack_release }}"
+neutron_openvswitch_agent_image_full: "{{ neutron_openvswitch_agent_image }}:{{ neutron_openvswitch_agent_tag }}"
+
+neutron_linuxbridge_agent_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-neutron-linuxbridge-agent"
+neutron_linuxbridge_agent_tag: "{{ openstack_release }}"
+neutron_linuxbridge_agent_image_full: "{{ neutron_linuxbridge_agent_image }}:{{ neutron_linuxbridge_agent_tag }}"
+
+openvswitch_vswitchd_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-openvswitch-vswitchd"
+openvswitch_vswitchd_tag: "{{ openstack_release }}"
+openvswitch_vswitchd_image_full: "{{ openvswitch_vswitchd_image }}:{{ openvswitch_vswitchd_tag }}"
+
+openvswitch_db_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-openvswitch-db-server"
+openvswitch_db_tag: "{{ openstack_release }}"
+openvswitch_db_image_full: "{{ openvswitch_db_image }}:{{ openvswitch_db_tag }}"
+
+
+####################
+# Openstack
+####################
+neutron_admin_endpoint: "http://{{ neutron_server_host }}:{{ neutron_server_port }}"
+neutron_internal_endpoint: "http://{{ neutron_server_host }}:{{ neutron_server_port }}"
+neutron_public_endpoint: "http://{{ neutron_server_host }}:{{ neutron_server_port }}"
+
+neutron_logging_verbose: "{{ openstack_logging_verbose }}"
+neutron_logging_debug: "{{ openstack_logging_debug }}"
+
+neutron_keystone_user: "neutron"
+
+neutron_bridge_name: "br-ex"
+
+openstack_neutron_auth: "{'auth_url':'{{ openstack_auth_url }}','username':'{{ openstack_username }}','password':'{{ openstack_password }}','project_name':'{{ openstack_project_name }}'}"
+
+nova_api_host: "nova-api-nova-openstack-{{ deployment_id }}.{{ marathon_framework }}.{{ mesos_dns_domain }}"
+
+####################
+# Resources
+####################
+# neutron-dhcp-agent
+neutron_dhcp_agent_mem: "{{ neutron_dhcp_agent_mem|default('128') }}"
+neutron_dhcp_agent_cpus: "{{ neutron_dhcp_agent_cpus|default('0.2') }}"
+# neutron-init
+neutron_init_mem: "{{ neutron_init_mem|default('512') }}"
+neutron_init_cpus: "{{ neutron_init_cpus|default('0.3') }}"
+# neutron-l3-agent
+neutron_l3_agent_mem: "{{ neutron_l3_agent_mem|default('128') }}"
+neutron_l3_agent_cpus: "{{ neutron_l3_agent_cpus|default('0.2') }}"
+# neutron-linuxbridge-agent
+neutron_linuxbridge_agent_mem: "{{ neutron_linuxbridge_agent_mem|default('128') }}"
+neutron_linuxbridge_agent_cpus: "{{ neutron_linuxbridfe_agent_cpus|default('0.2') }}"
+# neutron-metadata-agent
+neutron_metadata_agent_mem: "{{ neutron_metadata_agent_mem|default('128') }}"
+neutron_metadata_agent_cpus: "{{ neutron_metadata_agent_cpus|default('0.2') }}"
+# neutron-openvswitch-agent
+neutron_openvswitch_agent_mem: "{{ neutron_openvswitch_agent_mem|default('128') }}"
+neutron_openvswitch_agent_cpus: "{{ neutron_openvswitch_agent_cpus|default('0.2') }}"
+# neutron-server
+neutron_server_mem: "{{ neutron_server_mem|default('128') }}"
+neutron_server_cpus: "{{ neutron_server_cpus|default('0.3') }}"
+# openvswitch-db
+openvswitch_db_mem: "{{ openvswitch_db_mem|default('128') }}"
+openvswitch_db_cpus: "{{ openvswitch_db_cpus|default('0.3') }}"
+# openvswitch-vswitchd
+openvswitch_vswitchd_mem: "{{ openvswitch_vswitchd_mem|default('128') }}"
+openvswitch_vswitchd_cpus: "{{ openvswitch_vswitchd_cpus|default('0.3') }}"

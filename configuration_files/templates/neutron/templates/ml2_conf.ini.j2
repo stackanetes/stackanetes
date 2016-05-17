@@ -1,0 +1,15 @@
+# ml2_conf.ini
+[ml2]
+# Changing type_drivers after bootstrap can lead to database inconsistencies
+type_drivers = flat,vlan,vxlan
+tenant_network_types = vxlan
+
+[ml2_type_vlan]
+network_vlan_ranges =
+
+[ml2_type_flat]
+flat_networks = physnet1
+
+[ml2_type_vxlan]
+vni_ranges = 1:1000
+vxlan_group = 239.1.1.1
