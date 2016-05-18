@@ -277,6 +277,8 @@ def run_service(service_name, service_dir, variables=None):
         service_list.extend(OTHER_SERVICES)
     elif service_name == 'zookeeper':
         service_list = list()
+    elif service_name in OTHER_SERVICES:
+        service_list = [service_name]
     else:
         raise NotImplementedError("Service {} is not supported".format(
             service_name))
