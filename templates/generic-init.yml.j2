@@ -1,11 +1,12 @@
 ---
-apiVersion: v1
-kind: Pod
+kind: Job
+apiVersion: batch/v1
 metadata:
   labels:
     app: {{ service }}_ansible_tasks
   name: {{ service_name }}
 spec:
+  template:
   nodeSelector:
     app: controller
   restartPolicy: OnFailure

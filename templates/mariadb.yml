@@ -29,7 +29,7 @@ spec:
       name: mariadb
     spec:
       nodeSelector:
-        app: persistent-control
+        app: controller
       containers:
         - name: mariadb
           image: quay.io/stackanetes/centos-binary-mariadb:2.0.0

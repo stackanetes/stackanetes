@@ -43,4 +43,4 @@ class Kill(command.Command):
         return parser
 
     def take_action(self, parsed_args):
-        service.kill_service(parsed_args.service)
+        service.kill_service(parsed_args.service, CONF.service_dir)

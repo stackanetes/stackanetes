@@ -202,7 +202,7 @@ haproxy_user: "openstack"
 #################################
 # Cinder - Block Storage options
 #################################
-cinder_volume_driver: "{{ 'ceph' if enable_ceph | bool else 'lvm' }}"
+cinder_volume_driver: "{{ 'ceph' if enable_ceph else 'lvm' }}"
 
 
 ###################
@@ -226,3 +226,10 @@ ceph_nova_pool_name: "vms"
 ceph_erasure_profile: "k=4 m=2 ruleset-failure-domain=host"
 ceph_rule: "default host {{ 'indep' if ceph_pool_type == 'erasure' else 'firstn' }}"
 ceph_cache_rule: "cache host firstn"
+
+
+##################
+# Template wrapper
+##################
+#
+get_ip_address: {% raw %}"{{ .IP }}"{% endraw %}

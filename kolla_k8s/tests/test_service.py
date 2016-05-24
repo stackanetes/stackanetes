@@ -19,7 +19,7 @@ from kolla_k8s.service import (_get_mount_path, _get_external_ip, _render_yml,
     _generate_generic_control, _generate_generic_init,
     _generate_generic_network_node, _generate_generic_compute_node)
 
-RC_PATH = os.path.join(os.path.dirname(__file__), "../../rc")
+RC_PATH = os.path.join(os.path.dirname(__file__), "../../templates")
 
 
 class TestGetMountPath(unittest.TestCase):

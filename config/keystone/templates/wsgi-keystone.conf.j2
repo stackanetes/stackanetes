@@ -1,5 +1,5 @@
-Listen {{ get_ip_address(api_interface) }}:{{ keystone_public_port }}
-Listen {{ get_ip_address(api_interface) }}:{{ keystone_admin_port }}
+Listen {{ get_ip_address }}:{{ keystone_public_port }}
+Listen {{ get_ip_address }}:{{ keystone_admin_port }}
 
 <VirtualHost *:{{ keystone_public_port }}>
     WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}

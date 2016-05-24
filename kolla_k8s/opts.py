@@ -10,22 +10,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from kolla_k8s.config import k8s
-from kolla_k8s.config import kolla
 from kolla_k8s.config import logging
-from kolla_k8s.config import network
-from kolla_k8s.config import profiles
-from kolla_k8s.config import service
-from kolla_k8s.config import zookeeper
+from kolla_k8s.config import stackanetes
 
 
 def list_opts():
     return [
-        ('k8s', k8s.k8s_opts),
-        ('kolla', kolla.kolla_opts),
-        ('network', network.network_opts),
-        ('profiles', profiles.profiles_opts),
-        ('service', service.service_opts),
-        ('zookeeper', zookeeper.zookeeper_opts),
-        ('', logging.logging_opts)
+        ('', logging.logging_opts),
+        ('stackanetes', stackanetes.stackanetes_opts),
     ]

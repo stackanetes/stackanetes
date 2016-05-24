@@ -1,0 +1,16 @@
+name: keystone-db-sync
+command: keystone-db-sync.sh
+dependencies:
+  job:
+  - keystone-init
+files:
+- name: keystone.conf
+  configmap_name: keystone-db-sync
+  container_path: /etc/keystone
+  configs:
+  - keystone/templates/keystone.conf
+- name: keystone-init.sh
+  configmap_name: keystone-init
+  container_path: /tmp
+  configs:
+  - keystone/templates/keystone-init.sh

@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: keystone_ansible_tasks
+  annotations:
+    service_dependencies: "mariadb"
+  name: keystone-init
+spec:
+  restartPolicy: OnFailure
+  containers:
+    - name: keystone-init
+      image: 10.91.96.230:5000/centos-binary-kolla-toolbox:test
+      env:
+        - name: INTERFACE_NAME
+          value: "eth0"
+        - name: COMMAND
+          value: "bash /tmp/keystone-init.sh"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      volumeMounts:
+        - name: keystone-init
+          mountPath: /tmp
+  volumes:
+    - name: keystone-init
+      configMap:
+        name: keystone-init
+        items:
+        - key: keystone-init.sh
+          path: keystone-init.sh

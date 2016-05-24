@@ -11,4 +11,4 @@ files:
   configmap_name: glance-registry
   container_path: /etc/glance
   configs:
-  - config/glance/templates/glance-registry.conf.j2
+  - glance/templates/glance-registry.conf.j2

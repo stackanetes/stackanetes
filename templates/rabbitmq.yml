@@ -21,7 +21,7 @@ metadata:
   name: rabbitmq
 spec:
   nodeSelector:
-    app: persistent-control
+    app: controller
   containers:
     - name: rabbitmq
       image: quay.io/stackanetes/centos-binary-rabbitmq:2.0.0

@@ -10,5 +10,5 @@ files:
   configmap_name: glance-api
   container_path: /etc/glance
   configs:
-  - config/glance/templates/glance-api.conf.j2
-  - config/glance/templates/glance-file.conf.j2
+  - glance/templates/glance-api.conf.j2
+  - glance/templates/glance-file.conf.j2
