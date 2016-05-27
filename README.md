@@ -83,7 +83,7 @@ kubectl label node minion2 app=compute
 
 ### Final host dependencies
 
-There are a few temporary hacks in place to allow `nova-compute` run with full host privileges. 
+There are a few temporary hacks in place to allow `nova-compute` run with full host privileges.
 
 On all machines you must create the directories `/var/lib/nova` and `/var/lib/libvirt`:
 
@@ -119,6 +119,15 @@ If you run into errors, run with the --debug flag for additional information:
 kolla-k8s --debug
 ```
 ## Deploy Stackanetes via stackanetes-deployer POD
+
+You can either use pre-build stackanetes-deployer docker image:
+- quay.io/stackanetes/stackanetes-deployer:2.0.0
+
+or build your own image by executing
+
+```
+docker build -t stackanetes-deployer .
+```
 
 To install Stackanetes vis stackanetes-deployer POD you still have to label your nodes
 and finish `Final host dependencies` step.
