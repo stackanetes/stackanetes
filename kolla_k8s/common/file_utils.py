@@ -18,8 +18,6 @@ import sys
 
 from oslo_utils import importutils
 
-from kolla_k8s import exception
-
 LOG = logging.getLogger(__name__)
 
 
@@ -90,4 +88,4 @@ def find_file(filename):
         file_path = os.path.join(path, filename)
         if os.path.exists(file_path):
             return file_path
-    raise exception.KollaNotFoundException(filename, entity='file')
+    raise IOError("{} does not exist".format(filename))
