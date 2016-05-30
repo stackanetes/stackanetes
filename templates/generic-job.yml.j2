@@ -14,7 +14,8 @@ spec:
         configs: "{{ configmaps_string }}"
     spec:
       restartPolicy: OnFailure
-
+      securityContext:
+        runAsUser: 0
       containers:
         - name: {{ service_name }}
 {%- if image %}

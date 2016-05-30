@@ -1,0 +1,15 @@
+type: job
+name: nova-api-db-sync
+command: kolla_extend_start
+image: centos-binary-nova-api
+dependencies:
+  service:
+  - mariadb
+  job:
+  - nova-init
+files:
+- file_name: nova.conf
+  configmap_name: nova-conf-db-sync
+  container_path: /etc/nova
+  templates:
+  - nova/templates/nova.conf.j2

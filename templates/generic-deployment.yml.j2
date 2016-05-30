@@ -40,6 +40,8 @@ spec:
     spec:
       nodeSelector:
         app: controller
+      securityContext:
+        runAsUser: 0
       containers:
         - name: {{ service_name }}
           image: {{ docker_registry }}/centos-binary-{{ service_name }}:{{ image_version }}

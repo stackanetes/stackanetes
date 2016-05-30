@@ -1,11 +1,30 @@
-name: keystone-init
-command: keystone-init.sh
+type: deployment
+name: keystone-api
+command: bash /tmp/apache-wrapper.sh
+ports:
+- 5000
+- 35357
 dependencies:
   service:
   - mariadb
+  - glance-api
+  job:
+  - keystone-init
 files:
-- name: keystone-init.sh
-  configmap_name: keystone-init
+- file_name: keystone.conf
+  configmap_name: keystone-conf
+  container_path: /etc/keystone
+  templates:
+  - keystone/templates/keystone.conf.j2
+- file_name: wsgi-keystone.conf
+  configmap_name: wsgi-keystone
+  container_path: /etc/httpd/conf.d
+  templates:
+  - keystone/templates/wsgi-keystone.conf.j2
+- file_name: apache-wrapper.sh
+  configmap_name: apache-wrapper
   container_path: /tmp
-  configs:
-  - keystone/templates/keystone-init.sh
+  templates:
+  - common/templates/apache_wrapper.sh.j2
+env:
+  - OS_TOKEN: "password"

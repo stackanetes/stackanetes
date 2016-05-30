@@ -1,0 +1,19 @@
+type: deployment
+name: nova-api
+command: nova-api --config-file /etc/nova/nova.conf
+ports:
+- 8774
+- 8775
+dependencies:
+  service:
+  - mariadb
+  - glance-api
+  job:
+  - nova-init
+  - nova-db-sync
+files:
+- file_name: nova.conf
+  configmap_name: nova-conf
+  container_path: /etc/nova
+  templates:
+  - nova/templates/nova.conf.j2

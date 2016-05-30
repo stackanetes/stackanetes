@@ -1,0 +1,12 @@
+type: job
+name: nova-init
+command: bash /tmp/nova-init.sh
+dependencies:
+  service:
+  - mariadb
+files:
+- file_name: nova-init.sh
+  configmap_name: nova-init
+  container_path: /tmp
+  templates:
+  - nova/templates/nova-init.sh.j2

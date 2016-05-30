@@ -1,14 +1,17 @@
+type: deployment
 name: glance-registry
-command: glance-registry
+command: kolla_extend_start
+ports:
+- 9191
 dependencies:
+  service:
+  - mariadb
+  - rabbitmq
   job:
-  - glance_ansible_tasks/create_user
-  k8s-svc:
-  - keystone-api/daemon
-
+  - glance-init
 files:
-- name: glance-registry.conf
+- file_name: glance.conf
   configmap_name: glance-registry
   container_path: /etc/glance
-  configs:
+  templates:
   - glance/templates/glance-registry.conf.j2

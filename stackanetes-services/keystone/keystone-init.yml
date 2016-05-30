@@ -1,11 +1,12 @@
+type: job
 name: keystone-init
-command: keystone-init.sh
+command: bash /tmp/keystone-init.sh
 dependencies:
   service:
   - mariadb
 files:
-- name: keystone-init.sh
+- file_name: keystone-init.sh
   configmap_name: keystone-init
   container_path: /tmp
-  configs:
-  - keystone/templates/keystone-init.sh
+  templates:
+  - keystone/templates/keystone-init.sh.j2
