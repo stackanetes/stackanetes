@@ -9,7 +9,7 @@ spec:
   containers:
   - name: stackanetes-base
     #insert a valid image name
-    image: stackanetes-deployer
+    image: quay.io/stackanetes/stackanetes-deployer:2.0.0
     env:
     - name: HOST_INTERFACE
       value: "eno2" #name of physical interface for compute-node
