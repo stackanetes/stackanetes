@@ -5,6 +5,9 @@ kind: Service
 metadata:
   name: {{ service_name }}
 spec:
+    {%- if session_affinity %}
+  sessionAffinity: ClientIP
+    {%- endif %}
     {%- if external_ip %}
   externalIPs:
     - {{ external_ip }}
@@ -40,8 +43,10 @@ spec:
     spec:
       nodeSelector:
         app: controller
+      {%- if  not non_root %}
       securityContext:
         runAsUser: 0
+      {%- endif %}
       containers:
         - name: {{ service_name }}
           image: {{ docker_registry }}/centos-binary-{{ service_name }}:{{ image_version }}
@@ -78,7 +83,11 @@ spec:
           volumeMounts:
 {%- for configmap in configmaps %}
             - name: {{ configmap['configmap_name'] }}
+              {%- if configmap['dest_file_name'] %}
+              mountPath: /configmaps/{{ configmap['dest_file_name'] }}
+              {%- else %}
               mountPath: /configmaps/{{ configmap['file_name'] }}
+              {% endif %}
 {%- endfor %}
 {%- for emptydir in emptydirs %}
             - name: {{ emptydir['name'] }}
@@ -91,7 +100,11 @@ spec:
             name: {{ configmap['configmap_name'] }}
             items:
             - key: {{ configmap['file_name'] }}
+              {%- if configmap['dest_file_name'] %}
+              path: {{ configmap['dest_file_name'] }}
+              {%- else %}
               path: {{ configmap['file_name'] }}
+              {%- endif %}
 {%- endfor %}
 {%- for emptydir in emptydirs %}
         - name: {{ emptydir['name'] }}
