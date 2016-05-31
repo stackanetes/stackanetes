@@ -13,4 +13,4 @@ arp_responder = true
 
 [ovs]
 bridge_mappings = physnet1:{{ neutron_bridge_name }}
-local_ip = {{ get_ip_address() }}
+local_ip = {{ get_ip_address }}
