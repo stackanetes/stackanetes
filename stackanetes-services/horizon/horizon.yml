@@ -1,0 +1,27 @@
+type: deployment
+name: horizon
+command: bash /tmp/kolla-apache-wrapper.sh
+ports:
+- 80
+- 443
+dependencies:
+  service:
+  - memcached
+external_ip: 10.91.96.80
+files:
+- file_name: kolla-apache-wrapper.sh
+  configmap_name: horizon
+  container_path: /tmp
+  templates:
+  - common/templates/horizon.sh.j2
+- file_name: 000-default.conf
+  configmap_name: horizon-conf
+  container_path: /etc/httpd/conf.d
+  templates:
+  - horizon/templates/horizon.conf.j2
+- file_name: local-settings
+  dest_file_name: local_settings
+  configmap_name: horizon-local-settings
+  container_path: /etc/openstack-dashboard
+  templates: 
+  - horizon/templates/local_settings_memcached.j2
