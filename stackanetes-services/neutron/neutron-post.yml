@@ -1,0 +1,16 @@
+type: job 
+name: nova-post
+command: bash /tmp/neutron-post.sh
+dependencies:
+  service:
+  - keystone-api
+  job:
+  - neutron-server-db-sync
+files:
+- file_name: neutron-post.sh
+  configmap_name: neutron-post
+  container_path: /tmp
+  templates:
+  - neutron/templates/neutron-post.sh.j2
+envs:
+- ANSIBLE_LIBRARY: /usr/share/ansible/

@@ -4,7 +4,7 @@ debug = true
 use_syslog = {{ openstack_use_syslog }}
 use_stderr = {{ openstack_use_stderr }}
 
-bind_host = {{ get_ip_address() }}
+bind_host = {{ get_ip_address }}
 bind_port = {{ neutron_server_port }}
 
 #lock_path = /var/lock/neutron

@@ -1,0 +1,16 @@
+type: job 
+name: nova-post
+command: bash /tmp/nova-post.sh
+dependencies:
+  service:
+  - keystone-api
+  job:
+  - nova-api-db-sync
+files:
+- file_name: nova-post.sh
+  configmap_name: nova-post
+  container_path: /tmp
+  templates:
+  - nova/templates/nova-post.sh.j2
+envs:
+- ANSIBLE_LIBRARY: /usr/share/ansible/
