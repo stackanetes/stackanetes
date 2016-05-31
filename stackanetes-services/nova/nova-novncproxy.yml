@@ -1,0 +1,20 @@
+type: deployment
+name: nova-novncproxy
+command: nova-novncproxy --config-file /etc/nova/nova.conf
+# TODO(DTadrzak): move it to config?
+external_ip: 10.91.96.80
+ports:
+  - 6080
+dependencies:
+  service:
+  - nova-api
+  - glance-api
+  job:
+  - nova-init
+  - nova-db-sync
+files:
+- file_name: nova.conf
+  configmap_name: nova-conf
+  container_path: /etc/nova
+  templates:
+  - nova/templates/nova.conf.j2

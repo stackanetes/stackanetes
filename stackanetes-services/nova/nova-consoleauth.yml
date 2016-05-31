@@ -1,0 +1,17 @@
+type: deployment
+name: nova-consoleauth
+command: nova-consoleauth --config-file /etc/nova/nova.conf
+ports: []
+dependencies:
+  service:
+  - nova-api
+  - glance-api
+  job:
+  - nova-init
+  - nova-db-sync
+files:
+- file_name: nova.conf
+  configmap_name: nova-conf
+  container_path: /etc/nova
+  templates:
+  - nova/templates/nova.conf.j2
