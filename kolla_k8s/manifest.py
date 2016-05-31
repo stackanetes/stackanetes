@@ -19,6 +19,8 @@ class Manifest(object):
         self.image = configuration.get('image')
         self.ports = configuration.get('ports', [])
         self.envs = configuration.get('envs', [])
+        self.session_affinity = configuration.get("session_affinity",[])
+        self.non_root = configuration.get("non_root",[])
         self.emptydirs = configuration.get('emptyDirs', [])
         self.envs.append({'COMMAND': self.command})
         self._get_files_list()
@@ -34,8 +36,14 @@ class Manifest(object):
 
     def _get_files_list(self):
         # TODO(DTadrzak): switch on after Piotr's fix
-         self.configmaps_string = ','.join(map(lambda x: '/'.join(
-             [x['container_path'], x['file_name']]), self.configmaps))
+        for config in self.configmaps:
+            if 'dest_file_name' in config:
+                config['key_name'] = config['dest_file_name']
+            else:
+                config['key_name'] = config['file_name']
+            
+        self.configmaps_string = ','.join(map(lambda x: '/'.join(
+             [x['container_path'], x['key_name']]), self.configmaps))
 
     def _find_dependencies(self, dependencies):
         self.job_dependencies = dependencies.get('job', [])

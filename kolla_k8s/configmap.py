@@ -17,6 +17,7 @@ class ConfigMap(object):
     def __init__(self, service_dir, configs):
         self.service_dir = service_dir
         self.file_name = configs['file_name']
+        self.dest_file_name = configs.get('dest_file_name',None)
         self.name = configs['configmap_name']
         self.container_path = configs['container_path']
         self.templates = configs['templates']
