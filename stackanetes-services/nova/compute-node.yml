@@ -1,0 +1,24 @@
+type: daemonset
+name: compute-node
+ports: []
+dependencies:
+  service:
+  - mariadb
+  - glance-api
+  job:
+  - nova-init
+  - nova-db-sync
+containers:
+  - command: nova-api --config-file /etc/nova/nova.conf
+  - name: nova-compute
+  files:
+  - file_name: nova.conf
+    configmap_name: nova-conf
+    container_path: /etc/nova
+    templates:
+    - nova/templates/nova.conf.j2
+  mounts:
+  - name: test
+    container_path:
+    host_path:
+    read_only: True
