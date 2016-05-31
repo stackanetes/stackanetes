@@ -14,6 +14,21 @@ class Manifest(object):
         self.service_dir = service_dir
         self.type = configuration['type']
         self.service_name = configuration['name']
+        if configuration.get('dependencies'):
+            self._find_dependencies(configuration['dependencies'])
+        self.external_ip = configuration.get('external_ip')
+        self.memory = CONF.stackanetes.memory
+        self.docker_registry = CONF.stackanetes.docker_registry
+        self.image_version = CONF.stackanetes.docker_image_tag
+        self.host_interface = CONF.stackanetes.minion_interface_name
+        if configuration.get('containers'):
+            self._parameters_for_multi_containers_pod(configuration)
+        else:
+            self._parameters_for_singel_container_pod(configuration)
+        self._get_files_list()
+        self.template_name = self._find_template()
+
+    def _parameters_for_singel_container_pod(self, configuration):
         self.command = configuration['command']
         self.configmaps = configuration['files']
         self.image = configuration.get('image')
@@ -23,16 +38,32 @@ class Manifest(object):
         self.non_root = configuration.get("non_root",[])
         self.emptydirs = configuration.get('emptyDirs', [])
         self.envs.append({'COMMAND': self.command})
-        self._get_files_list()
-        if configuration.get('dependencies'):
-            self._find_dependencies(configuration['dependencies'])
-        self.external_ip = configuration.get('external_ip')
         self.template_name = self._find_template()
         self._set_service_type()
-        self.memory = CONF.stackanetes.memory
-        self.docker_registry = CONF.stackanetes.docker_registry
-        self.image_version = CONF.stackanetes.docker_image_tag
-        self.host_interface = CONF.stackanetes.minion_interface_name
+
+    def _parameters_for_multi_containers_pod(self, configuration):
+        config_maps = []
+        empty_dirs = []
+        mounts = []
+        self.containers = []
+        for container_configuration in configuration:
+            container_dict = {}
+            container_dict['command'] = container_configuration['command']
+            container_dict['image'] = container_configuration['image']
+            container_dict['name'] = container_configuration['name']
+            container_dict['envs'] = container_configuration.get('envs', [])
+            container_dict['emptydirs'] = configuration.get('emptyDirs', [])
+            container_dict['configmaps'] = configuration.get('files', [])
+            config_maps.extend(container_dict['configmaps'])
+            container_dict['emptyDirs'] = configuration.get('emptyDirs', [])
+            empty_dirs.extend(container_dict['emptyDirs'])
+            container_dict['mounts'] = configuration.get('mounts', [])
+            empty_dirs.extend(container_dict['mounts'])
+            container_dict['envs'].append({'COMMAND': self.command})
+            self.containers.append(container_dict)
+        self.configmaps = set(config_maps)
+        self.emptydirs = set(empty_dirs)
+        self.mounts = set(mounts)
 
     def _get_files_list(self):
         # TODO(DTadrzak): switch on after Piotr's fix
@@ -41,7 +72,7 @@ class Manifest(object):
                 config['key_name'] = config['dest_file_name']
             else:
                 config['key_name'] = config['file_name']
-            
+
         self.configmaps_string = ','.join(map(lambda x: '/'.join(
              [x['container_path'], x['key_name']]), self.configmaps))
 
@@ -76,5 +107,6 @@ class Manifest(object):
             LOG.error(msg)
             raise KeyError(msg)
 
+    # TODO(DTadrzak): check if those method is still required
     def _set_service_type(self):
         self.service = self.service_name.split("-")[0]
