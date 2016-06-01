@@ -15,7 +15,7 @@ CONF.import_group('stackanetes', 'kolla_k8s.config.stackanetes')
 
 class K8sInstance():
     def __init__(self, service_name, service_dir):
-        LOG.debug("Creaeting instance: {}".format(service_name))
+        LOG.debug("Creating instance: {}".format(service_name))
         self.service_name = service_name
         self.service_type = service_name.split("-")[0]
         self.service_dir = service_dir

@@ -31,6 +31,8 @@ class Manifest(object):
         self.image = configuration.get('image')
         self.ports = configuration.get('ports', [])
         self.envs = configuration.get('envs', [])
+        self.session_affinity = configuration.get("session_affinity",[])
+        self.non_root = configuration.get("non_root",[])
         self.emptydirs = configuration.get('emptyDirs', [])
         self.envs.append({'COMMAND': self.command})
         self.template_name = self._find_template()
@@ -76,8 +78,13 @@ class Manifest(object):
 
     @staticmethod
     def _add_files_list(envs, configmaps):
+        for config in configmaps:
+            if 'dest_file_name' in config:
+                config['key_name'] = config['dest_file_name']
+            else:
+                config['key_name'] = config['file_name']
         configmaps_string = ','.join(map(lambda x: '/'.join(
-            [x['container_path'], x['file_name']]), configmaps))
+            [x['container_path'], x['key_name']]), configmaps))
         envs.append({'CONFIGS': configmaps_string})
 
     @staticmethod

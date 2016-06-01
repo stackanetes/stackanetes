@@ -1,0 +1,9 @@
+type: deployment
+name: memcached
+command: "su  memcache -c 'memcached'"
+ports:
+- 11211
+session_affinity: true
+files: []
+image: memcached
+non_root: true
