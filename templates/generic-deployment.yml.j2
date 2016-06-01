@@ -29,11 +29,6 @@ spec:
   replicas: 1
   template:
     metadata:
-      annotations:
-        service_dependencies: "{{ ','.join(service_dependencies) }}"
-        job_dependencies: "{{ ','.join(job_dependencies) }}"
-        ds_dependencies: "{{ ','.join(ds_dependencies) }}"
-        configs: "{{ configmaps_string }}"
       labels:
         app: {{ service_name }}
       name: {{ service_name }}

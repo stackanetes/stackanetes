@@ -34,8 +34,19 @@ class K8sInstance():
             variables.update(yaml.load(file))
         self.configs = variables
         self.files = variables.get('files', [])
+        self.containers = variables.get('containers', [])
 
     def _load_configmaps(self):
+        if self.containers:
+            files = []
+            [files.extend(x['files']) for x in self.containers]
+            for file in files:
+                LOG.debug("Preparing configmap: {} for {}".format(
+                    file['configmap_name'], self.service_name))
+                configmap = ConfigMap(self.service_dir, file)
+                configmap.remove()
+                configmap.upload()
+
         for file in self.files:
             LOG.debug("Preparing configmap: {} for {}".format(
                 file['configmap_name'], self.service_name))

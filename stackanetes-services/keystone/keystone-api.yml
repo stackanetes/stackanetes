@@ -7,7 +7,6 @@ ports:
 dependencies:
   service:
   - mariadb
-  - glance-api
   job:
   - keystone-init
 files:

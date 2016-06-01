@@ -34,7 +34,7 @@ spec:
 {%- for mount in mounts %}
         - name: {{ mount['name'] }}
           hostPath:
-            path: {{ mounts['host_path'] }}
+            path: {{ mount['host_path'] }}
 {%- endfor %}
       containers:
 {% for container in containers %}
@@ -44,7 +44,7 @@ spec:
           image: {{ docker_registry }}/{{ container['image'] }}:{{ image_version }}
           env:
             - name: INTERFACE_NAME
-              value: {{ minion_interface_name }}
+              value: {{ host_interface }}
             - name: POD_NAME
               valueFrom:
                 fieldRef:
@@ -53,7 +53,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-  {%- for env in envs %}
+  {%- for env in container['envs'] %}
             - name: {{ env.keys()[0] }}
               value: {{ env.values()[0] }}
   {%- endfor %}

@@ -1,0 +1,82 @@
+type: daemonset
+name: compute-node
+ports: []
+dependencies:
+  service:
+    - keystone-api
+    - glance-api
+    - nova-api
+  job:
+    - nova-init
+    - nova-db-sync
+containers:
+  - name: nova-compute
+    command: nova-compute --config-file /etc/nova/nova.conf
+    image: centos-binary-nova-compute
+    # TODO(DTadrzak): add information about libvirit dependency to envs
+    files:
+      - file_name: nova.conf
+        configmap_name: nova-conf
+        container_path: /etc/nova
+        templates:
+          - nova/templates/nova.conf.j2
+    mounts:
+      - container_path: /etc/resolv.conf
+        name: resolv
+        read_only: true
+        host_path: /home/core/resolv.conf
+      - container_path: /lib/modules
+        name: lib-modules
+        read_only: true
+        host_path: /lib/modules
+      - container_path: /var/lib/nova
+        name: var-lib-nova
+        host_path: /var/lib/nova
+        read_only: false
+      - container_path: /var/lib/libvirt
+        name: var-lib-libvirt
+        host_path: /var/lib/libvirt
+        read_only: false
+      - container_path: /run
+        name: run
+        host_path: /run
+        read_only: false
+      - container_path: /sys/fs/cgroup
+        name: cgroup
+        host_path: /sys/fs/cgroup
+        read_only: false
+  - name: nova-libvirt
+    command: libvirtd --listen
+    image: centos-binary-nova-libvirt
+    # TODO(DTadrzak): add information about libvirit dependency to envs
+    files:
+      - file_name: libvirtd.conf
+        configmap_name: libvirtd-conf
+        container_path: /etc/libvirt
+        templates:
+          - nova/templates/libvirtd.conf.j2
+    mounts:
+      - container_path: /etc/resolv.conf
+        name: resolv
+        read_only: true
+        host_path: /home/core/resolv.conf
+      - container_path: /lib/modules
+        name: lib-modules
+        read_only: true
+        host_path: /lib/modules
+      - container_path: /var/lib/nova
+        name: var-lib-nova
+        host_path: /var/lib/nova
+        read_only: false
+      - container_path: /var/lib/libvirt
+        name: var-lib-libvirt
+        host_path: /var/lib/libvirt
+        read_only: false
+      - container_path: /run
+        name: run
+        host_path: /run
+        read_only: false
+      - container_path: /sys/fs/cgroup
+        name: cgroup
+        host_path: /sys/fs/cgroup
+        read_only: false

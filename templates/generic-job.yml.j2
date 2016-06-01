@@ -7,11 +7,6 @@ spec:
   template:
     metadata:
       name: {{ service_name }}
-      annotations:
-        service_dependencies: "{{ ','.join(service_dependencies) }}"
-        job_dependencies: "{{ ','.join(job_dependencies) }}"
-        ds_dependencies: "{{ ','.join(ds_dependencies) }}"
-        configs: "{{ configmaps_string }}"
     spec:
       restartPolicy: OnFailure
       # TODO(DTadrzak): it must be removed in future
