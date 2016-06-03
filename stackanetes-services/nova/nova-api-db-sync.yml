@@ -1,6 +1,6 @@
 type: job
 name: nova-api-db-sync
-command: bash /tmp/nova-db-sync.sh
+command: bash /tmp/nova-api-db-sync.sh
 image: centos-binary-nova-api
 dependencies:
   service:
@@ -13,8 +13,8 @@ files:
   container_path: /etc/nova
   templates:
   - nova/templates/nova.conf.j2
-- file_name: nova-db-sync.sh
-  configmap_name: nova-db-sync
+- file_name: nova-api-db-sync.sh
+  configmap_name: nova-api-db-sync
   container_path: /tmp
   templates:
-  - nova/templates/nova-db-sync.sh.j2
+  - nova/templates/nova-api-db-sync.sh.j2

@@ -1,0 +1,46 @@
+type: daemonset
+name: openvswitch-agent
+ports: []
+dependencies:
+  service:
+    - keystone-api
+    - glance-api
+    - nova-api
+  job:
+    - nova-init
+    - nova-api-db-sync
+containers:
+  - name: neutron-openvswitch-agent
+    command: bash /tmp/neutron-openvswitch-agent.sh
+    image: centos-binary-neutron-openvswitch-agent
+    files:
+      - file_name: neutron-openvswitch-agent.sh
+        configmap_name: neutron-openvswitch-agent-sh
+        container_path: /tmp
+        templates:
+          - neutron/templates/neutron-openvswitch-agent.sh.j2
+      - file_name: neutron.conf
+        configmap_name: neutron-conf-db-sync
+        container_path: /etc/neutron
+        templates:
+        - neutron/templates/neutron.conf.j2
+        - neutron/templates/neutron.openvswitch.conf.j2
+      - file_name: ml2-conf.ini
+        configmap_name: ml2-conf-db-sync
+        container_path: /etc/neutron/plugins/ml2
+        templates:
+        - neutron/templates/ml2_conf.ini.j2
+        - neutron/templates/ml2_conf.openvswitch.ini.j2
+    mounts:
+      - container_path: /etc/resolv.conf
+        name: resolv
+        read_only: true
+        host_path: /home/core/resolv.conf
+      - container_path: /lib/modules
+        name: lib-modules
+        read_only: true
+        host_path: /lib/modules
+      - container_path: /run
+        name: run
+        host_path: /run
+        read_only: false

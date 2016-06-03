@@ -50,6 +50,7 @@ class ConfigMap(object):
             file_path, file_name = os.path.split(config_file)
             config_dir = os.path.join(self.service_dir, '..', 'config',
                                       file_path)
+            file += "\n"
             file += self._render(config_dir, file_name)
         return file
 

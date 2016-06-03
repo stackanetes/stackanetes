@@ -11,7 +11,7 @@ dependencies:
   - glance-api
   job:
   - nova-init
-  - nova-db-sync
+  - nova-api-db-sync
 files:
 - file_name: nova.conf
   configmap_name: nova-conf

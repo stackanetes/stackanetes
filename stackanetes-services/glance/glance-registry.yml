@@ -1,6 +1,6 @@
 type: deployment
 name: glance-registry
-command: kolla_extend_start
+command: glance-registry
 ports:
 - 9191
 dependencies:

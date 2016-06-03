@@ -139,7 +139,7 @@ password = {{ nova_keystone_password }}
 
 [libvirt]
 connection_uri = "qemu+tcp://{{ get_ip_address }}/system"
-{% if enable_ceph %}
+{% if enable_ceph != "no" %}
 images_type = rbd
 images_rbd_pool = {{ ceph_nova_pool_name }}
 images_rbd_ceph_conf = /etc/ceph/ceph.conf

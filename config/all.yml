@@ -176,8 +176,8 @@ enable_neutron: "yes"
 
 # Additional optional OpenStack services are specified here
 enable_cinder: "no"
-enable_horizon: "no"
-enable_memcached: "no"
+enable_horizon: "yes"
+enable_memcached: "yes"
 enable_haproxy: "no"
 enable_ceph: "no"
 enable_heat: "no"

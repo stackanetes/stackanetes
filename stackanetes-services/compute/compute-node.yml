@@ -8,7 +8,7 @@ dependencies:
     - nova-api
   job:
     - nova-init
-    - nova-db-sync
+    - nova-api-db-sync
 containers:
   - name: nova-compute
     command: nova-compute --config-file /etc/nova/nova.conf
@@ -46,7 +46,7 @@ containers:
         host_path: /sys/fs/cgroup
         read_only: false
   - name: nova-libvirt
-    command: libvirtd --listen
+    command: bash /tmp/nova-libvirt.sh
     image: centos-binary-nova-libvirt
     # TODO(DTadrzak): add information about libvirit dependency to envs
     files:
@@ -55,6 +55,11 @@ containers:
         container_path: /etc/libvirt
         templates:
           - nova/templates/libvirtd.conf.j2
+      - file_name: nova-libvirt.sh
+        configmap_name: nova-libvirt-sh
+        container_path: /tmp
+        templates:
+          - nova/templates/nova-libvirt.sh.j2
     mounts:
       - container_path: /etc/resolv.conf
         name: resolv
