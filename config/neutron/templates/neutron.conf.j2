@@ -12,12 +12,14 @@ api_paste_config = /usr/share/neutron/api-paste.ini
 
 rpc_workers = 8
 api_workers = 8
-dhcp_agents_per_network = 3
+dhcp_agents_per_network = 1
 allow_automatic_l3agent_failover = True
 
 allow_overlapping_ips = true
 core_plugin = ml2
 service_plugins = router
+
+interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 
 [nova]
 auth_url = http://{{ keystone_auth_host }}:{{ keystone_admin_port }}
