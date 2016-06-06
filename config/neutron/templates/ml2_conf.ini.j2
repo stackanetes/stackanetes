@@ -3,6 +3,7 @@
 # Changing type_drivers after bootstrap can lead to database inconsistencies
 type_drivers = flat,vlan,vxlan
 tenant_network_types = vxlan
+mechanism_drivers = openvswitch,l2population
 
 [ml2_type_vlan]
 network_vlan_ranges =
@@ -13,3 +14,15 @@ flat_networks = physnet1
 [ml2_type_vxlan]
 vni_ranges = 1:1000
 vxlan_group = 239.1.1.1
+
+[securitygroup]
+firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+
+[agent]
+tunnel_types = vxlan
+l2_population = true
+arp_responder = true
+
+[ovs]
+bridge_mappings = physnet1:{{ neutron_bridge_name }}
+local_ip = {{ get_ip_address }}

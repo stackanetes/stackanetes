@@ -20,7 +20,6 @@ containers:
         container_path: /etc/neutron
         templates:
         - neutron/templates/neutron.conf.j2
-        - neutron/templates/neutron.openvswitch.conf.j2
       - file_name: ml2-conf.ini
         configmap_name: ml2-conf-db-sync
         container_path: /etc/neutron/plugins/ml2
@@ -68,7 +67,6 @@ containers:
         container_path: /etc/neutron
         templates:
         - neutron/templates/neutron.conf.j2
-        - neutron/templates/neutron.openvswitch.conf.j2
       - file_name: ml2-conf.ini
         configmap_name: ml2-conf-db-sync
         container_path: /etc/neutron/plugins/ml2

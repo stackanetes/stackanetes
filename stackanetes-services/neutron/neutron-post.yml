@@ -1,5 +1,5 @@
 type: job 
-name: nova-post
+name: neutron-post
 command: bash /tmp/neutron-post.sh
 dependencies:
   service:
