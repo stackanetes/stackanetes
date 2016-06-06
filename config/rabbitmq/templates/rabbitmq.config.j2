@@ -1,12 +1,12 @@
 [
   {kernel, [
-    {inet_dist_use_interface, {% raw %}{{% endraw %}{{ hostvars[inventory_hostname]['ansible_' + api_interface]['ipv4']['address'] | regex_replace('\.', ',') }}}},
+    {inet_dist_use_interface, {% raw %}{{% endraw %} {{get_ip_address_erlang}} }},
     {inet_dist_listen_min, {{ rabbitmq_cluster_port }}},
     {inet_dist_listen_max, {{ rabbitmq_cluster_port }}}
   ]},
   {rabbit, [
     {tcp_listeners, [
-      {"{{ hostvars[inventory_hostname]['ansible_' + api_interface]['ipv4']['address'] }}", {{ rabbitmq_port }}}
+      { "{{ get_ip_address }}", {{ rabbitmq_port }} }
     ]},
     {default_user, <<"{{ rabbitmq_user }}">>},
     {default_pass, <<"{{ rabbitmq_password }}">>},
@@ -14,7 +14,7 @@
   ]},
   {rabbitmq_management, [
     {listener, [
-      {ip, "{{ hostvars[inventory_hostname]['ansible_' + api_interface]['ipv4']['address'] }}"},
+      {ip, "{{ get_ip_address }}"},
       {port, {{ rabbitmq_management_port }}}
     ]}
   ]},
