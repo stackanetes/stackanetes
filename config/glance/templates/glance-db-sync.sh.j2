@@ -1,4 +1,2 @@
-#!/bin/bash
-
-glance-manage db_sync
+glance-manage  --debug db_sync
 sudo chown -R glance: /var/lib/glance/
