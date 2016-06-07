@@ -235,3 +235,4 @@ ceph_cache_rule: "cache host firstn"
 get_ip_address: {% raw %}"{{ .IP }}"{% endraw %}
 get_ip_address_erlang: {% raw %}"{{ .IP_ERLANG }}"{% endraw %}
 get_hostname: {% raw %}"{{ .HOSTNAME }}"{% endraw %}
+get_ip_address_erlang: {% raw %}"{{ .IP_ERLANG }}"{% endraw %}
