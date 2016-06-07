@@ -9,7 +9,7 @@ innodb_autoinc_lock_mode=2
 
 datadir=/var/lib/mysql/
 
-
+wsrep_cluster_address=gcomm://
 wsrep_provider_options="gmcast.listen_addr=tcp://{{ get_ip_address }}:{{ mariadb_wsrep_port }};ist.recv_addr={{ get_ip_address }}:{{ mariadb_ist_port }}"
 
 wsrep_node_address={{ get_ip_address }}:{{ mariadb_wsrep_port }}
