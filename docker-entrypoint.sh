@@ -6,7 +6,7 @@ if [[ ! $(kubectl get nodes) ]] ; then
 	exit 1;
 fi
 if [[ ! $(kubectl get nodes -o json | grep controller ) ]] ; then
-	echo Cannot find a node with app=persistent-control label 
+	echo Cannot find a node with app=control label 
 	exit 1;
 fi
 
@@ -16,13 +16,11 @@ if [[ ! $(kubectl get nodes -o json | grep compute ) ]] ; then
 fi
 
 echo Modifying stackanetes.conf
-builderip=$(cat /etc/stackanetes/stackanetes.conf | grep 2181 | awk '{print $3}')
 
-sed -i "s@#host = $builderip@host = $ZK_HOST@g" /etc/stackanetes/stackanetes.conf
 sed -i 's@#kubectl_path@kubectl_path@g' /etc/stackanetes/stackanetes.conf
-sed -i "s@#tag = 1.0.0@tag = $IMAGE_VERSION@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#docker_image_tag = mitaka@docker_image_tag = $IMAGE_VERSION@g" /etc/stackanetes/stackanetes.conf
 sed -i "s@#minion_interface_name = eno1@minion_interface_name = $HOST_INTERFACE@g" /etc/stackanetes/stackanetes.conf
-
+sed -i "s@#docker_registry = quay.io/stackanetes@docker_registry = $DOCKER_REGISTRY@g" /etc/stackanetes/stackanetes.conf
 
 echo Deploying stackanetes
-stackanetes --config-dir /etc/stackanetes run all --debug
+python ./deploy_all.py

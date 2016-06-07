@@ -9,7 +9,7 @@ services_names = []
 for _, _, files_names in os.walk(service_path):
     services_names.extend(files_names)
 
-services_names = [ file_name.rstrip('.yml') for file_name in services_names]
+services_names = [ file_name[:-4] for file_name in services_names]
 
 for service_name in services_names:
     cmd = ['stackanetes', '--config-dir', '/etc/stackanetes', '--debug', 'kill']
