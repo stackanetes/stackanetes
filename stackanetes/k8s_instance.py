@@ -4,13 +4,13 @@ import yaml
 from oslo_config import cfg
 from oslo_log import log as logging
 
-from kolla_k8s.manifest import Manifest
-from kolla_k8s.configmap import ConfigMap
+from stackanetes.manifest import Manifest
+from stackanetes.configmap import ConfigMap
 
 
 LOG = logging.getLogger()
 CONF = cfg.CONF
-CONF.import_group('stackanetes', 'kolla_k8s.config.stackanetes')
+CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
 
 
 class K8sInstance():
@@ -24,8 +24,7 @@ class K8sInstance():
 
     def _load_service_variables(self):
         variables = dict()
-        path_to_service_conf = os.path.join(self.service_dir, '..',
-                                            'stackanetes-services',
+        path_to_service_conf = os.path.join(self.service_dir,
                                             self.service_type,
                                             self.service_name + '.yml')
         LOG.debug("Instance: {} loading files from {}".format(

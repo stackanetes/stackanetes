@@ -21,14 +21,14 @@ from cliff import interactive
 from oslo_config import cfg
 from oslo_log import log
 
-from kolla_k8s.common import file_utils
-from kolla_k8s.common import utils
+from stackanetes.common import file_utils
+from stackanetes.common import utils
 
-PROJECT = 'kolla_k8s'
+PROJECT = 'stackanetes'
 VERSION = '1.0'
 
 CONF = cfg.CONF
-CONF.import_group('stackanetes', 'kolla_k8s.config.stackanetes')
+CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
 
 log.register_options(CONF)
 log.set_defaults(
@@ -41,7 +41,7 @@ cli_opts = [
     cfg.StrOpt('service-dir',
                default=utils.env(
                    'KM_SERVICE_DIR', default=os.path.join(
-                       file_utils.find_base_dir(), 'services')),
+                       file_utils.find_base_dir(), 'stackanetes-services')),
                help='Directory with services, (Env: KM_SERVICE_DIR)'),
 ]
 CONF.register_cli_opts(cli_opts)
@@ -65,18 +65,12 @@ class KollaMesosInteractiveApp(interactive.InteractiveApp):
 class KollaMesosShell(app.App):
     def __init__(self):
         super(KollaMesosShell, self).__init__(
-            description='Kolla-k8s command-line interface',
+            description='stackanetes command-line interface',
             version=VERSION,
-            command_manager=commandmanager.CommandManager('kolla_k8s.cli'),
+            command_manager=commandmanager.CommandManager('stackanetes.cli'),
             deferred_help=True,
             interactive_app_factory=KollaMesosInteractiveApp
         )
-
-    def configure_logging(self):
-        return
-
-    def initialize_app(self, argv):
-        self.options.service_dir = CONF.service_dir
 
     def print_help(self):
         outputs = []

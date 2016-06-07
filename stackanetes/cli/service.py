@@ -15,7 +15,7 @@ from oslo_config import cfg
 from oslo_log import log
 
 
-from kolla_k8s import service
+from stackanetes import service
 
 CONF = cfg.CONF
 LOG = log.getLogger(__name__)
@@ -30,8 +30,7 @@ class Run(command.Command):
         return parser
 
     def take_action(self, parsed_args):
-        service.run_service(parsed_args.service,
-                            CONF.service_dir)
+        service.run_service(parsed_args.service, CONF.service_dir)
 
 
 class Kill(command.Command):

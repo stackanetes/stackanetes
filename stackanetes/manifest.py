@@ -6,7 +6,7 @@ from oslo_log import log as logging
 
 LOG = logging.getLogger()
 CONF = cfg.CONF
-CONF.import_group('stackanetes', 'kolla_k8s.config.stackanetes')
+CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
 
 
 class Manifest(object):
@@ -67,7 +67,6 @@ class Manifest(object):
                                        configuration['dependencies'])
             self._add_files_list(container_dict['envs'],
                                  container_dict['configmaps'])
-            print container_dict['envs']
 
         self.configmaps = config_maps
         self.configmaps = self._filter_elements(self.configmaps, 'configmap_name')

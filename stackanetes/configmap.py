@@ -3,14 +3,14 @@ import subprocess
 import yaml
 
 from jinja2 import Environment, FileSystemLoader
-from kolla_k8s.common import file_utils
+from stackanetes.common import file_utils
 from oslo_config import cfg
 from oslo_log import log as logging
 
 
 LOG = logging.getLogger()
 CONF = cfg.CONF
-CONF.import_group('stackanetes', 'kolla_k8s.config.stackanetes')
+CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
 
 
 class ConfigMap(object):

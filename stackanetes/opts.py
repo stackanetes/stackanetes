@@ -10,8 +10,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from kolla_k8s.config import logging
-from kolla_k8s.config import stackanetes
+from stackanetes.config import logging
+from stackanetes.config import stackanetes
 
 
 def list_opts():

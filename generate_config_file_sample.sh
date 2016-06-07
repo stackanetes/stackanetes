@@ -25,24 +25,24 @@ for file in `ls etc/oslo-config-generator/*`; do
     $GEN_CMD --config-file=$file
 done
 
-if [ ! -d /etc/kolla-k8s ]
+if [ ! -d /etc/stackanetes ]
 then
-    mkdir /etc/kolla-k8s
+    mkdir /etc/stackanetes
 fi
 
-if [ ! -f /etc/kolla-k8s/globals.yml ]
+if [ ! -f /etc/stackanetes/globals.yml ]
 then
-    cp etc/globals.yml /etc/kolla-k8s/globals.yml
+    cp etc/globals.yml /etc/stackanetes/globals.yml
 fi
 
-if  [ ! -f /etc/kolla-k8s/kolla-k8s.conf ]
+if  [ ! -f /etc/stackanetes/stackanetes.conf ]
 then
-     cp etc/kolla-k8s.conf.sample /etc/kolla-k8s/kolla-k8s.conf
+     cp etc/stackanetes.conf.sample /etc/stackanetes/stackanetes.conf
 fi
 
-if [ ! -f /etc/kolla-k8s/passwords.yml ]
+if [ ! -f /etc/stackanetes/passwords.yml ]
 then
-    cp etc/passwords.yml /etc/kolla-k8s/passwords.yml
+    cp etc/passwords.yml /etc/stackanetes/passwords.yml
 fi
 
 set -x

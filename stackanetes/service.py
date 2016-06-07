@@ -14,11 +14,11 @@
 from oslo_config import cfg
 from oslo_log import log as logging
 
-from kolla_k8s.k8s_instance import K8sInstance
+from stackanetes.k8s_instance import K8sInstance
 
 LOG = logging.getLogger()
 CONF = cfg.CONF
-CONF.import_group('stackanetes', 'kolla_k8s.config.stackanetes')
+CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
 
 
 # Public API below

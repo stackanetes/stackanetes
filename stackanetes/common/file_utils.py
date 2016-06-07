@@ -36,8 +36,8 @@ def mkdir_p(path):
 
 
 def get_src_dir():
-    kolla_mesos = importutils.import_module('kolla_k8s')
-    mod_path = os.path.abspath(kolla_mesos.__file__)
+    stackanetes = importutils.import_module('stackanetes')
+    mod_path = os.path.abspath(stackanetes.__file__)
     # remove the file and module to get to the base.
     return os.path.dirname(os.path.dirname(mod_path))
 
@@ -45,9 +45,9 @@ def get_src_dir():
 def find_base_dir():
     script_path = os.path.dirname(os.path.realpath(sys.argv[0]))
     base_script_path = os.path.basename(script_path)
-    if base_script_path == 'kolla-k8s':
+    if base_script_path == 'stackanetes':
         return script_path
-    if base_script_path == 'kolla_k8s':
+    if base_script_path == 'stackanetes':
         return os.path.join(script_path, '..')
     if base_script_path == 'cmd':
         return os.path.join(script_path, '..', '..')
@@ -55,19 +55,19 @@ def find_base_dir():
         return get_src_dir()
     if base_script_path == 'bin':
         if find_os_type() in ['Ubuntu', 'debian']:
-            base_dir = '/usr/local/share/kolla-k8s'
+            base_dir = '/usr/local/share/stackanetes'
         else:
-            base_dir = '/usr/share/kolla-k8s'
+            base_dir = '/usr/share/stackanetes'
 
         if os.path.exists(base_dir):
             return base_dir
         else:
             return get_src_dir()
-    return '/usr/share/kolla-k8s'
+    return '/usr/share/stackanetes'
 
 
 def find_config_file(filename):
-    filepath = os.path.join('/etc/kolla-k8s', filename)
+    filepath = os.path.join('/etc/stackanetes', filename)
     if os.access(filepath, os.R_OK):
         config_file = filepath
     else:
@@ -77,7 +77,7 @@ def find_config_file(filename):
 
 
 POSSIBLE_PATHS = set([
-    '/usr/share/kolla-k8s',
+    '/usr/share/stackanetes',
     get_src_dir(),
     find_base_dir()
 ])
