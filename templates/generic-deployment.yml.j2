@@ -45,8 +45,15 @@ spec:
       {%- endif %}
       containers:
         - name: {{ service_name }}
+{%- if image %}
+          image: {{ docker_registry }}/{{ image }}:{{ image_version }}
+{%- else %}
           image: {{ docker_registry }}/centos-binary-{{ service_name }}:{{ image_version }}
+{%- endif %}
           imagePullPolicy: Always
+          command:
+            - sleep
+            - inf
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -60,7 +67,7 @@ spec:
                   fieldPath: metadata.namespace
 {%- for env in envs %}
             - name: {{ env.keys()[0] }}
-              value: {{ env.values()[0] }}
+              value: "{{ env.values()[0] }}"
 {%- endfor %}
 {%- if ports != [] %}
           readinessProbe:
@@ -85,6 +92,13 @@ spec:
               mountPath: /configmaps/{{ configmap['file_name'] }}
               {% endif %}
 {%- endfor %}
+{%- for mount in mounts %}
+            - mountPath: {{ mount['container_path'] }}
+              name: {{ mount['name'] }}
+    {% if mount['read_only'] %}
+              readOnly: true
+    {% endif %}
+{%- endfor %}
 {%- for emptydir in emptydirs %}
             - name: {{ emptydir['name'] }}
               mountPath: {{ emptydir['container_path'] }}
@@ -106,3 +120,8 @@ spec:
         - name: {{ emptydir['name'] }}
           emptyDir: {}
 {%- endfor %}
+  {%- for mount in mounts %}
+        - name: {{ mount['name'] }}
+          hostPath:
+            path: {{ mount['host_path'] }}
+  {%- endfor %}

@@ -34,6 +34,7 @@ class Manifest(object):
         self.session_affinity = configuration.get("session_affinity",[])
         self.non_root = configuration.get("non_root",[])
         self.emptydirs = configuration.get('emptyDirs', [])
+        self.mounts = configuration.get('mounts', [])
         self.envs.append({'COMMAND': self.command})
         self.template_name = self._find_template()
         self._set_service_type()
