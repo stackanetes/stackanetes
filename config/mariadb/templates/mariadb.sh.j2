@@ -1,3 +1,4 @@
+set -x
 function bootstrap_db {
     mysqld_safe --wsrep-new-cluster &
     # Wait for the mariadb server to be "Ready" before starting the security reset with a max timeout
@@ -16,28 +17,12 @@ function bootstrap_db {
     mysqladmin -uroot -p"${DB_ROOT_PASSWORD}" shutdown
 }
 
-# Only update permissions if permissions need to be updated
-if [[ $(stat -c %U:%G /var/lib/mysql) != "mysql:mysql" ]]; then
-    sudo chown mysql: /var/lib/mysql
-fi
+sudo chown mysql: /var/lib/mysql
 
-# Create log directory, with appropriate permissions
-if [[ ! -d "/var/log/kolla/mariadb" ]]; then
-    mkdir -p /var/log/kolla/mariadb
-fi
-if [[ $(stat -c %a /var/log/kolla/mariadb) != "755" ]]; then
-    chmod 755 /var/log/kolla/mariadb
-fi
+mkdir -p /var/log/kolla/mariadb
+chmod 755 /var/log/kolla/mariadb
 
-# This catches all cases of the BOOTSTRAP variable being set, including empty
-if [[ "${!KOLLA_BOOTSTRAP[@]}" ]]; then
-    mysql_install_db
-    bootstrap_db
-    exit 0
-fi
+su -s /bin/bash mysql - mysql -c 'mysql_install_db'
+su -s /bin/bash mysql - mysql -c 'bootstrap_db'
 
-if [[ "${!BOOTSTRAP_ARGS[@]}" ]]; then
-    ARGS="${BOOTSTRAP_ARGS}"
-fi
-
-/usr/bin/mysqld_safe
+su -s /bin/bash mysql - mysql -c '/usr/bin/mysqld_safe --wsrep-new-cluster'

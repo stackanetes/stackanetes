@@ -51,9 +51,6 @@ spec:
           image: {{ docker_registry }}/centos-binary-{{ service_name }}:{{ image_version }}
 {%- endif %}
           imagePullPolicy: Always
-          command:
-            - sleep
-            - inf
           env:
             - name: INTERFACE_NAME
               value: "eth0"

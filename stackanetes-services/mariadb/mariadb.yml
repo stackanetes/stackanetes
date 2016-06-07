@@ -1,5 +1,5 @@
 type: deployment
-name: mariadbdwa
+name: mariadb
 command: "bash /tmp/mariadb.sh"
 image: centos-binary-mariadb
 ports:
