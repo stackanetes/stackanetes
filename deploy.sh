@@ -1,4 +1,4 @@
 #!/bin/bash
-sudo python setup.py install
-kolla-k8s --config-dir /etc/kolla-k8s --debug kill $1
-kolla-k8s --config-dir /etc/kolla-k8s --debug run $1
+python setup.py install
+stackanetes --config-dir /etc/stackanetes --debug kill $1
+stackanetes --config-dir /etc/stackanetes --debug run $1
