@@ -5,5 +5,4 @@ ports:
 - 11211
 session_affinity: true
 files: []
-image: memcached
 non_root: true

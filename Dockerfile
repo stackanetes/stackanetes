@@ -1,22 +1,19 @@
 FROM ubuntu:14.04
 
-env NEUTRON_CNI eth0
-env DEST_YML_FILES_DIR /stackanetes/rc
 env DOCKER_REGISTRY quay.io/stackanetes
 env HOST_INTERFACE eno2
 env IMAGE_VERSION 2.0.0
-env KUBECONFIG ''
-env KUBEHOST ''
 
 WORKDIR /stackanetes
 
 RUN apt-get update && \
 	apt-get -y install python-pip python-dev libffi-dev libssl-dev git curl 
 
-RUN pip install --upgrade pip && \
-    curl -O https://storage.googleapis.com/kubernetes-release/release/v1.2.3/bin/linux/amd64/kubectl && \
+RUN curl -O https://storage.googleapis.com/kubernetes-release/release/v1.3.0-alpha.4/bin/linux/amd64/kubectl && \
 	mv kubectl /usr/bin/kubectl && \
 	chmod +x /usr/bin/kubectl 
+
+RUN pip install --upgrade pip 
 
 COPY . /stackanetes
 

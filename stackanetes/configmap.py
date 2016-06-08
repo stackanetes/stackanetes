@@ -22,6 +22,10 @@ class ConfigMap(object):
         self.container_path = configs['container_path']
         self.templates = configs['templates']
         self.variables = {}
+        self.variables['dns_ip'] = CONF.stackanetes['dns_ip']
+        print CONF.stackanetes['dns_ip']
+        print CONF.stackanetes['cluster_name']
+        self.variables['cluster_name'] = CONF.stackanetes['cluster_name']
 
     def _set_type(self, template_path):
         self.type = template_path.split('/')[0]

@@ -24,7 +24,9 @@ stackanetes_opts = [
     cfg.StrOpt('kubectl_path', default='/usr/bin/kubectl'),
     cfg.StrOpt('memory', default='4092Mi'),
     cfg.StrOpt('minion_interface_name', default='eno1'),
-    cfg.StrOpt('namespace', default='stackanetes')
+    cfg.StrOpt('namespace', default='stackanetes'),
+    cfg.StrOpt('dns_ip', default='10.2.0.10'),
+    cfg.StrOpt('cluster_name', default='cluster.local')
 ]
 
 stackanetes_opt_group = cfg.OptGroup(name='stackanetes', title="test")

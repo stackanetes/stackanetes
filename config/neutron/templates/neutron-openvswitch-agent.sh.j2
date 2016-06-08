@@ -1,2 +1,4 @@
+#!/usr/bin/env bash
+set -e
 ovs-vsctl add-br br-ex
 sudo -E -u neutron neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini

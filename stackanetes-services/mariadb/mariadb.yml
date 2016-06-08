@@ -21,3 +21,8 @@ files:
     container_path: /etc/mysql
     templates:
       - mariadb/templates/galera.cnf.j2
+  - file_name: bootstrap.sh
+    configmap_name: bootstrap 
+    container_path: /tmp
+    templates:
+      - mariadb/templates/bootstrap.sh.j2

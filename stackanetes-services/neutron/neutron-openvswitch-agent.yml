@@ -30,11 +30,12 @@ containers:
         templates:
         - neutron/templates/ml2_conf.ini.j2
         - neutron/templates/ml2_conf.openvswitch.ini.j2
+      - file_name: resolv.conf
+        configmap_name: resolv
+        container_path: /etc
+        templates:
+        - common/templates/resolv.conf.j2
     mounts:
-      - container_path: /etc/resolv.conf
-        name: resolv
-        read_only: true
-        host_path: /home/core/resolv.conf
       - container_path: /lib/modules
         name: lib-modules
         read_only: true
