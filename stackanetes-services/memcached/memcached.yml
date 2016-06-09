@@ -1,5 +1,6 @@
 type: deployment
 name: memcached
+image: memcached
 command: "su  memcache -c 'memcached'"
 ports:
 - 11211
