@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
 env DOCKER_REGISTRY quay.io/stackanetes
 env HOST_INTERFACE eno2
@@ -17,9 +17,9 @@ RUN pip install --upgrade pip
 
 COPY . /stackanetes
 
-RUN pip install -r requirements.txt && \
-	python setup.py build && python setup.py install && \
-	./generate_config_file_sample.sh && \	
-	rm /stackanetes/Dockerfile
+RUN pip install -r requirements.txt
+RUN python setup.py install
+RUN ./generate_config_file_sample.sh
+RUN rm /stackanetes/Dockerfile
 
 ENTRYPOINT ["/stackanetes/docker-entrypoint.sh"]

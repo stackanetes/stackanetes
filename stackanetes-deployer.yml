@@ -13,3 +13,11 @@ spec:
     env:
     - name: HOST_INTERFACE
       value: "eno2" #name of physical interface for compute-node
+    - name: DOCKER_REGISTRY
+      value: "quay.io/stackanetes"
+    - name: IMAGE_VERSION
+      value: "zkless"
+    - name: DNS_IP
+      value: "10.2.0.10"
+    - name: CLUSTER_NAME
+      value: "cluster.local"
