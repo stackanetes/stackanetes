@@ -21,3 +21,5 @@ spec:
       value: "10.2.0.10"
     - name: CLUSTER_NAME
       value: "cluster.local"
+    - name: EXTERNAL_IP
+      value: "10.10.10.10"

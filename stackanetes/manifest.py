@@ -14,11 +14,13 @@ class Manifest(object):
         self.service_dir = service_dir
         self.type = configuration['type']
         self.service_name = configuration['name']
-        self.external_ip = configuration.get('external_ip')
+        self.external_ip_enabled = configuration.get('external_ip_enabled',
+                                                     False)
         self.memory = CONF.stackanetes.memory
         self.docker_registry = CONF.stackanetes.docker_registry
         self.image_version = CONF.stackanetes.docker_image_tag
         self.host_interface = CONF.stackanetes.minion_interface_name
+        self.external_ip = CONF.stackanetes.external_ip
         if configuration.get('containers'):
             self._parameters_for_multi_containers_pod(configuration)
         else:

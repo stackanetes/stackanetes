@@ -2,7 +2,7 @@ type: deployment
 name: nova-novncproxy
 command: nova-novncproxy --config-file /etc/nova/nova.conf
 # TODO(DTadrzak): move it to config?
-external_ip: 10.91.96.80
+external_ip_enabled: true
 ports:
   - 6080
 dependencies:

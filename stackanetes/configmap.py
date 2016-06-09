@@ -21,11 +21,11 @@ class ConfigMap(object):
         self.name = configs['configmap_name']
         self.container_path = configs['container_path']
         self.templates = configs['templates']
-        self.variables = {}
-        self.variables['dns_ip'] = CONF.stackanetes['dns_ip']
-        print CONF.stackanetes['dns_ip']
-        print CONF.stackanetes['cluster_name']
-        self.variables['cluster_name'] = CONF.stackanetes['cluster_name']
+        self.variables = {
+            'dns_ip': CONF.stackanetes['dns_ip'],
+            'cluster_name': CONF.stackanetes['cluster_name'],
+            'external_ip': CONF.stackanetes['external_ip']
+        }
 
     def _set_type(self, template_path):
         self.type = template_path.split('/')[0]

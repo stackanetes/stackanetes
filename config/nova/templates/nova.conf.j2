@@ -36,7 +36,7 @@ allow_resize_to_same_host = true
 scheduler_host_manager = nova.scheduler.ironic_host_manager.IronicHostManager
 {% endif %}
 
-{% if service_name == "openstack/nova/nova-compute-ironic" %}
+{% if service_name == "nova-compute-ironic" %}
 compute_driver = nova.virt.ironic.IronicDriver
 vnc_enabled = False
 ram_allocation_ratio = 1.0
@@ -61,9 +61,7 @@ novncproxy_port = {{ nova_novncproxy_port }}
 [vnc]
 vncserver_listen = {{ get_ip_address }}
 vncserver_proxyclient_address = {{ get_ip_address }}
-{% if service_name == "openstack/nova/nova-compute" %}
-novncproxy_base_url = http://{{ get_ip_address }}:31313/vnc_auto.html
-{% endif %}
+novncproxy_base_url = http://{{ external_ip }}:6080/vnc_auto.html
 {% elif nova_console == 'spice' %}
 [vnc]
 # We have to turn off vnc to use spice
@@ -71,14 +69,12 @@ enabled = false
 [spice]
 server_listen = {{ get_ip_address }}
 server_proxyclient_address = {{ get_ip_address }}
-{% if service_name == "openstack/nova/nova-compute" %}
 html5proxy_base_url = http://{{ nova_spicehtml5proxy_host }}:{{ nova_spicehtml5proxy_port }}/spice_auto.html
-{% endif %}
 html5proxy_host = {{ get_ip_address }}
 html5proxy_port = {{ nova_spicehtml5proxy_port }}
 {% endif %}
 
-{% if service_name == "openstack/nova/nova-compute-ironic" %}
+{% if service_name == "nova-compute-ironic" %}
 [ironic]
 #(TODO) remember to update this once discoverd is replaced by inspector
 admin_username = {{ ironic_keystone_user }}

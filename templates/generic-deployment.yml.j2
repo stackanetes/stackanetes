@@ -8,7 +8,7 @@ spec:
     {%- if session_affinity %}
   sessionAffinity: ClientIP
     {%- endif %}
-    {%- if external_ip %}
+    {%- if external_ip_enabled %}
   externalIPs:
     - {{ external_ip }}
     {%- endif %}

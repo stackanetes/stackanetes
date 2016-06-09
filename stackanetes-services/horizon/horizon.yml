@@ -11,7 +11,7 @@ dependencies:
     - nova-api
   job:
     - nova-post
-external_ip: 10.91.96.80
+external_ip_enabled: true
 files:
 - file_name: kolla-apache-wrapper.sh
   configmap_name: horizon
