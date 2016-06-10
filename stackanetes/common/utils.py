@@ -10,9 +10,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import collections
 import os
-from six.moves.urllib import parse
+import subprocess
+from oslo_config import cfg
+
+
+CONF = cfg.CONF
+CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
 
 
 def env(*args, **kwargs):
@@ -21,3 +25,35 @@ def env(*args, **kwargs):
         if value:
             return value
     return kwargs.get('default', '')
+
+
+def get_kubectl_command(add_namespace=True):
+    cmd = [CONF.stackanetes.kubectl_path]
+    if CONF.stackanetes.host:
+        server = "--server=" + CONF.stackanetes.host
+        cmd.append(server)
+    if CONF.stackanetes.kubeconfig_path:
+        kubeconfig_path = "--kubeconfig=" + CONF.stackanetes.kubeconfig_path
+        cmd.append(kubeconfig_path)
+    if CONF.stackanetes.context:
+        context = "--context=" + CONF.stackanetes.context
+        cmd.append(context)
+    if add_namespace:
+        namespace = "--namespace=" + CONF.stackanetes.namespace
+        cmd.append(namespace)
+
+    return cmd
+
+
+def create_namespace(namespace):
+    cmd = get_kubectl_command(add_namespace=False)
+    cmd.extend(['create', 'namespace', namespace])
+    subprocess.call(cmd)
+
+
+def check_if_namespace_exist(namespace):
+    cmd = get_kubectl_command(add_namespace=False)
+    cmd.extend(['get', 'namespace', namespace])
+    output = subprocess.Popen(cmd,
+                              stdout=subprocess.PIPE).communicate()[0]
+    return True if 'Active' in output else False

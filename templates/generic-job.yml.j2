@@ -6,6 +6,7 @@ metadata:
 spec:
   template:
     metadata:
+      namespace: {{ namespace }}
       name: {{ service_name }}
     spec:
       restartPolicy: OnFailure

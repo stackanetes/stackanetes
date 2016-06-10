@@ -7,6 +7,7 @@ metadata:
 spec:
   template:
     metadata:
+      namespace: {{ namespace }}
       labels:
         app: {{ service_name }}
       name: {{ service_name }}
