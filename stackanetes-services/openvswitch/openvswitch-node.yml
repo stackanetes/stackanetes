@@ -1,5 +1,6 @@
 type: daemonset
 name: openvswitch-node
+label: openvswitch-node
 ports: []
 dependencies:
   service:

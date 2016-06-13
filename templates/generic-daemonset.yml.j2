@@ -14,7 +14,7 @@ spec:
     spec:
       hostPID: true
       nodeSelector:
-        app: compute
+        {{ label }}: enabled
       securityContext:
         runAsUser: 0
       hostNetwork: true

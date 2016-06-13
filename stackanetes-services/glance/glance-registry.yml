@@ -1,5 +1,6 @@
 type: deployment
 name: glance-registry
+label: control-plane
 command: glance-registry
 ports:
 - 9191

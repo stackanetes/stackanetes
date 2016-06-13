@@ -1,5 +1,6 @@
 type: deployment
 name: nova-novncproxy
+label: control-plane
 command: nova-novncproxy --config-file /etc/nova/nova.conf
 # TODO(DTadrzak): move it to config?
 external_ip_enabled: true

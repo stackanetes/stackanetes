@@ -1,5 +1,6 @@
 type: daemonset
 name: compute-node
+label: compute-node
 ports: []
 dependencies:
   service:

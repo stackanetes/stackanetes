@@ -1,5 +1,6 @@
 type: deployment
 name: memcached
+label: control-plane
 image: memcached
 command: "su  memcache -c 'memcached'"
 ports:

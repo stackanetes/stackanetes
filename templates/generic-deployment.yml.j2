@@ -39,7 +39,7 @@ spec:
       name: {{ service_name }}
     spec:
       nodeSelector:
-        app: controller
+        {{ label }}: enabled
       {%- if  not non_root %}
       # TODO(DTadrzak): it must be removed in future
       securityContext:

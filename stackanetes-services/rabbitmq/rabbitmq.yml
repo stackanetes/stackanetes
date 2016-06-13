@@ -1,5 +1,6 @@
 type: deployment
 name: rabbitmq
+label: control-plane
 command: "bash /tmp/rabbitmq.sh"
 image: centos-binary-rabbitmq
 ports:

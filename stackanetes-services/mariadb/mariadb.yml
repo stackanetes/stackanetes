@@ -1,5 +1,6 @@
 type: deployment
 name: mariadb
+label: control-plane
 command: "bash /tmp/mariadb.sh"
 image: centos-binary-mariadb
 ports:

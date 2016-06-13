@@ -1,5 +1,6 @@
 type: deployment
 name: glance-api
+label: control-plane
 command: glance-api
 ports:
 - 9292

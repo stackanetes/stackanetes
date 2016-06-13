@@ -1,4 +1,5 @@
 type: deployment
+label: control-plane
 name: keystone-api
 command: bash /tmp/apache-wrapper.sh
 ports:

@@ -1,5 +1,6 @@
 type: daemonset
 name: openvswitch-agent
+label: neutron-openvswitch-agent
 ports: []
 dependencies:
   service:

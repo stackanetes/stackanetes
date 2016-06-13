@@ -1,5 +1,6 @@
 type: deployment
 name: neutron-server
+label: control-plane
 command: neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini
 ports:
 - 9696
