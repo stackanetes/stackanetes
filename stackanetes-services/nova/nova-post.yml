@@ -4,6 +4,7 @@ command: bash /tmp/nova-post.sh
 dependencies:
   service:
   - keystone-api
+  - nova-api
   job:
   - nova-api-db-sync
 files:

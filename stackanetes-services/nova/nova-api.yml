@@ -9,8 +9,8 @@ dependencies:
   service:
   - mariadb
   - glance-api
+  - keystone-api
   job:
-  - nova-init
   - nova-api-db-sync
 files:
 - file_name: nova.conf

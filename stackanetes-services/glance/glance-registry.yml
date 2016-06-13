@@ -8,8 +8,9 @@ dependencies:
   service:
   - mariadb
   - rabbitmq
+  - glance-api
   job:
-  - glance-init
+  - glance-db-sync
 files:
 - file_name: glance.conf
   configmap_name: glance-registry

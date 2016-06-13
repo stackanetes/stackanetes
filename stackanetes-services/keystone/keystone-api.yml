@@ -8,8 +8,9 @@ ports:
 dependencies:
   service:
   - mariadb
+  - rabbitmq
   job:
-  - keystone-init
+  - keystone-db-sync
 files:
 - file_name: keystone.conf
   configmap_name: keystone-conf

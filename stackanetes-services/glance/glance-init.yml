@@ -5,7 +5,6 @@ dependencies:
   service:
   - mariadb
   - rabbitmq
-  - keystone-api
 files:
 - file_name: glance-init.sh
   configmap_name: glance-init

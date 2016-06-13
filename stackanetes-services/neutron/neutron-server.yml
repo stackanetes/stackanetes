@@ -8,8 +8,8 @@ dependencies:
   service:
   - rabbitmq
   - mariadb
+  - keystone-api
   job:
-  - neutron-init
   - neutron-server-db-sync
 files:
 - file_name: neutron.conf
