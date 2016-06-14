@@ -37,10 +37,9 @@ sudo ./generate_config_file_sample.sh
 Now, set the following variables in /etc/stackanetes/stackanetes.conf:
 
 ```
-[k8s]
+[stackanetes]
 host = localhost:8001 // k8s API, this can be easily be configured by using 'kubectl proxy'
 kubectl_path = /opt/bin/kubectl // absolute path to kubectl binary
-[stackanetes]
 docker_image_tag = barcelona // tag for images
 docker_registry = 192.168.0.1 // docker registry name
 minion_interface_name = eno1 // set physical interface name of minions
@@ -54,13 +53,13 @@ external_ip = 192.168.0.1 // external ip for services like horizon
 Control plane (mariadb, zookeeper, rabbitmq) will be labeled as such:
 
 ```
-kubectl label node minion1 control-plane=enabled
+kubectl label node minion1 app=controller
 ```
 
 Compute node will run couple of daemonsets like (compute-node, network-node, openvswitch-agent, openvswitch-node) , the VMs. Currently you need to dedicate the host to these:
 
 ```
-kubectl label node minion2  compute-node=enabled network-node=enabled neutron-openvswitch-agent=enabled  openvswitch-node=enabled
+kubectl label node minion2  app=compute
 ```
 
 ## Deploy OpenStack services
