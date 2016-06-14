@@ -10,11 +10,16 @@ dependencies:
   job:
     - nova-init
     - nova-api-db-sync
+  ds:
+    - openvswitch-agent
+    - openvswitch-node
 containers:
   - name: nova-compute
     command: nova-compute --config-file /etc/nova/nova.conf
     image: centos-binary-nova-compute
-    # TODO(DTadrzak): add information about libvirit dependency to envs
+    dependencies:
+      containers:
+      - nova-libvirt
     files:
       - file_name: nova.conf
         configmap_name: nova-conf
@@ -50,7 +55,6 @@ containers:
   - name: nova-libvirt
     command: bash /tmp/nova-libvirt.sh
     image: centos-binary-nova-libvirt
-    # TODO(DTadrzak): add information about libvirit dependency to envs
     files:
       - file_name: libvirtd.conf
         configmap_name: libvirtd-conf

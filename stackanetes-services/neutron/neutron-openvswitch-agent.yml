@@ -10,6 +10,8 @@ dependencies:
   job:
     - nova-init
     - nova-api-db-sync
+  ds:
+    - openvswitch-node
 containers:
   - name: neutron-openvswitch-agent
     command: bash /tmp/neutron-openvswitch-agent.sh
