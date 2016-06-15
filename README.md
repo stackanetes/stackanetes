@@ -70,16 +70,16 @@ You can run service one by one:
 stackanetes --config-dir /etc/stackanetes run <name-of-service>
 ```
 
-Or deploy all with deploy_all/py script:
+Or deploy all with manage_all/py script:
 
 ```
-./deploy_all.py run
+./manage_all.py run
 ```
 
 To kill all of OpenStack services use the same script but with kill parameter:
 
 ```
-./deploy_all.py kill
+./manage_all.py kill
 ```
 ## Deploy Stackanetes via stackanetes-deployer POD
 
