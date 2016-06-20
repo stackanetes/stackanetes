@@ -1,7 +1,8 @@
 type: deployment
 name: memcached
+label: openstack-control-plane
 image: memcached
-command: "su  memcache -c 'memcached'"
+command: "memcached"
 ports:
 - 11211
 session_affinity: true

@@ -1,5 +1,6 @@
 type: deployment
 name: glance-api
+label: openstack-control-plane
 command: glance-api
 ports:
 - 9292
@@ -7,8 +8,9 @@ dependencies:
   service:
   - mariadb
   - rabbitmq
+  - keystone-api
   job:
-  - glance-init
+  - glance-db-sync
 files:
 - file_name: glance-api.conf
   configmap_name: glance-api

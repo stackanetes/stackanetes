@@ -1,5 +1,6 @@
 type: deployment
 name: nova-conductor
+label: openstack-control-plane
 command: nova-conductor --config-file /etc/nova/nova.conf
 ports: []
 dependencies:

@@ -4,6 +4,7 @@ command: bash /tmp/neutron-post.sh
 dependencies:
   service:
   - keystone-api
+  - neutron-server
   job:
   - neutron-server-db-sync
 files:

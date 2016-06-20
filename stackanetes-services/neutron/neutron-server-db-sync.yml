@@ -5,6 +5,7 @@ image: centos-binary-neutron-server
 dependencies:
   service:
   - mariadb
+  - rabbitmq
   job:
   - neutron-init
 files:

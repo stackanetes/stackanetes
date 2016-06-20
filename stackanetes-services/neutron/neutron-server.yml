@@ -1,5 +1,6 @@
 type: deployment
 name: neutron-server
+label: openstack-control-plane
 command: neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini
 ports:
 - 9696
@@ -7,8 +8,8 @@ dependencies:
   service:
   - rabbitmq
   - mariadb
+  - keystone-api
   job:
-  - neutron-init
   - neutron-server-db-sync
 files:
 - file_name: neutron.conf

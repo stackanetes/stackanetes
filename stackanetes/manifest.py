@@ -28,6 +28,7 @@ class Manifest(object):
         self.service_dir = service_dir
         self.type = configuration['type']
         self.service_name = configuration['name']
+        self.label = configuration.get('label')
         self.external_ip_enabled = configuration.get('external_ip_enabled',
                                                      False)
         self.memory = CONF.stackanetes.memory
@@ -83,6 +84,10 @@ class Manifest(object):
             if configuration.get('dependencies'):
                 self._add_dependencies(container_dict['envs'],
                                        configuration['dependencies'])
+            if container_configuration.get('dependencies'):
+                self._add_container_dependecies(
+                    container_dict['envs'], container_configuration[
+                        'dependencies'])
             self._add_files_list(container_dict['envs'],
                                  container_dict['configmaps'])
 
@@ -112,6 +117,11 @@ class Manifest(object):
         envs.append({'SERVICES': services})
         ds = ','.join(dependencies.get('ds', []))
         envs.append({'DS': ds})
+
+    @staticmethod
+    def _add_container_dependecies(envs, dependencies):
+        containers = ','.join(dependencies.get('containers', []))
+        envs.append({'CONTAINERS': containers})
 
     def render(self):
         template_dir = os.path.join(self.service_dir, '..', 'templates')

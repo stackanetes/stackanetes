@@ -1,5 +1,6 @@
 type: deployment
 name: nova-api
+label: openstack-control-plane
 command: nova-api --config-file /etc/nova/nova.conf
 ports:
 - 8774
@@ -8,8 +9,8 @@ dependencies:
   service:
   - mariadb
   - glance-api
+  - keystone-api
   job:
-  - nova-init
   - nova-api-db-sync
 files:
 - file_name: nova.conf

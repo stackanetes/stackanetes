@@ -1,5 +1,6 @@
 type: daemonset
 name: network-node
+label: openstack-network-node
 ports: []
 dependencies:
   service:

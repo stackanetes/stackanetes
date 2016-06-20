@@ -1,4 +1,5 @@
 type: deployment
+label: openstack-control-plane
 name: keystone-api
 command: bash /tmp/apache-wrapper.sh
 ports:
@@ -7,8 +8,9 @@ ports:
 dependencies:
   service:
   - mariadb
+  - rabbitmq
   job:
-  - keystone-init
+  - keystone-db-sync
 files:
 - file_name: keystone.conf
   configmap_name: keystone-conf
