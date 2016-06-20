@@ -1,5 +1,5 @@
 type: deployment
-label: control-plane
+label: openstack-control-plane
 name: keystone-api
 command: bash /tmp/apache-wrapper.sh
 ports:

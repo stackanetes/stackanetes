@@ -1,6 +1,6 @@
 type: deployment
 name: glance-api
-label: control-plane
+label: openstack-control-plane
 command: glance-api
 ports:
 - 9292

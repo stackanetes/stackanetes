@@ -1,6 +1,6 @@
 type: deployment
 name: nova-consoleauth
-label: control-plane
+label: openstack-control-plane
 command: nova-consoleauth --config-file /etc/nova/nova.conf
 ports: []
 dependencies:

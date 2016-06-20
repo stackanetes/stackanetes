@@ -1,6 +1,6 @@
 type: daemonset
 name: compute-node
-label: compute-node
+label: openstack-compute-node
 ports: []
 dependencies:
   service:

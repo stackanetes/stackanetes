@@ -1,6 +1,6 @@
 type: deployment
 name: nova-api
-label: control-plane
+label: openstack-control-plane
 command: nova-api --config-file /etc/nova/nova.conf
 ports:
 - 8774

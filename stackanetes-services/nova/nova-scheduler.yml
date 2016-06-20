@@ -1,6 +1,6 @@
 type: deployment
 name: nova-scheduler
-label: control-plane
+label: openstack-control-plane
 command: nova-scheduler --config-file /etc/nova/nova.conf
 ports: []
 dependencies:

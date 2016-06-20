@@ -1,6 +1,6 @@
 type: deployment
 name: glance-registry
-label: control-plane
+label: openstack-control-plane
 command: glance-registry
 ports:
 - 9191

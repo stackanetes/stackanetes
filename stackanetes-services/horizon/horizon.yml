@@ -1,6 +1,6 @@
 type: deployment
 name: horizon
-label: control-plane
+label: openstack-control-plane
 command: bash /tmp/kolla-apache-wrapper.sh
 ports:
 - 80

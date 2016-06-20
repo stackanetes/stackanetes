@@ -1,6 +1,6 @@
 type: daemonset
 name: openvswitch-agent
-label: neutron-openvswitch-agent
+label: openstack-neutron-openvswitch-agent
 ports: []
 dependencies:
   service:
