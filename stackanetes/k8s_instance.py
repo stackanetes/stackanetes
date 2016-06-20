@@ -18,8 +18,10 @@ import yaml
 from oslo_config import cfg
 from oslo_log import log as logging
 
-from stackanetes.manifest import Manifest
 from stackanetes.configmap import ConfigMap
+from stackanetes.manifest import Manifest
+from stackanetes.common.utils import (check_if_namespace_exist,
+                                      create_namespace, get_kubectl_command)
 
 
 LOG = logging.getLogger()
@@ -34,6 +36,8 @@ class K8sInstance():
         self.service_type = service_name.split("-")[0]
         self.service_dir = service_dir
         self._load_service_variables()
+        if not check_if_namespace_exist(CONF.stackanetes.namespace):
+            create_namespace(CONF.stackanetes.namespace)
         self._load_configmaps()
 
     def _load_service_variables(self):
@@ -83,22 +87,10 @@ class K8sInstance():
         self._manage_instance("delete")
 
     def _manage_instance(self, cmd_type):
-        cmd = self._get_kubectl_command()
+        cmd = get_kubectl_command()
 
         cmd.extend([cmd_type, "-f", self.file_path])
         LOG.debug('{} instance {}'.format(cmd_type, self.service_name))
         subprocess.call(cmd)
 
-    @staticmethod
-    def _get_kubectl_command():
-        cmd = [CONF.stackanetes.kubectl_path]
-        if CONF.stackanetes.host:
-            server = "--server=" + CONF.stackanetes.host
-            cmd.append(server)
-        if CONF.stackanetes.kubeconfig_path:
-            kubeconfig_path = "--kubeconfig=" + CONF.stackanetes.kubeconfig_path
-            cmd.append(kubeconfig_path)
-        if CONF.stackanetes.context:
-            context = "--context=" + CONF.stackanetes.context
-            cmd.append(context)
-        return cmd
+

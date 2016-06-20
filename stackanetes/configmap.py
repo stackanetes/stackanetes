@@ -18,6 +18,7 @@ import yaml
 
 from jinja2 import Environment, FileSystemLoader
 from stackanetes.common import file_utils
+from stackanetes.common.utils import get_kubectl_command
 from oslo_config import cfg
 from oslo_log import log as logging
 
@@ -38,7 +39,8 @@ class ConfigMap(object):
         self.variables = {
             'dns_ip': CONF.stackanetes['dns_ip'],
             'cluster_name': CONF.stackanetes['cluster_name'],
-            'external_ip': CONF.stackanetes['external_ip']
+            'external_ip': CONF.stackanetes['external_ip'],
+            'namespace': CONF.stackanetes['namespace'],
         }
 
     def _set_type(self, template_path):
@@ -110,28 +112,14 @@ class ConfigMap(object):
 
     def upload(self):
         self._create_file()
-        cmd = self._get_kubectl_command()
+        cmd = get_kubectl_command()
         LOG.debug("Uploading configMap: {}".format(self.name))
         cmd.extend(["create", "configmap", self.name])
         cmd.extend(["--from-file", self.file_path])
         subprocess.call(cmd)
 
     def remove(self):
-        cmd = self._get_kubectl_command()
+        cmd = get_kubectl_command()
         LOG.debug("Removing configMap: {}".format(self.name))
         cmd.extend(["delete", "configmap", self.name])
         subprocess.call(cmd)
-
-    @staticmethod
-    def _get_kubectl_command():
-        cmd = [CONF.stackanetes.kubectl_path]
-        if CONF.stackanetes.host:
-            server = "--server=" + CONF.stackanetes.host
-            cmd.append(server)
-        if CONF.stackanetes.kubeconfig_path:
-            kubeconfig_path = "--kubeconfig=" + CONF.stackanetes.kubeconfig_path
-            cmd.append(kubeconfig_path)
-        if CONF.stackanetes.context:
-            context = "--context=" + CONF.stackanetes.context
-            cmd.append(context)
-        return cmd

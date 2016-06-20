@@ -35,6 +35,7 @@ class Manifest(object):
         self.image_version = CONF.stackanetes.docker_image_tag
         self.host_interface = CONF.stackanetes.minion_interface_name
         self.external_ip = CONF.stackanetes.external_ip
+        self.namespace = CONF.stackanetes.namespace
         if configuration.get('containers'):
             self._parameters_for_multi_containers_pod(configuration)
         else:

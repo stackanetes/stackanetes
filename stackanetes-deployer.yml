@@ -23,3 +23,5 @@ spec:
       value: "cluster.local"
     - name: EXTERNAL_IP
       value: "10.10.10.10"
+    - name: NAMESPACE
+      value: "stackanetes"
