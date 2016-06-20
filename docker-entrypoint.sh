@@ -24,6 +24,7 @@ sed -i "s@#docker_registry = quay.io/stackanetes@docker_registry = $DOCKER_REGIS
 sed -i "s@#dns_ip = 10.2.0.10@dns_ip = $DNS_IP@g" /etc/stackanetes/stackanetes.conf
 sed -i "s@#cluster_name = cluster.local@cluster_name = $CLUSTER_NAME@g" /etc/stackanetes/stackanetes.conf
 sed -i "s@#external_ip = 10.10.10.10@external_ip = $EXTERNAL_IP@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#namespace = stackanetes@namespace = $NAMESPACE@g" /etc/stackanetes/stackanetes.conf
 
 
 
