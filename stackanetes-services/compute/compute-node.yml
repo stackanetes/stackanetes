@@ -16,7 +16,7 @@ dependencies:
 containers:
   - name: nova-compute
     command: nova-compute --config-file /etc/nova/nova.conf
-    image: centos-binary-nova-compute
+    image: nova-compute
     dependencies:
       containers:
       - nova-libvirt
@@ -54,7 +54,7 @@ containers:
         read_only: false
   - name: nova-libvirt
     command: bash /tmp/nova-libvirt.sh
-    image: centos-binary-nova-libvirt
+    image: nova-libvirt
     files:
       - file_name: libvirtd.conf
         configmap_name: libvirtd-conf

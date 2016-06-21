@@ -1,6 +1,6 @@
 type: job
 name: keystone-db-sync
-image: centos-binary-keystone-api
+image: keystone-api
 command: bash /tmp/keystone-db-sync.sh
 dependencies:
   job:

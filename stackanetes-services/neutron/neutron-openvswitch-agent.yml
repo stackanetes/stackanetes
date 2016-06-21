@@ -15,7 +15,7 @@ dependencies:
 containers:
   - name: neutron-openvswitch-agent
     command: bash /tmp/neutron-openvswitch-agent.sh
-    image: centos-binary-neutron-openvswitch-agent
+    image: neutron-openvswitch-agent
     files:
       - file_name: neutron-openvswitch-agent.sh
         configmap_name: neutron-openvswitch-agent-sh
