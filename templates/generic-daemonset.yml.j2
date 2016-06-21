@@ -42,7 +42,7 @@ spec:
         - name: {{ container['name'] }}
           securityContext:
             privileged: true
-          image: {{ docker_registry }}/{{ container['image'] }}:{{ image_version }}
+          image: {{ docker_registry }}/{{ image_prefix }}{{ container['image'] }}:{{ image_version }}
           env:
             - name: INTERFACE_NAME
               value: {{ host_interface }}

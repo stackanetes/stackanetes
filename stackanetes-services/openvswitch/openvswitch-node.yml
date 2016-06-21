@@ -14,7 +14,7 @@ dependencies:
 containers:
   - name: openvswitch-db-server
     command: bash /tmp/neutron-openvswitch-db-server.sh
-    image: centos-binary-openvswitch-db-server
+    image: openvswitch-db-server
     files:
       - file_name: neutron-openvswitch-db-server.sh
         configmap_name: neutron-openvswitch-db-server-sh
@@ -36,7 +36,7 @@ containers:
         container_path: /var/lib/openvswitch/
   - name: openvswitch-vswitchd
     command: bash /tmp/neutron-openvswitch-vswitchd.sh
-    image: centos-binary-nova-libvirt
+    image: nova-libvirt
     files:
       - file_name: neutron-openvswitch-vswitchd.sh
         configmap_name: neutron-openvswitch-vswitchd-sh

@@ -1,7 +1,7 @@
 type: job
 name: nova-api-db-sync
 command: bash /tmp/nova-api-db-sync.sh
-image: centos-binary-nova-api
+image: nova-api
 dependencies:
   service:
   - mariadb

@@ -2,7 +2,7 @@ type: deployment
 name: rabbitmq
 label: openstack-control-plane
 command: "bash /tmp/rabbitmq.sh"
-image: centos-binary-rabbitmq
+image: rabbitmq
 ports:
 - 5672
 files: 

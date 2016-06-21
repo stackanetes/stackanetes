@@ -14,7 +14,7 @@ dependencies:
 containers:
   - name: neutron-dhcp-agent
     command: neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/dhcp-agent.ini
-    image: centos-binary-neutron-dhcp-agent
+    image: neutron-dhcp-agent
     files:
       - file_name: neutron.conf
         configmap_name: neutron-conf-db-sync
@@ -62,7 +62,7 @@ containers:
 
   - name: neutron-l3-agent
     command: neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/l3-agent.ini --config-file /etc/neutron/fwaas-driver.ini --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
-    image: centos-binary-neutron-l3-agent
+    image: neutron-l3-agent
     files:
       - file_name: neutron.conf
         configmap_name: neutron-conf-db-sync

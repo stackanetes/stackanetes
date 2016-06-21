@@ -30,6 +30,7 @@ stackanetes_opts = [
     cfg.StrOpt('dns_ip', default='10.2.0.10'),
     cfg.StrOpt('cluster_name', default='cluster.local'),
     cfg.StrOpt('external_ip', default='10.10.10.10'),
+    cfg.StrOpt('image_prefix', default=''),
 ]
 
 stackanetes_opt_group = cfg.OptGroup(name='stackanetes', title="test")

@@ -16,9 +16,9 @@ spec:
       containers:
         - name: {{ service_name }}
 {%- if image %}
-          image: {{ docker_registry }}/{{ image }}:{{ image_version }}
+          image: {{ docker_registry }}/{{ image_prefix }}{{ image }}:{{ image_version }}
 {%- else %}
-          image: {{ docker_registry }}/centos-binary-kolla-toolbox:{{ image_version }}
+          image: {{ docker_registry }}/{{ image_prefix }}kolla-toolbox:{{ image_version }}
 {%- endif %}
           imagePullPolicy: Always
           env:

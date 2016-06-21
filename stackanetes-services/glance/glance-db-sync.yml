@@ -1,6 +1,6 @@
 type: job
 name: glance-db-sync
-image: centos-binary-glance-api
+image: glance-api
 command: bash /tmp/glance-db-sync.sh
 dependencies:
   service:
