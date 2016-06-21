@@ -9,6 +9,7 @@ spec:
   containers:
   - name: stackanetes-base
     #insert a valid image name
+    imagePullPolicy: Always
     image: quay.io/stackanetes/stackanetes-deployer:barcelona
     env:
     - name: HOST_INTERFACE
@@ -25,3 +26,5 @@ spec:
       value: "10.10.10.10"
     - name: NAMESPACE
       value: "stackanetes"
+    - name: IMAGE_PREFIX
+      value: ""
