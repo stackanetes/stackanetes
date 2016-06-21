@@ -29,4 +29,5 @@ sed -i "s@#namespace = stackanetes@namespace = $NAMESPACE@g" /etc/stackanetes/st
 
 
 echo Deploying stackanetes
-python ./deploy_all.py
+python ./manage_all.py kill
+python ./manage_all.py run
