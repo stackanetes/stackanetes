@@ -42,15 +42,16 @@ class Manifest(object):
         if configuration.get('containers'):
             self._parameters_for_multi_containers_pod(configuration)
         else:
-            self._parameters_for_singel_container_pod(configuration)
+            self._parameters_for_single_container_pod(configuration)
         self.template_name = self._find_template()
 
-    def _parameters_for_singel_container_pod(self, configuration):
+    def _parameters_for_single_container_pod(self, configuration):
         self.command = configuration.get('command')
         self.configmaps = configuration.get('files', [])
         self.image = configuration.get('image')
         self.ports = configuration.get('ports', [])
         self.envs = configuration.get('envs', [])
+        self.privileged = configuration.get('privileged', True)
         self.session_affinity = configuration.get("session_affinity",[])
         self.non_root = configuration.get("non_root",[])
         self.emptydirs = configuration.get('emptyDirs', [])
@@ -68,39 +69,38 @@ class Manifest(object):
         empty_dirs = []
         mounts = []
         self.containers = []
-        for container_configuration in configuration['containers']:
+        for container_conf in configuration['containers']:
             container_dict = {}
-            container_dict['command'] = container_configuration.get('command')
-            container_dict['image'] = container_configuration['image']
-            container_dict['name'] = container_configuration['name']
-            container_dict['envs'] = container_configuration.get('envs', [])
-            container_dict['emptydirs'] = container_configuration.get('emptyDirs', [])
-            container_dict['configmaps'] = container_configuration.get('files', [])
+            container_dict['command'] = container_conf.get('command')
+            container_dict['image'] = container_conf['image']
+            container_dict['name'] = container_conf['name']
+            container_dict['envs'] = container_conf.get('envs', [])
+            container_dict['privileged'] = container_conf.get('privileged',
+                                                              True)
+            container_dict['emptydirs'] = container_conf.get('emptyDirs', [])
+            container_dict['configmaps'] = container_conf.get('files', [])
             config_maps.extend(container_dict['configmaps'])
-            container_dict['emptyDirs'] = container_configuration.get('emptyDirs', [])
+            container_dict['emptyDirs'] = container_conf.get('emptyDirs', [])
             empty_dirs.extend(container_dict['emptyDirs'])
-            container_dict['mounts'] = container_configuration.get('mounts', [])
+            container_dict['mounts'] = container_conf.get('mounts', [])
             mounts.extend(container_dict['mounts'])
             if container_dict['command']:
                 container_dict['envs'].append(
-                    {'COMMAND': container_configuration['command']})
+                    {'COMMAND': container_conf['command']})
             self.containers.append(container_dict)
             if configuration.get('dependencies'):
                 self._add_dependencies(container_dict['envs'],
                                        configuration['dependencies'])
-            if container_configuration.get('dependencies'):
+            if container_conf.get('dependencies'):
                 self._add_container_dependecies(
-                    container_dict['envs'], container_configuration[
+                    container_dict['envs'], container_conf[
                         'dependencies'])
             self._add_files_list(container_dict['envs'],
                                  container_dict['configmaps'])
 
-        self.configmaps = config_maps
-        self.configmaps = self._filter_elements(self.configmaps, 'configmap_name')
-        self.emptydirs = empty_dirs
-        self.emptydirs = self._filter_elements(self.emptydirs, 'name')
-        self.mounts = mounts
-        self.mounts = self._filter_elements(self.mounts, 'name')
+        self.configmaps = self._filter_elements(config_maps, 'configmap_name')
+        self.emptydirs = self._filter_elements(empty_dirs, 'name')
+        self.mounts = self._filter_elements(mounts, 'name')
 
     @staticmethod
     def _add_files_list(envs, configmaps):

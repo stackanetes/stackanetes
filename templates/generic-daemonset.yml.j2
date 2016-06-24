@@ -42,8 +42,10 @@ spec:
       containers:
 {%- for container in containers %}
         - name: {{ container['name'] }}
+{%- if container['privileged'] %}
           securityContext:
             privileged: true
+{%- endif %}
           image: {{ docker_registry }}/{{ image_prefix }}{{ container['image'] }}:{{ image_version }}
           env:
             - name: INTERFACE_NAME
