@@ -17,8 +17,10 @@ spec:
         {{ label }}: enabled
       securityContext:
         runAsUser: 0
-      hostNetwork: true
       dnsPolicy: ClusterFirst
+{%- if host_network %}
+      hostNetwork: true
+{%- endif %}
       volumes:
 {%- for configmap in configmaps %}
         - name: {{ configmap['configmap_name'] }}
@@ -38,7 +40,7 @@ spec:
             path: {{ mount['host_path'] }}
 {%- endfor %}
       containers:
-{% for container in containers %}
+{%- for container in containers %}
         - name: {{ container['name'] }}
           securityContext:
             privileged: true

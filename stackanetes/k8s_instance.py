@@ -56,7 +56,7 @@ class K8sInstance():
     def _load_configmaps(self):
         if self.containers:
             files = []
-            [files.extend(x['files']) for x in self.containers]
+            [files.extend(x.get('files', [])) for x in self.containers]
             for file in files:
                 LOG.debug("Preparing configmap: {} for {}".format(
                     file['configmap_name'], self.service_name))

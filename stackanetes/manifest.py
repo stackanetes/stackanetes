@@ -37,6 +37,7 @@ class Manifest(object):
         self.host_interface = CONF.stackanetes.minion_interface_name
         self.external_ip = CONF.stackanetes.external_ip
         self.image_prefix = CONF.stackanetes.image_prefix
+        self.host_network = configuration.get('host_network', True)
         self.namespace = CONF.stackanetes.namespace
         if configuration.get('containers'):
             self._parameters_for_multi_containers_pod(configuration)
@@ -45,8 +46,8 @@ class Manifest(object):
         self.template_name = self._find_template()
 
     def _parameters_for_singel_container_pod(self, configuration):
-        self.command = configuration['command']
-        self.configmaps = configuration['files']
+        self.command = configuration.get('command')
+        self.configmaps = configuration.get('files', [])
         self.image = configuration.get('image')
         self.ports = configuration.get('ports', [])
         self.envs = configuration.get('envs', [])
@@ -54,7 +55,8 @@ class Manifest(object):
         self.non_root = configuration.get("non_root",[])
         self.emptydirs = configuration.get('emptyDirs', [])
         self.mounts = configuration.get('mounts', [])
-        self.envs.append({'COMMAND': self.command})
+        if self.command:
+            self.envs.append({'COMMAND': self.command})
         self.template_name = self._find_template()
         self._set_service_type()
         if configuration.get('dependencies'):
@@ -68,7 +70,7 @@ class Manifest(object):
         self.containers = []
         for container_configuration in configuration['containers']:
             container_dict = {}
-            container_dict['command'] = container_configuration['command']
+            container_dict['command'] = container_configuration.get('command')
             container_dict['image'] = container_configuration['image']
             container_dict['name'] = container_configuration['name']
             container_dict['envs'] = container_configuration.get('envs', [])
@@ -79,8 +81,9 @@ class Manifest(object):
             empty_dirs.extend(container_dict['emptyDirs'])
             container_dict['mounts'] = container_configuration.get('mounts', [])
             mounts.extend(container_dict['mounts'])
-            container_dict['envs'].append(
-                {'COMMAND': container_configuration['command']})
+            if container_dict['command']:
+                container_dict['envs'].append(
+                    {'COMMAND': container_configuration['command']})
             self.containers.append(container_dict)
             if configuration.get('dependencies'):
                 self._add_dependencies(container_dict['envs'],
