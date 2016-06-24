@@ -4,7 +4,7 @@ label: openstack-control-plane
 image: memcached
 command: "memcached"
 ports:
-- 11211
+- port: 11211
 session_affinity: true
 files: []
 non_root: true

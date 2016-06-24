@@ -4,7 +4,7 @@ label: openstack-control-plane
 command: "bash /tmp/rabbitmq.sh"
 image: rabbitmq
 ports:
-- 5672
+- port: 5672
 files: 
 - file_name: rabbitmq.sh
   configmap_name: rabbitmq

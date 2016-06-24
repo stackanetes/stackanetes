@@ -5,7 +5,7 @@ command: nova-novncproxy --config-file /etc/nova/nova.conf
 # TODO(DTadrzak): move it to config?
 external_ip_enabled: true
 ports:
-  - 6080
+  - port: 6080
 dependencies:
   service:
   - nova-api

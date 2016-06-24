@@ -3,8 +3,8 @@ name: nova-api
 label: openstack-control-plane
 command: nova-api --config-file /etc/nova/nova.conf
 ports:
-- 8774
-- 8775
+- port: 8774
+- port: 8775
 dependencies:
   service:
   - mariadb

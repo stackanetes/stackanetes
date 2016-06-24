@@ -39,6 +39,7 @@ class Manifest(object):
         self.image_prefix = CONF.stackanetes.image_prefix
         self.host_network = configuration.get('host_network', True)
         self.namespace = CONF.stackanetes.namespace
+        self.ports = configuration.get('ports', [])
         if configuration.get('containers'):
             self._parameters_for_multi_containers_pod(configuration)
         else:
@@ -49,7 +50,6 @@ class Manifest(object):
         self.command = configuration.get('command')
         self.configmaps = configuration.get('files', [])
         self.image = configuration.get('image')
-        self.ports = configuration.get('ports', [])
         self.envs = configuration.get('envs', [])
         self.privileged = configuration.get('privileged', True)
         self.session_affinity = configuration.get("session_affinity",[])

@@ -1,3 +1,28 @@
+{%- if ports %}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ namespace }}
+  name: {{ service_name }}
+spec:
+    {%- if session_affinity %}
+  sessionAffinity: ClientIP
+    {%- endif %}
+    {%- if external_ip_enabled %}
+  externalIPs:
+    - {{ external_ip }}
+    {%- endif %}
+  ports:
+    {%- for port in ports %}
+  - name: {{ service_name.split('-')[0] }}{{ port['port'] }}
+    port: {{ port['port'] }}
+    protocol: TCP
+    targetPort: {{ port['target_port'] }}
+    {%- endfor %}
+  selector:
+    app: {{ service_name }}
+{%- endif %}
 
 ---
 apiVersion: extensions/v1beta1

@@ -3,7 +3,7 @@ name: glance-registry
 label: openstack-control-plane
 command: glance-registry
 ports:
-- 9191
+- port: 9191
 dependencies:
   service:
   - mariadb
