@@ -31,6 +31,7 @@ stackanetes_opts = [
     cfg.StrOpt('cluster_name', default='cluster.local'),
     cfg.StrOpt('external_ip', default='10.10.10.10'),
     cfg.StrOpt('image_prefix', default=''),
+    cfg.BoolOpt('ceph_enabled', default=False),
 ]
 
 stackanetes_opt_group = cfg.OptGroup(name='stackanetes', title="test")

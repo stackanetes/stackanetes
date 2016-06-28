@@ -1,0 +1,17 @@
+type: job
+name: cinder-init
+ceph_required: True
+command: bash /tmp/cinder-init.sh
+dependencies:
+  service:
+  - mariadb
+  - rabbitmq
+  - keystone-api
+files:
+- file_name: cinder-init.sh
+  configmap_name: cinder-init
+  container_path: /tmp
+  templates:
+  - cinder/templates/cinder-init.sh.j2
+envs:
+- ANSIBLE_LIBRARY: /usr/share/ansible/

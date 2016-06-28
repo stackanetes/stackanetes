@@ -4,7 +4,7 @@ enabled_backends = rbd-1
 
 [rbd-1]
 volume_driver = cinder.volume.drivers.rbd.RBDDriver
-rbd_pool = {{ ceph_cinder_pool_name }}
+rbd_pool = cinder
 rbd_ceph_conf = /etc/ceph/ceph.conf
 rbd_flatten_volume_from_snapshot = false
 rbd_max_clone_depth = 5

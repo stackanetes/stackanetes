@@ -1,0 +1,31 @@
+type: deployment
+name: cinder-volume
+label: openstack-control-plane
+ceph_required: True
+command: /usr/bin/cinder-volume
+ports:
+- 8776
+dependencies:
+  service:
+  - mariadb
+  - rabbitmq
+  - keystone-api
+  job:
+  - cinder-db-sync
+files:
+- file_name: cinder.conf
+  configmap_name: cinder-conf
+  container_path: /etc/cinder
+  templates:
+  - cinder/templates/cinder.conf.j2
+  - cinder/templates/cinder-ceph.conf.j2
+- file_name: ceph.conf
+  configmap_name: ceph-conf
+  container_path: /etc/ceph
+  templates:
+  - common/templates/ceph.conf.j2
+- file_name: ceph.client.cinder.keyring
+  configmap_name: ceph-keyring
+  container_path: /etc/ceph
+  templates:
+  - common/templates/ceph.client.cinder.keyring.j2

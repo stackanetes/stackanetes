@@ -1,0 +1,21 @@
+type: deployment
+name: cinder-api
+label: openstack-control-plane
+ceph_required: true
+command: /usr/bin/cinder-api
+ports:
+- 8776
+dependencies:
+  service:
+  - mariadb
+  - rabbitmq
+  - keystone-api
+  job:
+  - cinder-db-sync
+files:
+- file_name: cinder.conf
+  configmap_name: cinder-conf
+  container_path: /etc/cinder
+  templates:
+  - cinder/templates/cinder.conf.j2
+  - cinder/templates/cinder-ceph.conf.j2

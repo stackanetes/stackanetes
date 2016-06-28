@@ -11,7 +11,7 @@ ceph_cinder_backup_cache_mode: "{{ ceph_cache_mode }}"
 
 # Due to Ansible issues on include, you cannot override these variables. Please
 # override the variables they refernce instead.
-cinder_pool_name: "{{ ceph_cinder_pool_name }}"
+cinder_pool_name: "rbd"
 cinder_pool_type: "{{ ceph_cinder_pool_type }}"
 cinder_cache_mode: "{{ ceph_cinder_cache_mode }}"
 cinder_backup_pool_name: "{{ ceph_cinder_backup_pool_name }}"
@@ -63,7 +63,7 @@ cinder_logging_debug: "{{ openstack_logging_debug }}"
 
 cinder_keystone_user: "cinder"
 
-openstack_cinder_auth: "{'auth_url':'{{ openstack_auth_url }}','username':'{{ openstack_username }}','password':'{{ openstack_password }}','project_name':'{{ openstack_project_name }}'}"
+openstack_cinder_auth: "{'auth_url':'{{ openstack_auth_url }}','username':'{{ openstack_username }}','password':'{{ openstack_password }}','project_name':'{{ openstack_project_name }}','domain_name':'default'}"
 
 
 ####################

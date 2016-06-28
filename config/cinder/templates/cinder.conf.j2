@@ -6,12 +6,12 @@ use_stderr = {{ openstack_use_stderr }}
 enable_v1_api=false
 volume_name_template = %s
 
-glance_api_servers = http://{{ glance_api_host }}.{{ mesos_dns_domain }}:{{ glance_api_port }}
+glance_api_servers = http://{{ glance_api_host }}:{{ glance_api_port }}
 glance_api_version = 2
 
 os_region_name = {{ openstack_region_name }}
 
-osapi_volume_listen = {{ get_ip_address(api_interface) }}
+osapi_volume_listen = {{ get_ip_address }}
 osapi_volume_listen_port = {{ cinder_api_port }}
 
 api_paste_config = /etc/cinder/api-paste.ini
