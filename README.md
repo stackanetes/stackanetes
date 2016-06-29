@@ -38,6 +38,7 @@ Now, set the following variables in /etc/stackanetes/stackanetes.conf:
 
 ```
 [stackanetes]
+context = /home/core/context // Path to context file
 host = localhost:8001 // k8s API, this can be easily be configured by using 'kubectl proxy'
 kubectl_path = /opt/bin/kubectl // absolute path to kubectl binary
 docker_image_tag = barcelona // tag for images
@@ -46,6 +47,9 @@ minion_interface_name = eno1 // set physical interface name of minions
 dns_ip = 10.2.0.10 // ip of k8s dns
 cluster_name = cluster.local // k8s dns domain
 external_ip = 192.168.0.1 // external ip for services like horizon
+memory = 4096Mi // specify amount memory
+image-prefix = // specify image-prefixy if necessary
+namespace = stackanetes // specify kubernetes namespace
 ```
 
 ### Label kubernetes nodes
@@ -67,7 +71,7 @@ kubectl label node minion2  app=compute
 You can run service one by one:
 
 ```
-stackanetes --config-dir /etc/stackanetes run <name-of-service>
+stackanetes run <name-of-service>
 ```
 
 Or deploy all with manage_all/py script:
@@ -101,6 +105,8 @@ in `stackanetes-deployer.yml` change environment variables to fit your need:
 - DNS_IP
 - CLUSTER_NAME
 - EXTERNAL_IP
+- NAMESPACE
+- IMAGE_PREFIX
 
 ```
     env:
@@ -116,6 +122,10 @@ in `stackanetes-deployer.yml` change environment variables to fit your need:
       value:  "cluster.local" # k8s dns domain
     - name: EXTERNAL_IP
       value: "192.168.0.1" # external ip for services like horizon
+    - name: NAMESPACE
+      value: "stackanetes"
+    - name: IMAGE_PREFIX
+      value: ""
 ```
 
 then run:
