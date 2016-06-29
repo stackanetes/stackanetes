@@ -15,14 +15,14 @@ Checkout the video overview:
 
 ## Requirements
 
--  Kubernetes 1.2 cluster with minimum 2 kubernetes minions/workers
+-  Kubernetes 1.3 cluster with minimum 2 kubernetes minions/workers
   - see guides for [CoreOS Kubernetes](https://coreos.com/kubernetes/docs/latest/)
-
+-  Operation system with systemd version<=225
 ## Getting started
 
 ### Building Configuration
 
-Ensure the following packages are installed on the workstation that controls the Kubernetes cluster: git, python2.7, pip, [kubectl](https://github.com/kubernetes/kubernetes/releases) v1.2+.
+Ensure the following packages are installed on the workstation that controls the Kubernetes cluster: git, python2.7, pip, [kubectl](https://github.com/kubernetes/kubernetes/releases) v1.3+.
 
 Clone this repo: `git clone https://github.com/stackanetes/stackanetes` and move into the kolla directory `cd stackanetes`.
 
@@ -64,6 +64,12 @@ Compute node will run couple of daemonsets like (compute-node, network-node, ope
 
 ```
 kubectl label node minion2  app=compute
+```
+
+## Docker images
+Stackanetes requires images based on Kolla (To be changed). Those images also need a special entrypoint. Entrypoint code can be found here:
+```
+https://github.com/PiotrProkop/stackanetes/pull/1/files
 ```
 
 ## Deploy OpenStack services
