@@ -36,7 +36,7 @@ containers:
         container_path: /var/lib/openvswitch/
   - name: openvswitch-vswitchd
     command: bash /tmp/neutron-openvswitch-vswitchd.sh
-    image: nova-libvirt
+    image: openvswitch-vswitchd
     files:
       - file_name: neutron-openvswitch-vswitchd.sh
         configmap_name: neutron-openvswitch-vswitchd-sh
@@ -62,4 +62,3 @@ containers:
         name: run
         host_path: /run
         read_only: false
-
