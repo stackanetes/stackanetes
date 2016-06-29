@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+{{ ansible_task_cmd }} -m kolla_keystone_service -a "service_name=nova service_type=compute description='Openstack Compute' endpoint_region={{ openstack_region_name }} url='{{ nova_admin_endpoint }}' interface=admin region_name={{ openstack_region_name }} auth='{{ openstack_nova_auth }}'" -e "{'openstack_nova_auth':{{ openstack_nova_auth }}}"
+{{ ansible_task_cmd }} -m kolla_keystone_service -a "service_name=nova service_type=compute description='Openstack Compute' endpoint_region={{ openstack_region_name }} url='{{ nova_internal_endpoint }}' interface=internal region_name={{ openstack_region_name }} auth='{{ openstack_nova_auth }}'" -e "{'openstack_nova_auth':{{ openstack_nova_auth }}}"
+{{ ansible_task_cmd }} -m kolla_keystone_service -a "service_name=nova service_type=compute description='Openstack Compute' endpoint_region={{ openstack_region_name }} url='{{ nova_public_endpoint }}' interface=public region_name={{ openstack_region_name }} auth='{{ openstack_nova_auth }}'" -e "{'openstack_nova_auth':{{ openstack_nova_auth }}}" 
+{{ ansible_task_cmd }} -m kolla_keystone_user -a "project=service user=nova password={{ nova_keystone_password }} role=admin region_name={{ openstack_region_name }} auth='{{ openstack_nova_auth }}'" -e "{'openstack_nova_auth':{{ openstack_nova_auth }}}"

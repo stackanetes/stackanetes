@@ -1,7 +1,4 @@
 ---
-# You can use this file to override _any_ variable throughout Kolla-Mesos.
-# Additional options can be found in the 'kolla-mesos/config/all.yml' file.
-
 ####################
 # Kolla options
 ####################

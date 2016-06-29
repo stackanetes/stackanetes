@@ -1,6 +1,6 @@
 ---
 project_name: "rabbitmq"
-
+rabbitmq_cookie: "ERLANG_COOKIE"
 ####################
 # Docker
 ####################

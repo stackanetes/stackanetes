@@ -1,0 +1,80 @@
+
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: {{ service_name }}
+spec:
+  template:
+    metadata:
+      namespace: {{ namespace }}
+      labels:
+        app: {{ service_name }}
+      name: {{ service_name }}
+    spec:
+      hostPID: true
+      nodeSelector:
+        {{ label }}: enabled
+      securityContext:
+        runAsUser: 0
+      hostNetwork: true
+      dnsPolicy: ClusterFirst
+      volumes:
+{%- for configmap in configmaps %}
+        - name: {{ configmap['configmap_name'] }}
+          configMap:
+            name: {{ configmap['configmap_name'] }}
+            items:
+            - key: {{ configmap['file_name'] }}
+              path: {{ configmap['file_name'] }}
+{%- endfor %}
+{%- for emptydir in emptydirs %}
+        - name: {{ emptydir['name'] }}
+          emptyDir: {}
+{%- endfor %}
+{%- for mount in mounts %}
+        - name: {{ mount['name'] }}
+          hostPath:
+            path: {{ mount['host_path'] }}
+{%- endfor %}
+      containers:
+{% for container in containers %}
+        - name: {{ container['name'] }}
+          securityContext:
+            privileged: true
+          image: {{ docker_registry }}/{{ image_prefix }}{{ container['image'] }}:{{ image_version }}
+          env:
+            - name: INTERFACE_NAME
+              value: {{ host_interface }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+  {%- for env in container['envs'] %}
+            - name: {{ env.keys()[0] }}
+              value: {{ env.values()[0] }}
+  {%- endfor %}
+          resources:
+            limits:
+              memory: {{ memory }}
+          volumeMounts:
+  {%- for configmap in container['configmaps'] %}
+            - name: {{ configmap['configmap_name'] }}
+              mountPath: /configmaps/{{ configmap['file_name'] }}
+  {%- endfor %}
+  {%- for emptydir in container['emptydirs'] %}
+            - name: {{ emptydir['name'] }}
+              mountPath: {{ emptydir['container_path'] }}
+  {%- endfor %}
+  {%- for mount in container['mounts'] %}
+            - mountPath: {{ mount['container_path'] }}
+              name: {{ mount['name'] }}
+    {% if mount['read_only'] %}
+              readOnly: true
+    {% endif %}
+  {%- endfor %}
+{%- endfor %}

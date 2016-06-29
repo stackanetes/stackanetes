@@ -1,0 +1,21 @@
+type: job
+name: glance-db-sync
+image: glance-api
+command: bash /tmp/glance-db-sync.sh
+dependencies:
+  service:
+  - mariadb
+  job:
+  - glance-init
+files:
+- file_name: glance-db-sync.sh
+  configmap_name: glance-db-sync
+  container_path: /tmp
+  templates:
+  - glance/templates/glance-db-sync.sh.j2
+- file_name: glance-api.conf
+  configmap_name: glance-api
+  container_path: /etc/glance
+  templates:
+  - glance/templates/glance-file.conf.j2
+  - glance/templates/glance-api.conf.j2

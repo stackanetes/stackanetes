@@ -1,0 +1,17 @@
+type: deployment
+name: nova-scheduler
+label: openstack-control-plane
+command: nova-scheduler --config-file /etc/nova/nova.conf
+ports: []
+dependencies:
+  service:
+  - nova-api
+  job:
+  - nova-init
+  - nova-api-db-sync
+files:
+- file_name: nova.conf
+  configmap_name: nova-conf
+  container_path: /etc/nova
+  templates:
+  - nova/templates/nova.conf.j2

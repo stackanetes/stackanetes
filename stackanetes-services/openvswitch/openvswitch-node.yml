@@ -1,0 +1,64 @@
+type: daemonset
+name: openvswitch-node
+label: openstack-openvswitch-node
+ports: []
+dependencies:
+  service:
+    - neutron-server
+    - rabbitmq
+    - nova-api
+  job:
+    - nova-init
+    - neutron-init
+    - nova-post
+containers:
+  - name: openvswitch-db-server
+    command: bash /tmp/neutron-openvswitch-db-server.sh
+    image: openvswitch-db-server
+    files:
+      - file_name: neutron-openvswitch-db-server.sh
+        configmap_name: neutron-openvswitch-db-server-sh
+        container_path: /tmp
+        templates:
+          - neutron/templates/neutron-openvswitch-db-server.sh.j2
+      - file_name: resolv.conf
+        configmap_name: resolv
+        container_path: /etc
+        templates:
+        - common/templates/resolv.conf.j2
+    mounts:
+      - container_path: /run
+        name: run
+        host_path: /run
+        read_only: false
+    emptyDirs:
+      - name: var-lib-openvswitch
+        container_path: /var/lib/openvswitch/
+  - name: openvswitch-vswitchd
+    command: bash /tmp/neutron-openvswitch-vswitchd.sh
+    image: openvswitch-vswitchd
+    files:
+      - file_name: neutron-openvswitch-vswitchd.sh
+        configmap_name: neutron-openvswitch-vswitchd-sh
+        container_path: /tmp
+        templates:
+          - neutron/templates/neutron-openvswitch-vswitchd.sh.j2
+      - file_name: ovs-ensure-configured.sh
+        configmap_name: ovs-ensure-configured-sh
+        container_path: /tmp
+        templates:
+          - neutron/templates/ovs_ensure_configured.sh.j2
+      - file_name: resolv.conf
+        configmap_name: resolv
+        container_path: /etc
+        templates:
+        - common/templates/resolv.conf.j2
+    mounts:
+      - container_path: /lib/modules
+        name: lib-modules
+        read_only: true
+        host_path: /lib/modules
+      - container_path: /run
+        name: run
+        host_path: /run
+        read_only: false

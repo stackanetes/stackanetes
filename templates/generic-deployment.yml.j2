@@ -1,0 +1,126 @@
+{% if ports != [] %}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ namespace }}
+  name: {{ service_name }}
+spec:
+    {%- if session_affinity %}
+  sessionAffinity: ClientIP
+    {%- endif %}
+    {%- if external_ip_enabled %}
+  externalIPs:
+    - {{ external_ip }}
+    {%- endif %}
+  ports:
+    {%- for port in ports %}
+  - name: {{ service_name.split('-')[0] }}{{ port }}
+    port: {{ port }}
+    protocol: TCP
+    targetPort: {{ port }}
+    {%- endfor %}
+  selector:
+    app: {{ service_name }}
+{%- endif %}
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ service_name }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      namespace: {{ namespace }}
+      labels:
+        app: {{ service_name }}
+      name: {{ service_name }}
+    spec:
+      nodeSelector:
+        {{ label }}: enabled
+      {%- if  not non_root %}
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      {%- endif %}
+      containers:
+        - name: {{ service_name }}
+{%- if image %}
+          image: {{ docker_registry }}/{{ image_prefix }}{{ image }}:{{ image_version }}
+{%- else %}
+          image: {{ docker_registry }}/{{ image_prefix }}{{ service_name }}:{{ image_version }}
+{%- endif %}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+{%- for env in envs %}
+            - name: {{ env.keys()[0] }}
+              value: "{{ env.values()[0] }}"
+{%- endfor %}
+{%- if ports != [] %}
+          readinessProbe:
+            tcpSocket:
+              port: {{ ports[0] }}
+          ports:
+    {%- for port in ports %}
+          - containerPort: {{ port }}
+            name: {{ service_name.split('-')[0] }}{{ port }}
+            protocol: TCP
+    {%- endfor %}
+{%- endif %}
+          resources:
+            limits:
+              memory: {{ memory }}
+          volumeMounts:
+{%- for configmap in configmaps %}
+            - name: {{ configmap['configmap_name'] }}
+              {%- if configmap['dest_file_name'] %}
+              mountPath: /configmaps/{{ configmap['dest_file_name'] }}
+              {%- else %}
+              mountPath: /configmaps/{{ configmap['file_name'] }}
+              {% endif %}
+{%- endfor %}
+{%- for mount in mounts %}
+            - mountPath: {{ mount['container_path'] }}
+              name: {{ mount['name'] }}
+    {% if mount['read_only'] %}
+              readOnly: true
+    {% endif %}
+{%- endfor %}
+{%- for emptydir in emptydirs %}
+            - name: {{ emptydir['name'] }}
+              mountPath: {{ emptydir['container_path'] }}
+{%- endfor %}
+      volumes:
+{%- for configmap in configmaps %}
+        - name: {{ configmap['configmap_name'] }}
+          configMap:
+            name: {{ configmap['configmap_name'] }}
+            items:
+            - key: {{ configmap['file_name'] }}
+              {%- if configmap['dest_file_name'] %}
+              path: {{ configmap['dest_file_name'] }}
+              {%- else %}
+              path: {{ configmap['file_name'] }}
+              {%- endif %}
+{%- endfor %}
+{%- for emptydir in emptydirs %}
+        - name: {{ emptydir['name'] }}
+          emptyDir: {}
+{%- endfor %}
+  {%- for mount in mounts %}
+        - name: {{ mount['name'] }}
+          hostPath:
+            path: {{ mount['host_path'] }}
+  {%- endfor %}

@@ -1,0 +1,109 @@
+type: daemonset
+name: network-node
+label: openstack-network-node
+ports: []
+dependencies:
+  service:
+    - neutron-server
+    - rabbitmq
+    - nova-api
+  job:
+    - nova-init
+    - neutron-init
+    - nova-post
+containers:
+  - name: neutron-dhcp-agent
+    command: neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/dhcp-agent.ini
+    image: neutron-dhcp-agent
+    files:
+      - file_name: neutron.conf
+        configmap_name: neutron-conf-db-sync
+        container_path: /etc/neutron
+        templates:
+        - neutron/templates/neutron.conf.j2
+      - file_name: ml2-conf.ini
+        configmap_name: ml2-conf-db-sync
+        container_path: /etc/neutron/plugins/ml2
+        templates:
+        - neutron/templates/ml2_conf.ini.j2
+        - neutron/templates/ml2_conf.openvswitch.ini.j2
+      - file_name: dhcp-agent.ini
+        configmap_name: dhcp-agent-ini
+        container_path: /etc/neutron
+        templates:
+        - neutron/templates/dhcp_agent.ini.j2
+      - file_name: dnsmasq.conf
+        configmap_name: dnsmasq-conf
+        container_path: /etc/neutron
+        templates:
+        - neutron/templates/dnsmasq.conf.j2
+      - file_name: resolv.conf
+        configmap_name: resolv
+        container_path: /etc
+        templates:
+        - common/templates/resolv.conf.j2
+    mounts:
+      - container_path: /lib/modules
+        name: lib-modules
+        read_only: true
+        host_path: /lib/modules
+      - container_path: /run
+        name: run
+        host_path: /run
+        read_only: false
+      - container_path: /usr/sbin/ip
+        name: usr-sbin-ip
+        host_path: /usr/bin/ip
+        read_only: false
+      - container_path: /var/lib/neutron/kolla/
+        name: socket
+        host_path: /var/lib/neutron/kolla/
+        read_only: false
+
+  - name: neutron-l3-agent
+    command: neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/l3-agent.ini --config-file /etc/neutron/fwaas-driver.ini --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+    image: neutron-l3-agent
+    files:
+      - file_name: neutron.conf
+        configmap_name: neutron-conf-db-sync
+        container_path: /etc/neutron
+        templates:
+        - neutron/templates/neutron.conf.j2
+      - file_name: ml2-conf.ini
+        configmap_name: ml2-conf-db-sync
+        container_path: /etc/neutron/plugins/ml2
+        templates:
+        - neutron/templates/ml2_conf.ini.j2
+        - neutron/templates/ml2_conf.openvswitch.ini.j2
+      - file_name: fwaas-driver.ini
+        configmap_name: fwaas-driver-ini
+        container_path: /etc/neutron
+        templates:
+        - neutron/templates/fwaas_driver.ini.j2
+      - file_name: l3-agent.ini
+        configmap_name: l3-agent-ini
+        container_path: /etc/neutron
+        templates:
+        - neutron/templates/l3_agent.ini.j2
+      - file_name: resolv.conf
+        configmap_name: resolv
+        container_path: /etc
+        templates:
+        - common/templates/resolv.conf.j2
+    mounts:
+      - container_path: /lib/modules
+        name: lib-modules
+        read_only: true
+        host_path: /lib/modules
+      - container_path: /run
+        name: run
+        host_path: /run
+        read_only: false
+      - container_path: /usr/sbin/ip
+        name: usr-sbin-ip
+        host_path: /usr/bin/ip
+        read_only: false
+      - container_path: /var/lib/neutron/kolla/
+        name: socket
+        host_path: /var/lib/neutron/kolla/
+        read_only: false

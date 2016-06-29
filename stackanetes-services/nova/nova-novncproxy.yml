@@ -1,0 +1,21 @@
+type: deployment
+name: nova-novncproxy
+label: openstack-control-plane
+command: nova-novncproxy --config-file /etc/nova/nova.conf
+# TODO(DTadrzak): move it to config?
+external_ip_enabled: true
+ports:
+  - 6080
+dependencies:
+  service:
+  - nova-api
+  - glance-api
+  job:
+  - nova-init
+  - nova-api-db-sync
+files:
+- file_name: nova.conf
+  configmap_name: nova-conf
+  container_path: /etc/nova
+  templates:
+  - nova/templates/nova.conf.j2

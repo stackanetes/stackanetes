@@ -1,0 +1,26 @@
+type: deployment
+name: glance-api
+label: openstack-control-plane
+command: glance-api
+ports:
+- 9292
+dependencies:
+  service:
+  - mariadb
+  - rabbitmq
+  - keystone-api
+  job:
+  - glance-db-sync
+files:
+- file_name: glance-api.conf
+  configmap_name: glance-api
+  container_path: /etc/glance
+  templates:
+  - glance/templates/glance-file.conf.j2
+  - glance/templates/glance-api.conf.j2
+envs:
+- KOLLA_BOOTSTRAP: ""
+emptyDirs:
+- name: glance
+  container_path: /etc/glance
+

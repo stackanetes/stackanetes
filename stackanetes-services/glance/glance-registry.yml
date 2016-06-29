@@ -1,0 +1,19 @@
+type: deployment
+name: glance-registry
+label: openstack-control-plane
+command: glance-registry
+ports:
+- 9191
+dependencies:
+  service:
+  - mariadb
+  - rabbitmq
+  - glance-api
+  job:
+  - glance-db-sync
+files:
+- file_name: glance.conf
+  configmap_name: glance-registry
+  container_path: /etc/glance
+  templates:
+  - glance/templates/glance-registry.conf.j2

@@ -1,0 +1,30 @@
+type: deployment
+name: mariadb
+label: openstack-control-plane
+command: "bash /tmp/mariadb.sh"
+image: mariadb
+ports:
+  - 3306
+envs:
+  - DB_ROOT_PASSWORD: "password"
+  - DB_MAX_TIMEOUT: 100
+  - KOLLA_BOOTSTRAP: ""
+emptyDirs:
+- name: mysql
+  container_path: /var/lib/mysql
+files: 
+  - file_name: mariadb.sh
+    configmap_name: mariadb
+    container_path: /tmp
+    templates:
+      - mariadb/templates/mariadb.sh.j2
+  - file_name: my.cnf
+    configmap_name: mycnf
+    container_path: /etc/mysql
+    templates:
+      - mariadb/templates/galera.cnf.j2
+  - file_name: bootstrap.sh
+    configmap_name: bootstrap 
+    container_path: /tmp
+    templates:
+      - mariadb/templates/bootstrap.sh.j2

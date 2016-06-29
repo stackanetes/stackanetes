@@ -9,7 +9,22 @@ spec:
   containers:
   - name: stackanetes-base
     #insert a valid image name
-    image: quay.io/stackanetes/stackanetes-deployer:2.0.0
+    imagePullPolicy: Always
+    image: quay.io/stackanetes/stackanetes-deployer:barcelona
     env:
     - name: HOST_INTERFACE
       value: "eno2" #name of physical interface for compute-node
+    - name: DOCKER_REGISTRY
+      value: "quay.io/stackanetes"
+    - name: IMAGE_VERSION
+      value: "zkless"
+    - name: DNS_IP
+      value: "10.2.0.10"
+    - name: CLUSTER_NAME
+      value: "cluster.local"
+    - name: EXTERNAL_IP
+      value: "10.10.10.10"
+    - name: NAMESPACE
+      value: "stackanetes"
+    - name: IMAGE_PREFIX
+      value: ""

@@ -2,52 +2,32 @@
 set -eo pipefail
 echo Testing kubectl
 if [[ ! $(kubectl get nodes) ]] ; then 
-	echo Cannot connect to Kubernetes, please make sure you have the correct kubeconfig
-	exit 1;
+  echo Cannot connect to Kubernetes, please make sure you have the correct kubeconfig
+  exit 1;
 fi
 if [[ ! $(kubectl get nodes -o json | grep controller ) ]] ; then
-	echo Cannot find a node with app=persistent-control label 
-	exit 1;
+  echo Cannot find a node with app=control label
+  exit 1;
 fi
 
 if [[ ! $(kubectl get nodes -o json | grep compute ) ]] ; then 
-	echo Cannot find a node with app=compute label 
-	exit 1;
+  echo Cannot find a node with app=compute label
+  exit 1;
 fi
 
-echo Modifying kolla-k8s.conf
-builderip=$(cat /etc/kolla-k8s/kolla-k8s.conf | grep 2181 | awk '{print $3}')
-sed -i "s@#host = $builderip@host = $ZK_HOST@g" /etc/kolla-k8s/kolla-k8s.conf
-sed -i 's@#kubectl_path@kubectl_path@g' /etc/kolla-k8s/kolla-k8s.conf
-sed -i "s@#yml_dir_path = rc/@yml_dir_path = $KOLLA_K8S_YMLPATH@g" /etc/kolla-k8s/kolla-k8s.conf
-if [ $KUBECONFIG ]; then
-    sed -i "s@#kubeconfig_path =@kubeconfig_path = $KUBECONFIG@g" /etc/kolla-k8s/kolla-k8s.conf
-fi
-sed -i "s@#deployment_id = root@deployment_id = root@g" /etc/kolla-k8s/kolla-k8s.conf
-if [ $KUBEHOST ]; then
-    sed -i "s@#host =@host = $KUBEHOST@g" /etc/kolla-k8s/kolla-k8s.conf
-fi
-sed -i "s@#tag = 1.0.0@tag = $IMAGE_VERSION@g" /etc/kolla-k8s/kolla-k8s.conf
-sed -i "s@#host_interface = eno1@host_interface = $HOST_INTERFACE@g" /etc/kolla-k8s/kolla-k8s.conf
+echo Modifying stackanetes.conf
 
-echo Modifying Globals.yml
-sed -i "s@network_interface: \"eth0\"@network_interface: \"$NEUTRON_CNI\"@g" /etc/kolla-k8s/globals.yml
-sed -i "s@neutron_external_interface: \"eth0\"@neutron_external_interface: \"$HOST_INTERFACE\"@g" /etc/kolla-k8s/globals.yml
-sed -i "s@enable_horizon: \"no\"@enable_horizon: \"yes\"@g" /etc/kolla-k8s/globals.yml
+sed -i 's@#kubectl_path@kubectl_path@g' /etc/stackanetes/stackanetes.conf
+sed -i "s@#docker_image_tag = mitaka@docker_image_tag = $IMAGE_VERSION@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#minion_interface_name = eno1@minion_interface_name = $HOST_INTERFACE@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#docker_registry = quay.io/stackanetes@docker_registry = $DOCKER_REGISTRY@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#dns_ip = 10.2.0.10@dns_ip = $DNS_IP@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#cluster_name = cluster.local@cluster_name = $CLUSTER_NAME@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#external_ip = 10.10.10.10@external_ip = $EXTERNAL_IP@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#namespace = stackanetes@namespace = $NAMESPACE@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#image_prefix =@image_prefix = $IMAGE_PREFIX@g" /etc/stackanetes/stackanetes.conf
 
-echo Deploying Zookeeper
-kolla-k8s --config-dir /etc/kolla-k8s run zookeeper
-
-#Wait for zookeeper to come online on k8s cluster
-while [ true  ]                                                                                                                                                                                
-do                                                                                                                                                                                             
-    sleep 2                                                                                                                                                                                    
-    ZOOKEEPER_ENDPOINTS=$(kubectl describe svc zookeeper |awk '/Endpoint/ {{print $2}}' |head -1)                                                                                      
-    ZOOKEEPER_ENDPOINTS_ARRAY=(${ZOOKEEPER_ENDPOINTS//,/ })                                                                                                                                  
-    if [ ${#ZOOKEEPER_ENDPOINTS_ARRAY[@]} -eq 3 ]; then                                                                                                                                              
-        break                                                                                                                                                                                  
-    fi                                                                                                                                                                                         
-done 
 
 echo Deploying stackanetes
-kolla-k8s --config-dir /etc/kolla-k8s run all --debug
+python ./manage_all.py kill
+python ./manage_all.py run

@@ -4,7 +4,7 @@ debug = true
 use_syslog = {{ openstack_use_syslog }}
 use_stderr = {{ openstack_use_stderr }}
 
-bind_host = {{ get_ip_address() }}
+bind_host = {{ get_ip_address }}
 bind_port = {{ neutron_server_port }}
 
 #lock_path = /var/lock/neutron
@@ -18,6 +18,8 @@ allow_automatic_l3agent_failover = True
 allow_overlapping_ips = true
 core_plugin = ml2
 service_plugins = router
+
+interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 
 [nova]
 auth_url = http://{{ keystone_auth_host }}:{{ keystone_admin_port }}

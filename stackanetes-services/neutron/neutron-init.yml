@@ -1,0 +1,12 @@
+name: neutron-init
+type: job
+command: bash /tmp/neutron-init.sh
+dependencies:
+  service:
+  - mariadb
+files:
+- file_name: neutron-init.sh
+  configmap_name: neutron-init 
+  container_path: /tmp
+  templates:
+  - neutron/templates/neutron-init.sh.j2

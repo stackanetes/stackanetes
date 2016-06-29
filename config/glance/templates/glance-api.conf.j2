@@ -3,7 +3,7 @@ debug = {{ glance_logging_debug }}
 use_syslog = {{ openstack_use_syslog }}
 use_stderr = {{ openstack_use_stderr }}
 
-bind_host = {{ get_ip_address(api_interface) }}
+bind_host = {{ get_ip_address }}
 bind_port = {{ glance_api_port }}
 
 workers = 8

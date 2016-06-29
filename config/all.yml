@@ -4,11 +4,11 @@
 # The "temp" files that are created before merge need to stay persistent due
 # to the fact that ansible will register a "change" if it has to create them
 # again. Persistent files allow for idempotency
-node_templates_directory: "/usr/share/kolla/templates"
-container_config_directory: "/var/lib/kolla/config_files"
+node_templates_directory: "/usr/share/stackanetes/templates"
+container_config_directory: "/var/lib/stackanetes/config_files"
 
 # The directory to store the config files on the destination node
-node_config_directory: "/etc/kolla"
+node_config_directory: "/etc/stackanetes"
 
 #test
 ###################
@@ -157,7 +157,7 @@ ironic_api_host: "ironic-api"
 ####################
 # Openstack authentication string. You should only need to override these if you
 # are changing the admin tenant/project or user.
-openstack_auth_url: "http://{{ keystone_auth_host }}:{{ keystone_admin_port }}"
+openstack_auth_url: "http://keystone-api:35357"
 openstack_username: "admin"
 openstack_password: "{{ keystone_admin_password }}"
 openstack_project_name: "admin"
@@ -176,8 +176,8 @@ enable_neutron: "yes"
 
 # Additional optional OpenStack services are specified here
 enable_cinder: "no"
-enable_horizon: "no"
-enable_memcached: "no"
+enable_horizon: "yes"
+enable_memcached: "yes"
 enable_haproxy: "no"
 enable_ceph: "no"
 enable_heat: "no"
@@ -202,7 +202,7 @@ haproxy_user: "openstack"
 #################################
 # Cinder - Block Storage options
 #################################
-cinder_volume_driver: "{{ 'ceph' if enable_ceph | bool else 'lvm' }}"
+cinder_volume_driver: "{{ 'ceph' if enable_ceph else 'lvm' }}"
 
 
 ###################
@@ -226,3 +226,13 @@ ceph_nova_pool_name: "vms"
 ceph_erasure_profile: "k=4 m=2 ruleset-failure-domain=host"
 ceph_rule: "default host {{ 'indep' if ceph_pool_type == 'erasure' else 'firstn' }}"
 ceph_cache_rule: "cache host firstn"
+
+
+##################
+# Template wrapper
+##################
+#
+get_ip_address: {% raw %}"{{ .IP }}"{% endraw %}
+get_ip_address_erlang: {% raw %}"{{ .IP_ERLANG }}"{% endraw %}
+get_hostname: {% raw %}"{{ .HOSTNAME }}"{% endraw %}
+get_ip_address_erlang: {% raw %}"{{ .IP_ERLANG }}"{% endraw %}
