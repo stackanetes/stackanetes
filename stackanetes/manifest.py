@@ -40,6 +40,9 @@ class Manifest(object):
         self.host_network = configuration.get('host_network', True)
         self.namespace = CONF.stackanetes.namespace
         self.ports = configuration.get('ports', [])
+        for port in self.ports:
+            if not port.get('target_port'):
+                port['target_port'] = port.get('port')
         if configuration.get('containers'):
             self._parameters_for_multi_containers_pod(configuration)
         else:

@@ -73,11 +73,11 @@ spec:
 {%- if ports != [] %}
           readinessProbe:
             tcpSocket:
-              port: {{ ports[0]['port'] }}
+              port: {{ ports[0]['target_port'] }}
           ports:
     {%- for port in ports %}
-          - containerPort: {{ port['port'] }}
-            name: {{ service_name.split('-')[0] }}{{ port['port'] }}
+          - containerPort: {{ port['target_port'] }}
+            name: {{ service_name.split('-')[0] }}{{ port['target_port'] }}
             protocol: TCP
     {%- endfor %}
 {%- endif %}
