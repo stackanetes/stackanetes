@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+ceph auth get client.bootstrap-rgw  -o /var/lib/ceph/bootstrap-rgw/ceph.keyring
+/entrypoint.sh
+

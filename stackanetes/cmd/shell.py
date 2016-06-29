@@ -29,6 +29,7 @@ VERSION = '1.0'
 
 CONF = cfg.CONF
 CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
+CONF.import_group('ceph','stackanetes.config.ceph')
 
 log.register_options(CONF)
 log.set_defaults(
