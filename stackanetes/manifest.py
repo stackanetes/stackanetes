@@ -163,10 +163,10 @@ class Manifest(object):
 
     @staticmethod
     def _filter_elements(dict_list, key_name):
-         filtered_list = []
-         new_list = []
-         for dictionary in dict_list:
-             if dictionary[key_name] not in filtered_list:
-                 new_list.append(dictionary)
-                 filtered_list.append(dictionary[key_name])
-         return new_list
+        filtered_list = []
+        new_list = []
+        for dictionary in dict_list:
+            if dictionary[key_name] not in filtered_list:
+                new_list.append(dictionary)
+                filtered_list.append(dictionary[key_name])
+        return new_list
