@@ -26,7 +26,9 @@ sed -i "s@#cluster_name = cluster.local@cluster_name = $CLUSTER_NAME@g" /etc/sta
 sed -i "s@#external_ip = 10.10.10.10@external_ip = $EXTERNAL_IP@g" /etc/stackanetes/stackanetes.conf
 sed -i "s@#namespace = stackanetes@namespace = $NAMESPACE@g" /etc/stackanetes/stackanetes.conf
 sed -i "s@#image_prefix =@image_prefix = $IMAGE_PREFIX@g" /etc/stackanetes/stackanetes.conf
-
+sed -i "s@#ceph_mons = 192.168.10.1,10.91.10.2@ceph_mons = $CEPH_MONS@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#ceph_admin_keyring = ASDA==@ceph_admin_keyring = $CEPH_ADMIN_KEYRING@g" /etc/stackanetes/stackanetes.conf
+sed -i "s@#ceph_enabled = true@ceph_enabled = $CEPH_ENABLED@g" /etc/stackanetes/stackanetes.conf
 
 echo Deploying stackanetes
 python ./manage_all.py kill

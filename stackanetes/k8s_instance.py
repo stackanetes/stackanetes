@@ -27,7 +27,7 @@ from stackanetes.common.utils import (check_if_namespace_exist,
 LOG = logging.getLogger()
 CONF = cfg.CONF
 CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
-
+CONF.import_group('ceph','stackanetes.config.ceph')
 
 class K8sInstance():
     def __init__(self, service_name, service_dir):
@@ -49,6 +49,7 @@ class K8sInstance():
             self.service_name, path_to_service_conf))
         with open(path_to_service_conf, 'r') as file:
             variables.update(yaml.load(file))
+        self.ceph_required = variables.get('ceph_required', False)
         self.configs = variables
         self.files = variables.get('files', [])
         self.containers = variables.get('containers', [])
@@ -78,11 +79,27 @@ class K8sInstance():
         with open(self.file_path, 'w') as stream:
             stream.write(data)
 
+    def _check_if_ceph_conditional_is_fulfilled(self):
+        return False if not CONF.ceph.ceph_enabled and \
+                        self.ceph_required else True
+
     def run(self):
+        if not self._check_if_ceph_conditional_is_fulfilled():
+            LOG.warning(
+                "{} requires CEPH to working but CEPH is disabled.".format(
+                    self.service_name.capitalize()
+                ))
+            return
         self._generate_manifest()
         self._manage_instance("create")
 
     def delete(self):
+        if not self._check_if_ceph_conditional_is_fulfilled():
+            LOG.warning(
+                "{} requires CEPH to working but CEPH is disabled.".format(
+                    self.service_name.capitalize()
+                ))
+            return
         self._generate_manifest()
         self._manage_instance("delete")
 
@@ -92,5 +109,4 @@ class K8sInstance():
         cmd.extend([cmd_type, "-f", self.file_path])
         LOG.debug('{} instance {}'.format(cmd_type, self.service_name))
         subprocess.call(cmd)
-
 

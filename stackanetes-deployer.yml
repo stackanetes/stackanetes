@@ -28,3 +28,9 @@ spec:
       value: "stackanetes"
     - name: IMAGE_PREFIX
       value: ""
+    - name: CEPH_MONS
+      value: ""
+    - name: CEPH_ADMIN_KEYRING
+      value: ""
+    - name: CEPH_ENABLED
+      value: "true"
