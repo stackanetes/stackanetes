@@ -3,8 +3,8 @@ name: horizon
 label: openstack-control-plane
 command: bash /tmp/kolla-apache-wrapper.sh
 ports:
-- 80
-- 443
+- port: 80
+- port: 443
 dependencies:
   service:
     - memcached

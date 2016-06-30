@@ -3,7 +3,7 @@ name: glance-api
 label: openstack-control-plane
 command: glance-api
 ports:
-- 9292
+- port: 9292
 dependencies:
   service:
   - mariadb

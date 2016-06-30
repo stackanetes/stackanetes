@@ -4,7 +4,7 @@ label: openstack-control-plane
 command: "bash /tmp/mariadb.sh"
 image: mariadb
 ports:
-  - 3306
+  - port: 3306
 envs:
   - DB_ROOT_PASSWORD: "password"
   - DB_MAX_TIMEOUT: 100

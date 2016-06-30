@@ -3,8 +3,8 @@ label: openstack-control-plane
 name: keystone-api
 command: bash /tmp/apache-wrapper.sh
 ports:
-- 5000
-- 35357
+- port: 5000
+- port: 35357
 dependencies:
   service:
   - mariadb
