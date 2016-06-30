@@ -1,0 +1,9 @@
+type: fluentd-elasticsearch
+name: fluentd-elasticsearch
+command: "/run.sh"
+files: []
+centralized_logging_required: true
+external_ip_enabled: true
+ports:
+- 5601
+session_affinity: true

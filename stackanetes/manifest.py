@@ -21,6 +21,7 @@ from oslo_log import log as logging
 LOG = logging.getLogger()
 CONF = cfg.CONF
 CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
+GENERIC_TYPES = ['job','deployment','daemonset']
 
 
 class Manifest(object):
@@ -142,16 +143,10 @@ class Manifest(object):
         return data
 
     def _find_template(self):
-        if self.type == "network-node":
-            return "generic-network-node.yml.j2"
-        elif self.type == "compute-node":
-            return "generic-compute-node.yml.j2"
-        elif self.type == "job":
-            return "generic-job.yml.j2"
-        elif self.type == "deployment":
-            return "generic-deployment.yml.j2"
-        elif self.type == "daemonset":
-            return "generic-daemonset.yml.j2"
+        if self.type in GENERIC_TYPES:
+            return "generic-{}.yml.j2".format(self.type)
+        elif self.type == "fluentd-elasticsearch":
+            return "fluentd-elasticsearch.yml.j2"
         else:
             msg = "{} type is not supported".format(self.type)
             LOG.error(msg)

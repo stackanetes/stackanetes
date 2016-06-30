@@ -1,0 +1,141 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-logging
+  namespace: kube-system
+  labels:
+    k8s-app: elasticsearch-logging
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "Elasticsearch"
+spec:
+  ports:
+  - port: 9200
+    protocol: TCP
+    targetPort: db
+  selector:
+    k8s-app: elasticsearch-logging
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: elasticsearch-logging-v1
+  namespace: kube-system
+  labels:
+    k8s-app: elasticsearch-logging
+    version: v1
+    kubernetes.io/cluster-service: "true"
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        k8s-app: elasticsearch-logging
+        version: v1
+        kubernetes.io/cluster-service: "true"
+    spec:
+      containers:
+      - image: gcr.io/google_containers/elasticsearch:1.8
+        name: elasticsearch-logging         
+        ports:
+        - containerPort: 9200
+          name: db
+          protocol: TCP
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        volumeMounts:
+        - name: es-persistent-storage
+          mountPath: /data
+      volumes:
+      - name: es-persistent-storage
+        hostPath: 
+          path: /var/lib/fluentd-elasticsearch
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: fluentd-elasticsearch
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  template:
+    metadata:
+      name: fluentd-elasticsearch
+      namespace: kube-system
+      labels:
+        k8s-app: fluentd-logging
+    spec:
+      containers:
+      - name: fluentd-elasticsearch
+        image: gcr.io/google_containers/fluentd-elasticsearch:1.15
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana-logging
+  namespace: kube-system
+  labels:
+    k8s-app: kibana-logging
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "Kibana"
+spec:
+{%- if session_affinity %}
+  sessionAffinity: ClientIP
+{%- endif %}
+{%- if external_ip_enabled %}
+  externalIPs:
+    - {{ external_ip }}
+{%- endif %}
+{%- for port in ports %}
+  ports:
+  - port: {{ port }}
+    protocol: TCP
+    targetPort: ui
+ {%- endfor %}
+  selector:
+    k8s-app: kibana-logging
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kibana-logging-v1
+  namespace: kube-system
+  labels:
+    k8s-app: kibana-logging
+    version: v1
+    kubernetes.io/cluster-service: "true"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: kibana-logging
+        version: v1
+        kubernetes.io/cluster-service: "true"
+    spec:
+      containers:
+      - name: kibana-logging
+        image: gcr.io/google_containers/kibana:1.3
+        resources:
+        env:
+          - name: "ELASTICSEARCH_URL"
+            value: "http://elasticsearch-logging:9200"
+        ports:
+        - containerPort: 5601
+          name: ui
+          protocol: TCP
