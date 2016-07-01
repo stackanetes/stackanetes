@@ -4,7 +4,7 @@ label: openstack-control-plane
 ceph_required: True
 command: /usr/bin/cinder-volume
 ports:
-- 8776
+  - port: 8776
 dependencies:
   service:
   - mariadb
@@ -18,14 +18,13 @@ files:
   container_path: /etc/cinder
   templates:
   - cinder/templates/cinder.conf.j2
-  - cinder/templates/cinder-ceph.conf.j2
 - file_name: ceph.conf
   configmap_name: ceph-conf
   container_path: /etc/ceph
   templates:
-  - common/templates/ceph.conf.j2
-- file_name: ceph.client.cinder.keyring
+  - rgw/templates/ceph.conf.j2
+- file_name: ceph.client.admin.keyring
   configmap_name: ceph-keyring
   container_path: /etc/ceph
   templates:
-  - common/templates/ceph.client.cinder.keyring.j2
+  - rgw/templates/ceph.client.admin.keyring.j2

@@ -14,10 +14,22 @@ os_region_name = {{ openstack_region_name }}
 osapi_volume_listen = {{ get_ip_address }}
 osapi_volume_listen_port = {{ cinder_api_port }}
 
+default_volume_type = rbd-1
+enabled_backends = rbd-1
+
 api_paste_config = /etc/cinder/api-paste.ini
 nova_catalog_info = compute:nova:internalURL
 
 auth_strategy = keystone
+
+backup_driver = cinder.backup.drivers.ceph
+backup_ceph_conf = /etc/ceph/ceph.conf
+backup_ceph_user = cinder-backup
+backup_ceph_chunk_size = 134217728
+backup_ceph_pool = {{ ceph_cinder_backup_pool_name }}
+backup_ceph_stripe_unit = 0
+backup_ceph_stripe_count = 0
+restore_discard_excess_bytes = true
 
 [database]
 connection = mysql+pymysql://{{ cinder_database_user }}:{{ cinder_database_password }}@{{ cinder_database_address }}/{{ cinder_database_name }}
@@ -40,3 +52,15 @@ rabbit_userid = {{ rabbitmq_user }}
 rabbit_password = {{ rabbitmq_password }}
 rabbit_ha_queues = true
 rabbit_hosts = {{ rabbitmq_address }}
+
+[rbd-1]
+volume_driver = cinder.volume.drivers.rbd.RBDDriver
+rbd_pool = cinder
+rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_flatten_volume_from_snapshot = false
+rbd_max_clone_depth = 5
+rbd_store_chunk_size = 4
+rados_connect_timeout = -1
+rbd_user = admin
+rbd_secret_uuid = {{ rbd_secret_uuid }}
+report_discard_supported = True

@@ -16,4 +16,3 @@ files:
   container_path: /etc/cinder
   templates:
   - cinder/templates/cinder.conf.j2
-  - cinder/templates/cinder-ceph.conf.j2
