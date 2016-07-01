@@ -161,7 +161,7 @@ openstack_auth_url: "http://keystone-api:35357"
 openstack_username: "admin"
 openstack_password: "{{ keystone_admin_password }}"
 openstack_project_name: "admin"
-
+openstack_domain_name: 'default'
 
 ####################
 # OpenStack services
