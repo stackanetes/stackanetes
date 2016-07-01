@@ -103,7 +103,7 @@ spec:
 {%- endif %}
 {%- for port in ports %}
   ports:
-  - port: {{ port }}
+  - port: {{ port.port }}
     protocol: TCP
     targetPort: ui
  {%- endfor %}
