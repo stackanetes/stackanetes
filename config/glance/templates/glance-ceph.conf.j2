@@ -1,0 +1,9 @@
+[DEFAULT]
+show_image_direct_url= True
+
+[glance_store]
+default_store = rbd
+stores = rbd
+rbd_store_user = glance
+rbd_store_pool = {{ ceph_glance_pool_name }}
+rbd_store_chunk_size = 8
