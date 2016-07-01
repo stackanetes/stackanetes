@@ -5,7 +5,7 @@ image: ceph-daemon
 command: "bash /tmp/rgw.sh"
 ceph_required: True
 ports:
-- 6000
+- port: 6000
 session_affinity: true
 external_ip_enabled: true
 envs:

@@ -1,0 +1,7 @@
+type: fluentd-elasticsearch
+name: fluentd-elasticsearch
+centralized_logging_required: true
+external_ip_enabled: true
+ports:
+- port: 5601
+session_affinity: true
