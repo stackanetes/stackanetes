@@ -1,0 +1,18 @@
+type: deployment
+name: cinder-scheduler
+label: openstack-control-plane
+ceph_required: true
+command: /usr/bin/cinder-scheduler
+dependencies:
+  service:
+  - mariadb
+  - rabbitmq
+  - keystone-api
+  job:
+  - cinder-db-sync
+files:
+- file_name: cinder.conf
+  configmap_name: cinder-conf
+  container_path: /etc/cinder
+  templates:
+  - cinder/templates/cinder.conf.j2
