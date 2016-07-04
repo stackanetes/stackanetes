@@ -1,4 +1,4 @@
-type: daemonset
+type: generic/daemonset
 name: compute-node
 label: openstack-compute-node
 ports: []

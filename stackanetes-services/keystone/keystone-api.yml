@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 label: openstack-control-plane
 name: keystone-api
 command: bash /tmp/apache-wrapper.sh

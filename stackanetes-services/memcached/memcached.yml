@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: memcached
 label: openstack-control-plane
 image: memcached

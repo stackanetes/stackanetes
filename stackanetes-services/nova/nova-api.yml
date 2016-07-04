@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: nova-api
 label: openstack-control-plane
 command: nova-api --config-file /etc/nova/nova.conf

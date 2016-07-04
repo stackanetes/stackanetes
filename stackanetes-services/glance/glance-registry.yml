@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: glance-registry
 label: openstack-control-plane
 command: glance-registry

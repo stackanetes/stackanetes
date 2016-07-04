@@ -1,5 +1,5 @@
 name: neutron-init
-type: job
+type: generic/job
 command: bash /tmp/neutron-init.sh
 dependencies:
   service:

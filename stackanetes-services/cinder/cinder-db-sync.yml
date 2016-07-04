@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: cinder-db-sync
 image: cinder-api
 ceph_required: true

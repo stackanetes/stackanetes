@@ -1,0 +1,53 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ namespace }}
+  name: {{ service_name }}
+spec:
+  template:
+    metadata:
+      namespace: {{ namespace }}
+      name: {{ service_name }}
+    spec:
+      restartPolicy: OnFailure
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: {{ service_name }}
+{%- if image %}
+          image: {{ docker_registry }}/{{ image_prefix }}{{ image }}:{{ image_version }}
+{%- else %}
+          image: {{ docker_registry }}/{{ image_prefix }}kolla-toolbox:{{ image_version }}
+{%- endif %}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+{%- for env in envs %}
+            - name: {{ env.keys()[0] }}
+              value: {{ env.values()[0] }}
+{%- endfor %}
+          volumeMounts:
+{%- for configmap in configmaps %}
+            - name: {{ configmap['configmap_name'] }}
+              mountPath: /configmaps/{{ configmap['file_name'] }}
+{%- endfor %}
+      volumes:
+{%- for configmap in configmaps %}
+        - name: {{ configmap['configmap_name'] }}
+          configMap:
+            name: {{ configmap['configmap_name'] }}
+            items:
+            - key: {{ configmap['file_name'] }}
+              path: {{ configmap['file_name'] }}
+{%- endfor %}

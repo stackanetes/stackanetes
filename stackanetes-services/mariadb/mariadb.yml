@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: mariadb
 label: openstack-control-plane
 command: "bash /tmp/mariadb.sh"

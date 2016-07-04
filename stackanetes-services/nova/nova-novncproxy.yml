@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: nova-novncproxy
 label: openstack-control-plane
 command: nova-novncproxy --config-file /etc/nova/nova.conf
