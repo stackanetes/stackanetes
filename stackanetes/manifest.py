@@ -144,6 +144,11 @@ class Manifest(object):
         return data
 
     def _find_template(self):
+        if self.type.count('/') != 1:
+            msg = "Invalid format type of {} service. Service type should " \
+                  "have following format (generic|job)/(template_name)."
+            LOG.error(msg)
+            raise KeyError(msg)
         template_type, template_name = self.type.split('/')
         if template_type == "generic" and template_name in GENERIC_TYPES:
             return "generic/{}.yml.j2".format(template_name)
