@@ -1,0 +1,19 @@
+type: daemonset
+name: elasticsearch-search
+label: elasticsearch-search
+host_network: false
+external_ip_enabled: true
+ports:
+- port: 9210
+  target_port: 9200
+containers:
+  - name: elasticsearch
+    image: elasticsearch
+    privileged: false
+    envs:
+      - SERVICE: "elasticsearch-search"
+    mounts:
+      - container_path: /data
+        name: elasticsearch-data
+        read_only: false
+        host_path: /data
