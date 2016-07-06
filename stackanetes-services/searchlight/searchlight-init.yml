@@ -1,0 +1,19 @@
+type: job
+name: searchlight-init
+command: bash /tmp/searchlight-init.sh
+label: openstack-control-plane
+image: centos-binary-kolla-toolbox
+#dependencies:
+#  service:
+#  - mariadb
+#  - rabbitmq
+#  - keystone-api
+#  - ironic-api
+files:
+- file_name: searchlight-init.sh
+  configmap_name: searchlight-init
+  container_path: /tmp
+  templates:
+  - searchlight/templates/searchlight-init.sh.j2
+envs:
+- ANSIBLE_LIBRARY: /usr/share/ansible/

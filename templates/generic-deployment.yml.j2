@@ -30,6 +30,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
+  namespace: {{ namespace }}
   name: {{ service_name }}
 spec:
   replicas: 1

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+searchlight-manage index sync --type OS::Ironic::Node --force
+searchlight-manage index sync --type OS::Ironic::Port --force
