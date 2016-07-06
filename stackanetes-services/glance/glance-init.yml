@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: glance-init
 command: bash /tmp/glance-init.sh
 dependencies:

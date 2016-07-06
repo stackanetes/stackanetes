@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: horizon
 label: openstack-control-plane
 command: bash /tmp/kolla-apache-wrapper.sh

@@ -1,4 +1,4 @@
-type: daemonset
+type: generic/daemonset
 name: elasticsearch-search
 label: elasticsearch-search
 host_network: false

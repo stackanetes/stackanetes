@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: nova-api-db-sync
 command: bash /tmp/nova-api-db-sync.sh
 image: nova-api

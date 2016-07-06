@@ -1,4 +1,4 @@
-type: daemonset
+type: generic/daemonset
 name: openvswitch-agent
 label: openstack-neutron-openvswitch-agent
 ports: []

@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: glance-post
 command: bash /tmp/glance-post.sh
 dependencies:

@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: nova-conductor
 label: openstack-control-plane
 command: nova-conductor --config-file /etc/nova/nova.conf
