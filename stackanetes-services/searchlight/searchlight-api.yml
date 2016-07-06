@@ -5,11 +5,11 @@ label: openstack-control-plane
 image: searchlight
 ports:
 - port: 9393
-#dependencies:
-#  service:
-#  - mariadb
-#  - rabbitmq
-#  - ironic-api
+dependencies:
+  service:
+  - mariadb
+  - keystone-api
+  - elasticsearch-search
   job:
   - searchlight-init
 files:
