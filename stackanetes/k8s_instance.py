@@ -29,7 +29,8 @@ CONF = cfg.CONF
 CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
 CONF.import_group('ceph','stackanetes.config.ceph')
 
-class K8sInstance():
+
+class K8sInstance(object):
     def __init__(self, service_name, service_dir):
         LOG.debug("Creating instance: {}".format(service_name))
         self.service_name = service_name

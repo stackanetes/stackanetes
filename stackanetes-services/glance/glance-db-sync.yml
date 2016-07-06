@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: glance-db-sync
 image: glance-api
 command: bash /tmp/glance-db-sync.sh

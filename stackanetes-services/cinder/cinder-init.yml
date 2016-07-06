@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: cinder-init
 ceph_required: True
 command: bash /tmp/cinder-init.sh

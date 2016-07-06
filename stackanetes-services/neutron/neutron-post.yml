@@ -1,4 +1,4 @@
-type: job 
+type: generic/job
 name: neutron-post
 command: bash /tmp/neutron-post.sh
 dependencies:

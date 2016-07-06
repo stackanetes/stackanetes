@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: keystone-init
 command: bash /tmp/keystone-init.sh
 dependencies:

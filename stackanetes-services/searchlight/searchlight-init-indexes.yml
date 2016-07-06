@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: searchlight-init-indexes
 command: bash /tmp/searchlight-init-indexes.sh
 label: openstack-control-plane

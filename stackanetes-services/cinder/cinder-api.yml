@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: cinder-api
 label: openstack-control-plane
 ceph_required: true

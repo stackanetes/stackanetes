@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: searchlight-api
 command: searchlight-api
 label: openstack-control-plane

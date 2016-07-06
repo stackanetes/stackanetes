@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: rgw
 label: openstack-control-plane
 image: ceph-daemon
