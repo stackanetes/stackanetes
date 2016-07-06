@@ -6,7 +6,6 @@ image: searchlight
 dependencies:
   service:
   - elasticsearch-search
-  - ironic-api
 files:
 - file_name: searchlight.conf
   configmap_name: searchlight-api
