@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: keystone-db-sync
 image: keystone-api
 command: bash /tmp/keystone-db-sync.sh

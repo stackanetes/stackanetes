@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: nova-init
 command: bash /tmp/nova-init.sh
 dependencies:

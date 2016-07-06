@@ -1,4 +1,4 @@
-type: deployment
+type: generic/deployment
 name: neutron-server
 label: openstack-control-plane
 command: neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini

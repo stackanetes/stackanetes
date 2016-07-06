@@ -1,4 +1,4 @@
-type: job
+type: generic/job
 name: neutron-server-db-sync
 command: "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head"
 image: neutron-server

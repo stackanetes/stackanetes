@@ -1,4 +1,4 @@
-type: daemonset
+type: generic/daemonset
 name: openvswitch-node
 label: openstack-openvswitch-node
 ports: []
