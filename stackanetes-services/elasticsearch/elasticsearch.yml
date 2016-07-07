@@ -1,6 +1,6 @@
 type: generic/daemonset
-name: elasticsearch-search
-label: elasticsearch-search
+name: elasticsearch-s9t
+label: elasticsearch-s9t
 host_network: false
 external_ip_enabled: true
 ports:
@@ -11,7 +11,7 @@ containers:
     image: elasticsearch
     privileged: false
     envs:
-      - SERVICE: "elasticsearch-search"
+      - SERVICE: "elasticsearch-s9t"
     mounts:
       - container_path: /data
         name: elasticsearch-data
