@@ -1,7 +1,7 @@
 type: generic/deployment
 name: searchlight-api
 command: searchlight-api
-label: searchlight
+label: openstack-control-plane
 image: searchlight
 ports:
 - port: 9393
@@ -9,7 +9,7 @@ dependencies:
   service:
   - mariadb
   - keystone-api
-  - elasticsearch-search
+  - elasticsearch-s9t
   job:
   - searchlight-init
 files:

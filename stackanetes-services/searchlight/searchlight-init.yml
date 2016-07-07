@@ -1,7 +1,7 @@
 type: generic/job
 name: searchlight-init
 command: bash /tmp/searchlight-init.sh
-label: searchlight
+label: openstack-control-plane
 dependencies:
   service:
   - mariadb

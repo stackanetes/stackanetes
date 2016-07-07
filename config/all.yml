@@ -34,7 +34,7 @@ rabbitmq_address: "rabbitmq"
 ####################
 # Elasticsearch options
 ####################
-elasticsearch_host: "elasticsearch-search"
+elasticsearch_host: "elasticsearch-s9t"
 
 ####################
 # Database options

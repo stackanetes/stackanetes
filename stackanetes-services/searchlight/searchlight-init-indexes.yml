@@ -1,11 +1,11 @@
 type: generic/job
 name: searchlight-init-indexes
 command: bash /tmp/searchlight-init-indexes.sh
-label: searchlight
+label: openstack-control-plane
 image: searchlight
 dependencies:
   service:
-  - elasticsearch-search
+  - elasticsearch-s9t
 files:
 - file_name: searchlight.conf
   configmap_name: searchlight-api
