@@ -1,7 +1,7 @@
 type: generic/deployment
 name: searchlight-api
 command: searchlight-api
-label: openstack-control-plane
+label: searchlight
 image: searchlight
 ports:
 - port: 9393
