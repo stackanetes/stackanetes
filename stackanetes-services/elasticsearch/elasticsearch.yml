@@ -2,7 +2,6 @@ type: generic/daemonset
 name: elasticsearch-s9t
 label: elasticsearch-s9t
 host_network: false
-external_ip_enabled: true
 ports:
 - port: 9210
   target_port: 9200
