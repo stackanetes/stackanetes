@@ -23,6 +23,11 @@ files:
   container_path: /etc/searchlight
   templates:
   - searchlight/templates/api-paste.ini.j2
+- file_name: policy.json
+  configmap_name: searchlight-policy
+  container_path: /etc/searchlight
+  templates:
+  - searchlight/templates/policy.json.j2
 envs:
 - KOLLA_BOOTSTRAP: ""
 emptyDirs:
