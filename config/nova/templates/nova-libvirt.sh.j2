@@ -1,3 +1,11 @@
+#!/bin/env bash
+set -e
+
+if [[ -f /var/run/libvirtd.pid ]]; then
+   echo "Libvirtd is already running. Exiting"
+   test -d /proc/$(< /var/run/libvirtd.pid) && exit 10
+fi
+
 if [[ -c /dev/kvm ]]; then
     chmod 660 /dev/kvm
     chown root:kvm /dev/kvm
