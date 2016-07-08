@@ -38,6 +38,9 @@ def get_kubectl_command():
     if CONF.stackanetes.context:
         context = "--context=" + CONF.stackanetes.context
         cmd.append(context)
+    if CONF.stackanetes.namespace:
+        namespace = "--namespace=" + CONF.stackanetes.namespace
+        cmd.append(namespace)
 
     return cmd
 
