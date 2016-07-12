@@ -33,21 +33,18 @@ def main():
 
 def load_all_services():
     services = []
-    for _, _, files_names in os.walk(SERVICE_PATH):
-        services.extend(files_names)
-
-    services = [file_name[:-4] for file_name in services]
+    for _, _, file_name in os.walk(SERVICE_PATH):
+        services.extend(file_name)
+    # Remove .yml from the of service name
+    services = [service.replace('.yml', '') for service in services]
 
     return services
 
 
 def manage_services(services, manage_type):
+    cmd = ['stackanetes', manage_type]
     for service_name in services:
-        cmd = ['stackanetes', '--config-dir',
-               '/etc/stackanetes', '--debug', manage_type]
-        cmd.append(service_name)
-        print cmd
-        subprocess.call(cmd)
+        subprocess.call(cmd + [service_name])
 
 if __name__ == "__main__":
     main()
