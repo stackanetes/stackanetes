@@ -42,10 +42,9 @@ def load_all_services():
 
 
 def manage_services(services, manage_type):
-    cmd = ['stackanetes', '--debug', manage_type, 'service_type']
+    cmd = ['stackanetes', manage_type]
     for service_name in services:
-        cmd[-1] = service_name
-        subprocess.call(cmd)
+        subprocess.call(cmd + [service_name])
 
 if __name__ == "__main__":
     main()
