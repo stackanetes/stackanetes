@@ -27,5 +27,5 @@ _testmain.go
 *.prof
 
 build/
-etc/kolla-k8s.conf.sample
+etc/stackanetes.conf.sample
 ansible/site.retry

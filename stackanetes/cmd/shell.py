@@ -48,7 +48,7 @@ cli_opts = [
 CONF.register_cli_opts(cli_opts)
 
 
-class KollaMesosInteractiveApp(interactive.InteractiveApp):
+class StackanetesInteractiveApp(interactive.InteractiveApp):
     def do_run(self, arg):
         self.default(arg)
 
@@ -63,14 +63,14 @@ class KollaMesosInteractiveApp(interactive.InteractiveApp):
         return interactive.InteractiveApp.do_help(self, arg)
 
 
-class KollaMesosShell(app.App):
+class StackanetesShell(app.App):
     def __init__(self):
-        super(KollaMesosShell, self).__init__(
+        super(StackanetesShell, self).__init__(
             description='stackanetes command-line interface',
             version=VERSION,
             command_manager=commandmanager.CommandManager('stackanetes.cli'),
             deferred_help=True,
-            interactive_app_factory=KollaMesosInteractiveApp
+            interactive_app_factory=StackanetesInteractiveApp
         )
 
     def print_help(self):
@@ -139,7 +139,7 @@ def main(argv=sys.argv[1:]):
     if need_help:
         CONF([], project=PROJECT, version=VERSION)
         CONF.print_help()
-        return KollaMesosShell().print_help()
+        return StackanetesShell().print_help()
 
     CONF(config_args, project=PROJECT, version=VERSION)
     log.setup(CONF, PROJECT, VERSION)
@@ -149,7 +149,7 @@ def main(argv=sys.argv[1:]):
         CONF.log_opt_values(
             log.getLogger(PROJECT), log.INFO)
 
-    return KollaMesosShell().run(command_args)
+    return StackanetesShell().run(command_args)
 
 
 if __name__ == '__main__':
