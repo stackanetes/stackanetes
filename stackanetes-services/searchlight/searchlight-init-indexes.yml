@@ -1,0 +1,19 @@
+type: generic/job
+name: searchlight-init-indexes
+command: bash /tmp/searchlight-init-indexes.sh
+label: openstack-control-plane
+image: searchlight
+dependencies:
+  service:
+  - elasticsearch-s9t
+files:
+- file_name: searchlight.conf
+  configmap_name: searchlight-api
+  container_path: /etc/searchlight
+  templates:
+  - searchlight/templates/searchlight.conf.j2
+- file_name: searchlight-init-indexes.sh
+  configmap_name: searchlight-init-indexes
+  container_path: /tmp
+  templates:
+  - searchlight/templates/searchlight-init-indexes.sh.j2

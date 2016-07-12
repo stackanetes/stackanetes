@@ -32,6 +32,11 @@ rabbitmq_address: "rabbitmq"
 
 
 ####################
+# Elasticsearch options
+####################
+elasticsearch_host: "elasticsearch-s9t"
+
+####################
 # Database options
 ####################
 database_address: "mariadb"
@@ -84,6 +89,8 @@ rabbitmq_management_port: "15672"
 rabbitmq_cluster_port: "25672"
 rabbitmq_epmd_port: "4369"
 
+elasticsearch_port: "9210"
+
 haproxy_stats_port: "1984"
 
 keystone_public_port: "5000"
@@ -116,6 +123,7 @@ murano_api_port: "8082"
 
 ironic_api_port: "6385"
 
+searchlight_api_port: "9393"
 
 ####################
 # Openstack options
@@ -150,6 +158,7 @@ glance_api_host: "glance-api"
 cinder_api_host: "cinder-api"
 nova_api_host: "nova-api"
 ironic_api_host: "ironic-api"
+searchlight_api_host: "searchlight-api"
 
 
 ####################
