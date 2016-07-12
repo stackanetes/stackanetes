@@ -91,6 +91,12 @@ To kill all of OpenStack services use the same script but with kill parameter:
 ```
 ./manage_all.py kill
 ```
+
+
+### Enabling Searchlight-UI plugin in Horizon
+Enabling [Searchlight-UI](https://github.com/openstack/searchlight-ui/) plugin has to be done inside Docker image. In order to build a custom Horizon image with Searchlight-UI plugin, follow [the instructions](https://github.com/openstack/searchlight-ui/#setup-local-dev-environment). If new image name differs, set the appropriate name in `horizon.yml`.
+
+
 ## Deploy Stackanetes via stackanetes-deployer POD
 
 You can either use pre-build stackanetes-deployer docker image:
