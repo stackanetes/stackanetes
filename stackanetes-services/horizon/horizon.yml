@@ -21,7 +21,7 @@ files:
   - common/templates/horizon.sh.j2
 - file_name: 000-default.conf
   configmap_name: horizon-conf
-  container_path: /etc/httpd/conf.d
+  container_path: /etc/apache2/conf-enabled
   templates:
   - horizon/templates/horizon.conf.j2
 - file_name: local-settings
