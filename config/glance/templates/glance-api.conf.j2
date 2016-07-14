@@ -23,6 +23,8 @@ username = {{ glance_keystone_user }}
 password = {{ glance_keystone_password }}
 
 [paste_deploy]
+# Temporary workaround
+config_file = /glance-base-source/glance-13.0.0.0b2.dev59/etc/glance-api-paste.ini
 flavor = keystone
 
 [oslo_messaging_notifications]

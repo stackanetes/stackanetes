@@ -18,9 +18,9 @@ node_config_directory: "/etc/stackanetes"
 config_strategy: "COPY_ONCE"
 
 # Valid options are [ centos, fedora, oraclelinux, ubuntu ]
-kolla_base_distro: "centos"
+kolla_base_distro: "debian"
 # Valid options are [ binary, source ]
-kolla_install_type: "binary"
+kolla_install_type: "source"
 
 # Value set in the public_url endpoint in Keystone
 kolla_external_address: "{{ kolla_internal_address }}"
@@ -58,7 +58,7 @@ docker_restart_policy_retry: "10"
 # kolla anisble image name
 kolla_toolbox_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-kolla-toolbox"
 kolla_toolbox_tag: "{{ openstack_release }}"
-ansible_task_cmd: "/usr/bin/ansible localhost"
+ansible_task_cmd: "/usr/local/bin/ansible localhost"
 
 # loglevel for the container init script
 init_log_level: "info"

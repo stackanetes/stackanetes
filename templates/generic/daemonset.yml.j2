@@ -75,6 +75,7 @@ spec:
             privileged: true
 {%- endif %}
           image: {{ docker_registry }}/{{ image_prefix }}{{ container['image'] }}:{{ image_version }}
+          imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME
               value: {{ host_interface }}

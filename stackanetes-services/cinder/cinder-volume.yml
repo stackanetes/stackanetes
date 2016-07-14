@@ -2,7 +2,7 @@ type: generic/deployment
 name: cinder-volume
 label: openstack-control-plane
 ceph_required: True
-command: /usr/bin/cinder-volume
+command: cinder-volume
 ports:
   - port: 8776
 dependencies:

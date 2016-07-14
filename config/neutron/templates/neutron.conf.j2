@@ -40,8 +40,11 @@ rabbit_password = {{ rabbitmq_password }}
 rabbit_ha_queues = true
 rabbit_hosts = {{ rabbitmq_address }}
 
+[ovs]
+ovsdb_connection = unix:/var/run/openvswitch/db.sock
+
 [agent]
-root_helper = sudo neutron-rootwrap /etc/neutron/rootwrap.conf
+root_helper = sudo /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
 
 [database]
 connection = mysql+pymysql://{{ neutron_database_user }}:{{ neutron_database_password }}@{{ neutron_database_address }}/{{ neutron_database_name }}

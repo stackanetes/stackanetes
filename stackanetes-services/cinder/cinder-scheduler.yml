@@ -2,7 +2,7 @@ type: generic/deployment
 name: cinder-scheduler
 label: openstack-control-plane
 ceph_required: true
-command: /usr/bin/cinder-scheduler
+command: cinder-scheduler
 dependencies:
   service:
   - mariadb
