@@ -15,5 +15,4 @@
 import pbr.version
 
 
-__version__ = pbr.version.VersionInfo(
-    'kolla-k8s').version_string()
+__version__ = pbr.version.VersionInfo('stackanetes').version_string()
