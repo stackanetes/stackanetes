@@ -97,7 +97,7 @@ lock_path = /var/lib/nova/tmp
 workers = 8
 
 [glance]
-api_servers = {{ glance_api_host }}:{{ glance_api_port }}
+api_servers = http://{{ glance_api_host }}:{{ glance_api_port }}
 num_retries = 3
 
 [cinder]
