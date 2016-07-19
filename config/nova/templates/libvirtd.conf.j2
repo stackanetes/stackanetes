@@ -1,8 +1,8 @@
 listen_tcp = 1
 auth_tcp = "none"
 ca_file = ""
-log_level = 4
-log_outputs = "4:file:/var/log/libvirt/libvirtd.log"
+log_level = 2
+log_outputs = "2:stderr"
 listen_addr = "{{ get_ip_address }}"
 unix_sock_group = "nova"
 unix_sock_ro_perms = "0777"

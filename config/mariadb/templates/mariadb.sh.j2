@@ -5,7 +5,7 @@ mkdir -p /var/log/kolla/mariadb
 chmod 755 /var/log/kolla/mariadb
 
 su -s /bin/bash mysql - mysql -c 'mysql_install_db'
-su -s /bin/bash  mysql -c 'bash /tmp/bootstrap.sh'
+su -s /bin/bash mysql -c 'bash /tmp/bootstrap.sh'
 
 su -s /bin/bash mysql - mysql -c '/usr/bin/mysqld_safe --wsrep-new-cluster'
 

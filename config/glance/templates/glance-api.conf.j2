@@ -24,8 +24,23 @@ password = {{ glance_keystone_password }}
 
 [paste_deploy]
 # Temporary workaround
-config_file = /glance-base-source/glance-13.0.0.0b2.dev59/etc/glance-api-paste.ini
+config_file = /glance-base-source/glance-base-archive-stable-mitaka/etc/glance-api-paste.ini
 flavor = keystone
 
 [oslo_messaging_notifications]
 driver = noop
+
+[glance_store]
+stores = file, http
+{%- if ceph_enabled -%}
+, swift
+
+stores = file, http, swift
+default_store = swift
+swift_store_auth_version = 1
+swift_store_auth_address = http://rgw:6000/auth/1.0
+swift_store_user = glance:swift
+swift_store_key = glance_store_key
+swift_store_container = glance
+swift_store_create_container_on_put = True
+{% endif %}

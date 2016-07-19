@@ -14,13 +14,14 @@
 
 import os
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, TemplateSyntaxError
 from oslo_config import cfg
 from oslo_log import log as logging
 
 LOG = logging.getLogger()
 CONF = cfg.CONF
 CONF.import_group('stackanetes', 'stackanetes.config.stackanetes')
+CONF.import_group('ceph', 'stackanetes.config.ceph')
 GENERIC_TYPES = ['job', 'deployment', 'daemonset']
 CUSTOM_TYPES = ['fluentd-elasticsearch']
 
@@ -118,11 +119,12 @@ class Manifest(object):
             [x['container_path'], x['key_name']]), configmaps))
         envs.append({'CONFIGS': configmaps_string})
 
-    @staticmethod
-    def _add_dependencies(envs, dependencies):
+    def _add_dependencies(self, envs, dependencies):
         jobs = ','.join(dependencies.get('job', []))
         envs.append({'JOBS': jobs})
         services = ','.join(dependencies.get('service', []))
+        if CONF.ceph.ceph_enabled and self.service_name != 'rgw':
+            services = ','.join([services, 'rgw'])
         envs.append({'SERVICES': services})
         ds = ','.join(dependencies.get('ds', []))
         envs.append({'DS': ds})
@@ -133,14 +135,19 @@ class Manifest(object):
         envs.append({'CONTAINERS': containers})
 
     def render(self):
+        LOG.debug("Start rendering manifest for {}".format(self.service_name))
         template_dir = os.path.join(self.service_dir, '..', 'templates')
-
         template_environment = Environment(
             autoescape=False,
             loader=FileSystemLoader(template_dir),
             trim_blocks=False)
-        data = template_environment.get_template(self.template_name).render(
-            self.__dict__)
+
+        try:
+            data = template_environment.get_template(self.template_name).render(
+                self.__dict__)
+        except TemplateSyntaxError as err:
+            LOG.error("Cannot render manifest. Err={}".format(err))
+            raise TemplateSyntaxError("Cannot render manifest")
         return data
 
     def _find_template(self):
