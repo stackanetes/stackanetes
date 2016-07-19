@@ -6,6 +6,8 @@ dependencies:
   - keystone-api
   - glance-api
   - glance-registry
+  job:
+  - glance-init
 files:
 - file_name: glance-post.sh
   configmap_name: glance-post

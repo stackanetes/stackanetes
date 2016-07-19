@@ -2,7 +2,7 @@ set -x
 mysqld_safe --wsrep-new-cluster &
 # Wait for the mariadb server to be "Ready" before starting the security reset with a max timeout
 TIMEOUT=${DB_MAX_TIMEOUT:-60}
-while [[ ! -f /var/lib/mysql/$HOSTNAME.pid ]]; do
+while [[ ! -f /var/lib/mysql/mariadb.pid ]]; do
 if [[ ${TIMEOUT} -gt 0 ]]; then
     let TIMEOUT-=1
     sleep 1

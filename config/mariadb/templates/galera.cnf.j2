@@ -1,4 +1,4 @@
-{% set wsrep_driver = '/usr/lib/galera/libgalera_smm.so' if kolla_base_distro == 'ubuntu' else '/usr/lib64/galera/libgalera_smm.so' %}
+{% set wsrep_driver = '/usr/lib/galera/libgalera_smm.so' if kolla_base_distro in ['ubuntu', 'debian'] else '/usr/lib64/galera/libgalera_smm.so' %}
 [mysqld]
 bind-address={{ get_ip_address }}
 port={{ mariadb_port }}

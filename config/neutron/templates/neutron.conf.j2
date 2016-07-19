@@ -4,6 +4,9 @@ debug = true
 use_syslog = {{ openstack_use_syslog }}
 use_stderr = {{ openstack_use_stderr }}
 
+nova_url = http://nova-api:8774
+notify_nova_on_port_status_changes = True
+notify_nova_on_port_data_changes = True
 bind_host = {{ get_ip_address }}
 bind_port = {{ neutron_server_port }}
 

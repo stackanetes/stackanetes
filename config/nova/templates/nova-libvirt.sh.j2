@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 if [[ -c /dev/kvm ]]; then
     chmod 660 /dev/kvm
     chown root:kvm /dev/kvm
@@ -14,4 +17,9 @@ fi
 if [[ $(stat -c %a /var/log/kolla/libvirt) != "755" ]]; then
     chmod 755 /var/log/kolla/libvirt
 fi
-libvirtd --listen
+
+ceph auth get client.cinder -o /etc/ceph/ceph.client.cinder.keyring
+
+bash /tmp/nova-libvirt-cinder-hack.sh &
+
+libvirtd -v --listen

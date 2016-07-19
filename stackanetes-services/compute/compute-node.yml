@@ -31,6 +31,16 @@ containers:
         container_path: /etc
         templates:
         - common/templates/resolv.conf.j2
+      - file_name: ceph.conf
+        configmap_name: ceph-conf
+        container_path: /etc/ceph
+        templates:
+        - rgw/templates/ceph.conf.j2
+      - file_name: ceph.client.admin.keyring
+        configmap_name: ceph-keyring
+        container_path: /etc/ceph
+        templates:
+        - rgw/templates/ceph.client.admin.keyring.j2
     mounts:
       - container_path: /lib/modules
         name: lib-modules
@@ -70,7 +80,22 @@ containers:
         configmap_name: resolv
         container_path: /etc
         templates:
-        - common/templates/resolv.conf.j2
+          - common/templates/resolv.conf.j2
+      - file_name: ceph.conf
+        configmap_name: ceph-conf
+        container_path: /etc/ceph
+        templates:
+          - rgw/templates/ceph.conf.j2
+      - file_name: ceph.client.admin.keyring
+        configmap_name: ceph-keyring
+        container_path: /etc/ceph
+        templates:
+        - rgw/templates/ceph.client.admin.keyring.j2
+      - file_name: nova-libvirt-cinder-hack.sh
+        configmap_name: nova-libvirt-cinder-hack
+        container_path: /tmp
+        templates:
+        - nova/templates/nova-libvirt-cinder-hack.sh.j2
     mounts:
       - container_path: /lib/modules
         name: lib-modules
