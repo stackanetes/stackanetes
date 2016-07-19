@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+if [[ -f /var/run/libvirtd.pid ]]; then
+   echo "Libvirtd daemon is running"
+   test -d /proc/$(< /var/run/libvirtd.pid) && exit 10
+fi
+
+rm -f /var/run/libvirtd.pid
+
 if [[ -c /dev/kvm ]]; then
     chmod 660 /dev/kvm
     chown root:kvm /dev/kvm
