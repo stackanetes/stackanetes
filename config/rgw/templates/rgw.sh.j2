@@ -1,13 +1,17 @@
 #!/bin/bash
-set -e
-ceph auth get client.bootstrap-rgw  -o /var/lib/ceph/bootstrap-rgw/ceph.keyring
-radosgw-admin user create --uid="glance" --display-name="User for Glance"
-radosgw-admin subuser create --uid=glance --subuser=glance:swift --access=full
-radosgw-admin key create --subuser=glance:swift --key-type=swift --secret={{ ceph_admin_keyring }}
-radosgw-admin user modify --uid=glance --temp-url-key=glance_temp_url_key
 
-ceph-authtool /etc/ceph/ceph.keyring --import-keyring /etc/ceph/ceph.client.admin.keyring
-ceph auth get client.admin -o /etc/ceph/ceph.client.admin.keyring
+radosgw-admin user info --uid=glance
+
+if [ $? -gt 0 ]; then
+        radosgw-admin user create --uid="glance" --display-name="User for Glance"
+        radosgw-admin subuser create --uid=glance --subuser=glance:swift --access=full
+        radosgw-admin key create --subuser=glance:swift --key-type=swift --secret={{ ceph_admin_keyring }}
+        radosgw-admin user modify --uid=glance --temp-url-key=glance_temp_url_key
+fi
+
+ceph auth get client.bootstrap-rgw  -o /var/lib/ceph/bootstrap-rgw/ceph.keyring || exit 1
+ceph-authtool /etc/ceph/ceph.keyring --import-keyring /etc/ceph/ceph.client.admin.keyring || exit 2
+ceph auth get client.admin -o /etc/ceph/ceph.client.admin.keyring || exit 3
 
 /entrypoint.sh
 
