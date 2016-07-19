@@ -10,7 +10,5 @@ if [ $? -gt 0 ]; then
 fi
 
 ceph auth get client.bootstrap-rgw  -o /var/lib/ceph/bootstrap-rgw/ceph.keyring || exit 1
-ceph-authtool /etc/ceph/ceph.keyring --import-keyring /etc/ceph/ceph.client.admin.keyring || exit 2
-ceph auth get client.admin -o /etc/ceph/ceph.client.admin.keyring || exit 3
 
 /entrypoint.sh
