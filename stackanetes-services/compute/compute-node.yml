@@ -15,7 +15,7 @@ dependencies:
     - openvswitch-node
 containers:
   - name: nova-compute
-    command: nova-compute --config-file /etc/nova/nova.conf
+    command: bash /tmp/nova.sh
     image: nova-compute
     dependencies:
       containers:
@@ -26,6 +26,11 @@ containers:
         container_path: /etc/nova
         templates:
           - nova/templates/nova.conf.j2
+      - file_name: nova.sh
+        configmap_name: nova
+        container_path: /tmp
+        templates:
+          - nova/templates/nova.sh.j2
       - file_name: resolv.conf
         configmap_name: resolv
         container_path: /etc

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+
+ceph auth get client.cinder -o /etc/ceph/ceph.client.cinder.keyring
+
+ceph auth get client.glance -o /etc/ceph/ceph.client.glance.keyring
+
+nova-compute --config-file /etc/nova/nova.conf
