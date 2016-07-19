@@ -2,7 +2,7 @@ type: generic/job
 name: cinder-db-sync
 image: cinder-api
 ceph_required: true
-command: cinder-manage db sync
+command: bash /tmp/cinder-db-sync.sh
 dependencies:
   service:
   - mariadb
@@ -14,3 +14,18 @@ files:
   container_path: /etc/cinder
   templates:
   - cinder/templates/cinder.conf.j2
+- file_name: cinder-db-sync.sh
+  configmap_name: cinder-db-sync
+  container_path: /tmp
+  templates:
+  - cinder/templates/cinder-db-sync.sh.j2
+- file_name: ceph.conf
+  configmap_name: ceph-conf
+  container_path: /etc/ceph
+  templates:
+  - rgw/templates/ceph.conf.j2
+- file_name: ceph.client.admin.keyring
+  configmap_name: ceph-keyring
+  container_path: /etc/ceph
+  templates:
+  - rgw/templates/ceph.client.admin.keyring.j2
