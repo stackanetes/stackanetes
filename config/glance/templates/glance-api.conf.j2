@@ -41,6 +41,8 @@ swift_store_auth_version = 1
 swift_store_auth_address = http://rgw:6000/auth/1.0
 swift_store_user = glance:swift
 swift_store_key = {{ ceph_admin_keyring }}
+default_swift_reference = ref1
+swift_store_config_file = /etc/glance/glance-swift-store.conf
 swift_store_container = glance
 swift_store_create_container_on_put = True
 {% endif %}

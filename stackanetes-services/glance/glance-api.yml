@@ -18,6 +18,11 @@ files:
   templates:
   - glance/templates/glance-file.conf.j2
   - glance/templates/glance-api.conf.j2
+- file_name: glance-swift-store.conf
+  configmap_name: glance-swift-store
+  container_path: /etc/glance
+  templates:
+  - glance/templates/glance-swift-store.conf.j2
 envs:
 - KOLLA_BOOTSTRAP: ""
 emptyDirs:
