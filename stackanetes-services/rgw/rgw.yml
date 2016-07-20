@@ -1,8 +1,7 @@
-type: generic/deployment
+type: custom/rgw
 name: rgw
 label: openstack-control-plane
 image: ceph-daemon
-command: "bash /tmp/rgw.sh"
 ceph_required: True
 ports:
 - port: 6000
