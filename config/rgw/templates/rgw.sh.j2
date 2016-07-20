@@ -1,5 +1,8 @@
 #!/bin/bash
 
+cp /configmaps/ceph.conf/ceph.conf /etc/ceph/
+cp /configmaps/ceph.client.admin.keyring/ceph.client.admin.keyring /etc/ceph/
+
 radosgw-admin user info --uid=glance
 
 if [ $? -gt 0 ]; then
@@ -10,5 +13,5 @@ if [ $? -gt 0 ]; then
 fi
 
 ceph auth get client.bootstrap-rgw  -o /var/lib/ceph/bootstrap-rgw/ceph.keyring || exit 1
-
 /entrypoint.sh
+
