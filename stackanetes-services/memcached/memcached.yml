@@ -2,7 +2,7 @@ type: generic/deployment
 name: memcached
 label: openstack-control-plane
 image: memcached
-command: "memcached"
+command: "memcached -v"
 ports:
 - port: 11211
 session_affinity: true
