@@ -24,9 +24,9 @@ fi
 if [[ $(stat -c %a /var/log/kolla/libvirt) != "755" ]]; then
     chmod 755 /var/log/kolla/libvirt
 fi
-
+{%- if ceph_enabled %}
 ceph auth get client.cinder -o /etc/ceph/ceph.client.cinder.keyring
 
 bash /tmp/nova-libvirt-cinder-hack.sh &
-
+{%- endif %}
 libvirtd -v --listen
