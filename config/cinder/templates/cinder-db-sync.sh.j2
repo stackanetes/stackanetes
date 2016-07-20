@@ -4,7 +4,7 @@ ceph auth get client.cinder
 
 if [ $? -ne 0 ];then
  set -e
- ceph-authtool -n client.cinder --cap osd 'allow class-read object_prefix rbd_children, allow rwx pool=cinder, allow rwx pool=cinder-cache, allow rwx pool=nova, allow rwx pool=nova-cache, allow rwx pool=glance, allow' --cap mon 'allow rwx' -C /etc/ceph/ceph.client.cinder.keyring --gen-key
+ ceph-authtool -n client.cinder --cap osd 'allow class-read object_prefix rbd_children, allow rwx pool=cinder, allow rwx pool=cinder-cache, allow rwx pool=nova, allow rwx pool=nova-cache, allow rwx pool=glance, allow rwx' --cap mon 'allow rwx' -C /etc/ceph/ceph.client.cinder.keyring --gen-key
 
  ceph auth add client.cinder -i /etc/ceph/ceph.client.cinder.keyring
 fi
