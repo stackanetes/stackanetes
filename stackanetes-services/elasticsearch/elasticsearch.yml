@@ -1,6 +1,7 @@
 type: generic/daemonset
 name: elasticsearch-s9t
-label: elasticsearch-s9t
+label: openstack-control-plane
+image: elasticsearch
 host_network: false
 ports:
 - port: 9210
@@ -8,6 +9,7 @@ ports:
 containers:
   - name: elasticsearch
     image: elasticsearch
+    command: /usr/share/elasticsearch/bin/elasticsearch
     privileged: false
     envs:
       - SERVICE: "elasticsearch-s9t"
