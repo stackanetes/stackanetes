@@ -2,7 +2,6 @@ type: generic/deployment
 name: horizon
 label: openstack-control-plane
 command: bash /tmp/kolla-apache-wrapper.sh
-image: searchlight-ui
 ports:
 - port: 80
 - port: 443
