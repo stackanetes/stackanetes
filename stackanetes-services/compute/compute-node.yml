@@ -9,7 +9,7 @@ dependencies:
     - nova-api
   job:
     - nova-init
-    - nova-api-db-sync
+    - nova-post
   ds:
     - openvswitch-agent
     - openvswitch-node
