@@ -7,7 +7,7 @@ if [ $? -ne 0 ];then
  ceph auth add client.cinder -i /etc/ceph/ceph.client.cinder.keyring
 fi
 ceph osd pool get cinder size
-if [ $? -ne 0];then
+if [ $? -ne 0 ];then
   set -e 
   ceph osd pool create cinder 1024 1024
 fi
