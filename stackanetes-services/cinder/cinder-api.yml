@@ -2,7 +2,7 @@ type: generic/deployment
 name: cinder-api
 label: openstack-control-plane
 ceph_required: true
-command: /usr/bin/cinder-api
+command: cinder-api
 ports:
   - port: 8776
 dependencies:

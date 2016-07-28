@@ -42,6 +42,7 @@ class ConfigMap(object):
             'dns_ip': CONF.stackanetes['dns_ip'],
             'cluster_name': CONF.stackanetes['cluster_name'],
             'external_ip': CONF.stackanetes['external_ip'],
+            'interface_name': CONF.stackanetes['minion_interface_name'],
             'namespace': CONF.stackanetes['namespace'],
             'monitors': CONF.ceph['ceph_mons'],
             'ceph_admin_keyring': CONF.ceph['ceph_admin_keyring'],

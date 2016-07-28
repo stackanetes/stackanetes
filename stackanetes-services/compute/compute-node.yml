@@ -9,13 +9,13 @@ dependencies:
     - nova-api
   job:
     - nova-init
-    - nova-api-db-sync
+    - nova-post
   ds:
     - openvswitch-agent
     - openvswitch-node
 containers:
   - name: nova-compute
-    command: nova-compute --config-file /etc/nova/nova.conf
+    command: bash /tmp/nova.sh
     image: nova-compute
     dependencies:
       containers:
@@ -26,11 +26,26 @@ containers:
         container_path: /etc/nova
         templates:
           - nova/templates/nova.conf.j2
+      - file_name: nova.sh
+        configmap_name: nova
+        container_path: /tmp
+        templates:
+          - nova/templates/nova.sh.j2
       - file_name: resolv.conf
         configmap_name: resolv
         container_path: /etc
         templates:
         - common/templates/resolv.conf.j2
+      - file_name: ceph.conf
+        configmap_name: ceph-conf
+        container_path: /etc/ceph
+        templates:
+        - rgw/templates/ceph.conf.j2
+      - file_name: ceph.client.admin.keyring
+        configmap_name: ceph-keyring
+        container_path: /etc/ceph
+        templates:
+        - rgw/templates/ceph.client.admin.keyring.j2
     mounts:
       - container_path: /lib/modules
         name: lib-modules
@@ -70,7 +85,22 @@ containers:
         configmap_name: resolv
         container_path: /etc
         templates:
-        - common/templates/resolv.conf.j2
+          - common/templates/resolv.conf.j2
+      - file_name: ceph.conf
+        configmap_name: ceph-conf
+        container_path: /etc/ceph
+        templates:
+          - rgw/templates/ceph.conf.j2
+      - file_name: ceph.client.admin.keyring
+        configmap_name: ceph-keyring
+        container_path: /etc/ceph
+        templates:
+        - rgw/templates/ceph.client.admin.keyring.j2
+      - file_name: nova-libvirt-cinder-hack.sh
+        configmap_name: nova-libvirt-cinder-hack
+        container_path: /tmp
+        templates:
+        - nova/templates/nova-libvirt-cinder-hack.sh.j2
     mounts:
       - container_path: /lib/modules
         name: lib-modules

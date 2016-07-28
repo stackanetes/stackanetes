@@ -7,9 +7,10 @@ dependencies:
     - keystone-api
     - glance-api
     - nova-api
+    - neutron-server
   job:
-    - nova-init
-    - nova-api-db-sync
+    - neutron-post
+    - nova-post
   ds:
     - openvswitch-node
 containers:

@@ -75,6 +75,8 @@ class K8sInstance(object):
             configmap.upload()
 
     def _generate_manifest(self):
+        LOG.debug("Start generating manifest: {}".format(self.configs.get(
+            "name", "[Cannot get manifest name]")))
         manifest = Manifest(self.configs, self.service_dir)
         data = manifest.render()
         self.file_path = os.path.join("/tmp", self.service_name + ".yml")
@@ -90,6 +92,7 @@ class K8sInstance(object):
                         self.centralized_logging_required else True
 
     def run(self):
+        LOG.debug("Calling run on {}".format(self.service_name))
         if not self._check_if_ceph_conditional_is_fulfilled():
             LOG.warning(
                 "{} requires CEPH to working but CEPH is disabled.".format(
@@ -106,10 +109,12 @@ class K8sInstance(object):
         self._manage_instance("create")
 
     def delete(self):
+        LOG.debug("Calling delete on {}".format(self.service_name))
         self._generate_manifest()
         self._manage_instance("delete")
 
     def _manage_instance(self, cmd_type):
+        LOG.debug("{}ing {}".format(cmd_type[:-1], self.service_name))
         cmd = get_kubectl_command()
 
         cmd.extend([cmd_type, "-f", self.file_path])
