@@ -39,6 +39,10 @@ spec:
       labels:
         app: {{ service_name }}
       name: {{ service_name }}
+      annotations:
+{%- for key, value in annotations.iteritems() %}
+        {{ key }}: {{value}}
+{%- endfor %}
     spec:
       hostPID: true
       nodeSelector:

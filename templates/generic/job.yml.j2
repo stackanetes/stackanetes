@@ -9,6 +9,10 @@ spec:
     metadata:
       namespace: {{ namespace }}
       name: {{ service_name }}
+      annotations:
+{%- for key, value in annotations.iteritems() %}
+        {{ key }}: {{value}}
+{%- endfor %}
     spec:
       restartPolicy: OnFailure
       # TODO(DTadrzak): it must be removed in future
@@ -16,6 +20,10 @@ spec:
         runAsUser: 0
       containers:
         - name: {{ service_name }}
+{%- if privileged %}
+          securityContext:
+            privileged: true
+{%- endif %}
 {%- if image %}
           image: {{ docker_registry }}/{{ image_prefix }}{{ image }}:{{ image_version }}
 {%- else %}

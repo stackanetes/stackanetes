@@ -42,7 +42,9 @@ class Manifest(object):
         self.image_prefix = CONF.stackanetes.image_prefix
         self.host_network = configuration.get('host_network', True)
         self.namespace = CONF.stackanetes.namespace
+        self.annotations = configuration.get('annotations', {})
         self.ports = configuration.get('ports', [])
+        self.host_ports = configuration.get('host_ports', [])
         for port in self.ports:
             if not port.get('target_port'):
                 port['target_port'] = port.get('port')
