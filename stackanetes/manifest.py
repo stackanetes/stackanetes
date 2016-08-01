@@ -34,6 +34,7 @@ class Manifest(object):
         self.label = configuration.get('label')
         self.external_ip_enabled = configuration.get('external_ip_enabled',
                                                      False)
+        self.replicas = configuration.get('replicas', CONF.stackanetes.replicas)
         self.memory = CONF.stackanetes.memory
         self.docker_registry = CONF.stackanetes.docker_registry
         self.image_version = CONF.stackanetes.docker_image_tag
