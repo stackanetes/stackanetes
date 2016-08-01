@@ -40,7 +40,7 @@ class Manifest(object):
         self.host_interface = CONF.stackanetes.minion_interface_name
         self.external_ip = CONF.stackanetes.external_ip
         self.image_prefix = CONF.stackanetes.image_prefix
-        self.host_network = configuration.get('host_network', True)
+        self.host_network = configuration.get('host_network', False)
         self.namespace = CONF.stackanetes.namespace
         self.ports = configuration.get('ports', [])
         for port in self.ports:
@@ -58,8 +58,8 @@ class Manifest(object):
         self.image = configuration.get('image')
         self.envs = configuration.get('envs', [])
         self.privileged = configuration.get('privileged', True)
-        self.session_affinity = configuration.get("session_affinity",[])
-        self.non_root = configuration.get("non_root",[])
+        self.session_affinity = configuration.get("session_affinity", [])
+        self.non_root = configuration.get("non_root", [])
         self.emptydirs = configuration.get('emptyDirs', [])
         self.mounts = configuration.get('mounts', [])
         if self.command:

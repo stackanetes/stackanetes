@@ -105,6 +105,9 @@ spec:
             - name: {{ emptydir['name'] }}
               mountPath: {{ emptydir['container_path'] }}
 {%- endfor %}
+{%- if host_network %}
+      hostNetwork: true
+{%- endif %}
       volumes:
 {%- for configmap in configmaps %}
         - name: {{ configmap['configmap_name'] }}
