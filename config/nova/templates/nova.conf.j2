@@ -1,8 +1,8 @@
 # nova.conf
 [DEFAULT]
 debug = {{ nova_logging_debug }}
-vif_plugin_is_fatal = False
-vif_plugin_timeout = 0
+vif_plugging_is_fatal = False
+vif_plugging_timeout = 1
 
 api_paste_config = /etc/nova/api-paste.ini
 state_path = /var/lib/nova
@@ -150,3 +150,6 @@ hw_disk_discard = unmap
 
 [upgrade_levels]
 compute = auto
+
+[serial_console]
+enabled = False
