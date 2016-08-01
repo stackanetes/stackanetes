@@ -54,23 +54,24 @@ namespace = stackanetes // specify kubernetes namespace
 
 ### Label kubernetes nodes
 
-Control plane (mariadb, zookeeper, rabbitmq) will be labeled as such:
+Control plane (mariadb, rabbitmq, nova-api, etc) will be labeled as such:
 
 ```
-kubectl label node minion1 app=controller
+kubectl label node minion1 openstack-control-plane=enabled
 ```
 
-Compute node will run couple of daemonsets like (compute-node, network-node, openvswitch-agent, openvswitch-node) , the VMs. Currently you need to dedicate the host to these:
+Compute node will run couple of daemonsets like (compute-node, openvswitch-node, dhcp and l3-agent):
 
 ```
-kubectl label node minion2  app=compute
+kubectl label node minion2  openstack-compute-node=enabled
 ```
 
 ## Docker images
 Stackanetes requires images based on Kolla (To be changed). Those images also need a special entrypoint. Entrypoint code can be found here:
 ```
-https://github.com/PiotrProkop/stackanetes/pull/1/files
+https://github.com/stackanetes/kubernetes-entrypoint
 ```
+You can also use images stored on quay.io/stackanetes.
 
 ## Deploy OpenStack services
 
@@ -91,12 +92,6 @@ To kill all of OpenStack services use the same script but with kill parameter:
 ```
 ./manage_all.py kill
 ```
-
-
-### Enabling Searchlight-UI plugin in Horizon
-Enabling [Searchlight-UI](https://github.com/openstack/searchlight-ui/) plugin has to be done inside Docker image. In order to build a custom Horizon image with Searchlight-UI plugin, follow [the instructions](https://github.com/openstack/searchlight-ui/#setup-local-dev-environment). If new image name differs, set the appropriate name in `horizon.yml`.
-
-
 ## Deploy Stackanetes via stackanetes-deployer POD
 
 You can either use pre-build stackanetes-deployer docker image:
@@ -137,7 +132,7 @@ in `stackanetes-deployer.yml` change environment variables to fit your need:
     - name: NAMESPACE
       value: "stackanetes"
     - name: IMAGE_PREFIX
-      value: ""
+      value: "stackanetes-"
 ```
 
 then run:
