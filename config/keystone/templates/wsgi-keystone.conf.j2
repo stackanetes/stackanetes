@@ -10,8 +10,8 @@ Listen {{ get_ip_address }}:{{ keystone_admin_port }}
     <IfVersion >= 2.4>
       ErrorLogFormat "%{cu}t %M"
     </IfVersion>
-    ErrorLog /proc/self/fd/2
-    CustomLog /proc/self/fd/1 combined
+    ErrorLog "|$/bin/cat 1>&2"
+    CustomLog "|/bin/cat" combined
 </VirtualHost>
 
 <VirtualHost *:{{ keystone_admin_port }}>
@@ -23,6 +23,6 @@ Listen {{ get_ip_address }}:{{ keystone_admin_port }}
     <IfVersion >= 2.4>
       ErrorLogFormat "%{cu}t %M"
     </IfVersion>
-    ErrorLog /proc/self/fd/2
-    CustomLog /proc/self/fd/1 combined
+    ErrorLog "|$/bin/cat 1>&2"
+    CustomLog "|/bin/cat" combined
 </VirtualHost>
