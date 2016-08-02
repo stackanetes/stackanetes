@@ -22,18 +22,21 @@ SERVICE_PATH = "/usr/local/share/stackanetes/stackanetes-services"
 
 
 def main():
-    if len(sys.argv) != 2:
+    if len(sys.argv) not in [2, 3]:
         exit("Please provide a 'run' or 'kill' as a script parameter")
-    if sys.argv[1] not in ['run', 'kill']:
+    if sys.argv[1] not in ['run', 'kill', 'restart']:
         exit("Invalid argument, please provide 'run' or 'kill'")
 
-    services = load_all_services()
-    manage_services(services, sys.argv[1])
+    service = '' if len(sys.argv) == 2 else sys.argv[2]
+    services = load_all_services(service)
+    arguments = ['kill', 'run'] if sys.argv[1] == 'restart' else [sys.argv[1]]
+    for argument in arguments:
+        manage_services(services, argument)
 
 
-def load_all_services():
+def load_all_services(service):
     services = []
-    for _, _, file_name in os.walk(SERVICE_PATH):
+    for _, _, file_name in os.walk(os.path.join(SERVICE_PATH, service)):
         services.extend(file_name)
     # Remove .yml from the of service name
     services = [service.replace('.yml', '') for service in services]
