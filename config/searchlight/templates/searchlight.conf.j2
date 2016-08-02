@@ -9,13 +9,13 @@ transport_url = rabbit://{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ rabbitmq
 
 [api]
 bind_port = {{ searchlight_api_port }}
-workers = 4
+workers = {{ workers }}
 
 [elasticsearch]
 hosts = {{ elasticsearch_host }}:{{ elasticsearch_port }}
 
 [listener]
-workers = 4
+workers = {{ workers }}
 
 [oslo_messaging_notifications]
 driver = messaging

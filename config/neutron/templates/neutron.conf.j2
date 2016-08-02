@@ -14,8 +14,8 @@ bind_port = {{ neutron_server_port }}
 #lock_path = /var/lock/neutron
 api_paste_config = /usr/share/neutron/api-paste.ini
 
-rpc_workers = 8
-api_workers = 8
+rpc_workers = {{ workers }}
+api_workers = {{ workers }}
 dhcp_agents_per_network = 3
 allow_automatic_l3agent_failover = True
 
