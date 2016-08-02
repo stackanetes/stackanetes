@@ -38,6 +38,10 @@ fi
 if  [ ! -f /etc/stackanetes/stackanetes.conf ]
 then
      cp etc/stackanetes.conf.sample /etc/stackanetes/stackanetes.conf
+     # Sometimes OS (especially lightweight OS) doesn't have uuidgen binary.
+     # That's why we use python uuid generator.
+     X=`python -c "import uuid; print uuid.uuid4()"`
+     sed -i "s@#uuid =@uuid = $X@g" /etc/stackanetes/stackanetes.conf
 fi
 
 if [ ! -f /etc/stackanetes/passwords.yml ]

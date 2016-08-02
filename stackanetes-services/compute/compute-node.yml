@@ -102,6 +102,11 @@ containers:
         container_path: /tmp
         templates:
         - nova/templates/nova-libvirt-cinder-hack.sh.j2
+      - file_name: secret.xml
+        configmap_name: secret-xml
+        container_path: /tmp
+        templates:
+        - nova/templates/secret.xml.j2
     mounts:
       - container_path: /lib/modules
         name: lib-modules
