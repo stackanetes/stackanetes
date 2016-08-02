@@ -2,7 +2,7 @@
 debug = {{ keystone_logging_debug }}
 use_syslog = {{ openstack_use_syslog }}
 use_stderr = {{ openstack_use_stderr }}
-workers = 8
+workers = {{ workers }}
 
 [database]
 connection = mysql+pymysql://{{ keystone_database_user }}:{{ keystone_database_password }}@{{ keystone_database_address }}/{{ keystone_database_name }}

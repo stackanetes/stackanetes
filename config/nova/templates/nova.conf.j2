@@ -9,15 +9,15 @@ state_path = /var/lib/nova
 
 osapi_compute_listen = {{ get_ip_address }}
 osapi_compute_listen_port = {{ nova_api_port }}
-osapi_compute_workers = 8
+osapi_compute_workers = {{ workers }}
 
-workers = 8
+workers = {{ workers }}
 
 enabled_apis = osapi_compute
 
 ec2_listen = {{ get_ip_address }}
 ec2_listen_port = {{ nova_api_ec2_port }}
-ec2_workers = 8
+ec2_workers = {{ workers }}
 
 notification_driver = noop
 
@@ -97,7 +97,7 @@ rabbit_hosts = {{ rabbitmq_address }}
 lock_path = /var/lib/nova/tmp
 
 [conductor]
-workers = 8
+workers = {{ workers }}
 
 [glance]
 api_servers = http://{{ glance_api_host }}:{{ glance_api_port }}
