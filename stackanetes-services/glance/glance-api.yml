@@ -1,7 +1,7 @@
 type: generic/deployment
 name: glance-api
 label: openstack-control-plane
-command: glance-api
+command: "bash /tmp/glance-api.sh"
 ports:
 - port: 9292
 dependencies:
@@ -12,17 +12,22 @@ dependencies:
   job:
   - glance-db-sync
 files:
-- file_name: glance-api.conf
-  configmap_name: glance-api
-  container_path: /etc/glance
-  templates:
-  - glance/templates/glance-file.conf.j2
-  - glance/templates/glance-api.conf.j2
-- file_name: glance-swift-store.conf
-  configmap_name: glance-swift-store
-  container_path: /etc/glance
-  templates:
-  - glance/templates/glance-swift-store.conf.j2
+  - file_name: glance-api.conf
+    configmap_name: glance-api
+    container_path: /etc/glance
+    templates:
+      - glance/templates/glance-file.conf.j2
+      - glance/templates/glance-api.conf.j2
+  - file_name: glance-swift-store.conf
+    configmap_name: glance-swift-store
+    container_path: /etc/glance
+    templates:
+      - glance/templates/glance-swift-store.conf.j2
+  - file_name: glance-api.sh
+    configmap_name: glance-api-sh
+    container_path: /tmp
+    templates:
+      - glance/templates/glance-api.sh.j2
 envs:
 - KOLLA_BOOTSTRAP: ""
 emptyDirs:
