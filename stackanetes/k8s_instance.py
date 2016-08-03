@@ -37,7 +37,7 @@ class K8sInstance(object):
         self.service_type = service_name.split("-")[0]
         self.service_dir = service_dir
         self._load_service_variables()
-        if not check_if_namespace_exist(CONF.stackanetes.namespace):
+        if not check_if_namespace_exist(self.namespace):
             create_namespace(CONF.stackanetes.namespace)
         self._load_configmaps()
 
@@ -55,22 +55,26 @@ class K8sInstance(object):
         self.configs = variables
         self.files = variables.get('files', [])
         self.containers = variables.get('containers', [])
+        self.namespace = variables.get('namespace', CONF.stackanetes.namespace)
+        LOG.error("k8s_instances: {}".format(self.namespace))
 
     def _load_configmaps(self):
         if self.containers:
             files = []
             [files.extend(x.get('files', [])) for x in self.containers]
-            for file in files:
+            for file_configuration in files:
                 LOG.debug("Preparing configmap: {} for {}".format(
-                    file['configmap_name'], self.service_name))
-                configmap = ConfigMap(self.service_dir, file)
+                    file_configuration['configmap_name'], self.service_name))
+                file_configuration['namespace'] = self.namespace
+                configmap = ConfigMap(self.service_dir, file_configuration)
                 configmap.remove()
                 configmap.upload()
 
-        for file in self.files:
+        for file_configuration in self.files:
             LOG.debug("Preparing configmap: {} for {}".format(
-                file['configmap_name'], self.service_name))
-            configmap = ConfigMap(self.service_dir, file)
+                file_configuration['configmap_name'], self.service_name))
+            file_configuration['namespace'] = self.namespace
+            configmap = ConfigMap(self.service_dir, file_configuration)
             configmap.remove()
             configmap.upload()
 
@@ -115,7 +119,7 @@ class K8sInstance(object):
 
     def _manage_instance(self, cmd_type):
         LOG.debug("{}ing {}".format(cmd_type[:-1], self.service_name))
-        cmd = get_kubectl_command()
+        cmd = get_kubectl_command(self.namespace)
 
         cmd.extend([cmd_type, "-f", self.file_path])
         LOG.debug('{} instance {}'.format(cmd_type, self.service_name))

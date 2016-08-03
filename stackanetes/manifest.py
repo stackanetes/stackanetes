@@ -26,6 +26,7 @@ GENERIC_TYPES = ['job', 'deployment', 'daemonset']
 CUSTOM_TYPES = ['fluentd-elasticsearch', 'rgw']
 DEPENDENCY_PREFIX = "DEPENDENCY_"
 
+
 class Manifest(object):
     def __init__(self, configuration, service_dir):
         self.service_dir = service_dir
@@ -42,7 +43,9 @@ class Manifest(object):
         self.external_ip = CONF.stackanetes.external_ip
         self.image_prefix = CONF.stackanetes.image_prefix
         self.host_network = configuration.get('host_network', False)
-        self.namespace = CONF.stackanetes.namespace
+        self.namespace = configuration.get('namespace',
+                                           CONF.stackanetes.namespace)
+        LOG.error("manifest: {}".format(self.namespace))
         self.annotations = configuration.get('annotations', {})
         self.ports = configuration.get('ports', [])
         self.host_ports = configuration.get('host_ports', [])
@@ -157,7 +160,7 @@ class Manifest(object):
                 self.__dict__)
         except TemplateSyntaxError as err:
             LOG.error("Cannot render manifest. Err={}".format(err))
-            raise TemplateSyntaxError("Cannot render manifest")
+            raise TemplateSyntaxError("Cannot render manifest.")
         return data
 
     def _find_template(self):
