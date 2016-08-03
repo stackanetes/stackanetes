@@ -20,6 +20,7 @@ ceph_opts = [
     cfg.ListOpt('ceph_mons', default=["192.168.10.1","10.91.10.2"]),
     cfg.StrOpt('ceph_admin_keyring', default='ASDA=='),
     cfg.BoolOpt('ceph_enabled', default=True),
+    cfg.StrOpt('uuid', default=''),
 ]
 
 

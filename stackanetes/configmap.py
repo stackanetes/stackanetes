@@ -46,6 +46,7 @@ class ConfigMap(object):
             'namespace': CONF.stackanetes['namespace'],
             'monitors': CONF.ceph['ceph_mons'],
             'ceph_admin_keyring': CONF.ceph['ceph_admin_keyring'],
+            'uuid': CONF.ceph['uuid'],
         }
 
     def _set_type(self, template_path):
