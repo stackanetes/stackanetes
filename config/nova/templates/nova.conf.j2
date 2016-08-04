@@ -122,9 +122,13 @@ password = {{ neutron_keystone_password }}
 
 [database]
 connection = mysql+pymysql://{{ nova_database_user }}:{{ nova_database_password }}@{{ nova_database_address }}/{{ nova_database_name }}
+max_pool_size = {{ workers }}
+max_overflow  = {{ workers }}
 
 [api_database]
 connection = mysql+pymysql://{{ nova_api_database_user }}:{{ nova_api_database_password }}@{{ nova_api_database_address }}/{{ nova_api_database_name }}
+max_pool_size = {{ workers }}
+max_overflow  = {{ workers }}
 
 [keystone_authtoken]
 auth_uri = http://{{ keystone_auth_host }}:{{ keystone_public_port }}
