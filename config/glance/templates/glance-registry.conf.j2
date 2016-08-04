@@ -6,7 +6,7 @@ use_stderr = {{ openstack_use_stderr }}
 bind_host = {{ get_ip_address }}
 bind_port = {{ glance_registry_port }}
 
-workers = 8
+workers = {{ workers }}
 [database]
 connection = mysql+pymysql://{{ glance_database_user }}:{{ glance_database_password }}@{{ glance_database_address }}/{{ glance_database_name }}
 

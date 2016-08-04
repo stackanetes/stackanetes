@@ -6,7 +6,7 @@ use_stderr = {{ openstack_use_stderr }}
 bind_host = {{ get_ip_address }}
 bind_port = {{ glance_api_port }}
 
-workers = 8
+workers = {{ workers }}
 registry_host = {{ glance_registry_host }}
 
 [database]
@@ -27,3 +27,20 @@ flavor = keystone
 
 [oslo_messaging_notifications]
 driver = noop
+
+[glance_store]
+stores = file, http
+{%- if ceph_enabled -%}
+, swift
+
+stores = file, http, swift
+default_store = swift
+swift_store_auth_version = 1
+swift_store_auth_address = http://rgw:6000/auth/1.0
+swift_store_user = glance:swift
+swift_store_key = {{ ceph_admin_keyring }}
+default_swift_reference = ref1
+swift_store_config_file = /etc/glance/glance-swift-store.conf
+swift_store_container = glance
+swift_store_create_container_on_put = True
+{% endif %}

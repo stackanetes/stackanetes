@@ -54,23 +54,24 @@ namespace = stackanetes // specify kubernetes namespace
 
 ### Label kubernetes nodes
 
-Control plane (mariadb, zookeeper, rabbitmq) will be labeled as such:
+Control plane (mariadb, rabbitmq, nova-api, etc) will be labeled as such:
 
 ```
-kubectl label node minion1 app=controller
+kubectl label node minion1 openstack-control-plane=enabled
 ```
 
-Compute node will run couple of daemonsets like (compute-node, network-node, openvswitch-agent, openvswitch-node) , the VMs. Currently you need to dedicate the host to these:
+Compute node will run couple of daemonsets like (compute-node, openvswitch-node, dhcp and l3-agent):
 
 ```
-kubectl label node minion2  app=compute
+kubectl label node minion2  openstack-compute-node=enabled
 ```
 
 ## Docker images
 Stackanetes requires images based on Kolla (To be changed). Those images also need a special entrypoint. Entrypoint code can be found here:
 ```
-https://github.com/PiotrProkop/stackanetes/pull/1/files
+https://github.com/stackanetes/kubernetes-entrypoint
 ```
+You can also use images stored on quay.io/stackanetes.
 
 ## Deploy OpenStack services
 
@@ -131,7 +132,7 @@ in `stackanetes-deployer.yml` change environment variables to fit your need:
     - name: NAMESPACE
       value: "stackanetes"
     - name: IMAGE_PREFIX
-      value: ""
+      value: "stackanetes-"
 ```
 
 then run:

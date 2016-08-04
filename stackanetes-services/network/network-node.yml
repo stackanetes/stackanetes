@@ -1,6 +1,7 @@
 type: generic/daemonset
 name: network-node
-label: openstack-network-node
+label: openstack-compute-node
+host_network: True
 ports: []
 dependencies:
   service:
@@ -61,7 +62,7 @@ containers:
         read_only: false
 
   - name: neutron-l3-agent
-    command: neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/l3-agent.ini --config-file /etc/neutron/fwaas-driver.ini --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
+    command: neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/l3-agent.ini --config-file /etc/neutron/fwaas-driver.ini --config-file /etc/neutron/plugins/ml2/ml2-conf.ini
     image: neutron-l3-agent
     files:
       - file_name: neutron.conf

@@ -19,7 +19,7 @@ files:
   - keystone/templates/keystone.conf.j2
 - file_name: wsgi-keystone.conf
   configmap_name: wsgi-keystone
-  container_path: /etc/httpd/conf.d
+  container_path: /etc/apache2/conf-enabled
   templates:
   - keystone/templates/wsgi-keystone.conf.j2
 - file_name: apache-wrapper.sh

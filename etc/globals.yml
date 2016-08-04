@@ -17,8 +17,8 @@ docker_namespace: "kollaglue"
 ####################
 # Networking options
 ####################
-network_interface: "eth0"
-neutron_external_interface: "eth0"
+network_interface: "eno2"
+neutron_external_interface: "eno2"
 
 ####################
 # Resources options

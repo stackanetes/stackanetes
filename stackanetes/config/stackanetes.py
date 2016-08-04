@@ -32,6 +32,8 @@ stackanetes_opts = [
     cfg.StrOpt('external_ip', default='10.10.10.10'),
     cfg.StrOpt('image_prefix', default=''),
     cfg.BoolOpt('centralized_logging', default=True),
+    cfg.IntOpt('replicas', default=3, help="Default value of replicas for "
+                                           "deployments")
 ]
 
 stackanetes_opt_group = cfg.OptGroup(name='stackanetes', title="test")

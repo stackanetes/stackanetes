@@ -18,9 +18,9 @@ node_config_directory: "/etc/stackanetes"
 config_strategy: "COPY_ONCE"
 
 # Valid options are [ centos, fedora, oraclelinux, ubuntu ]
-kolla_base_distro: "centos"
+kolla_base_distro: "debian"
 # Valid options are [ binary, source ]
-kolla_install_type: "binary"
+kolla_install_type: "source"
 
 # Value set in the public_url endpoint in Keystone
 kolla_external_address: "{{ kolla_internal_address }}"
@@ -30,6 +30,11 @@ kolla_external_address: "{{ kolla_internal_address }}"
 ####################
 rabbitmq_address: "rabbitmq"
 
+
+####################
+# Elasticsearch options
+####################
+elasticsearch_host: "elasticsearch-s9t"
 
 ####################
 # Database options
@@ -58,7 +63,7 @@ docker_restart_policy_retry: "10"
 # kolla anisble image name
 kolla_toolbox_image: "{{ docker_registry ~ '/' if docker_registry else '' }}{{ docker_namespace }}/{{ kolla_base_distro }}-{{ kolla_install_type }}-kolla-toolbox"
 kolla_toolbox_tag: "{{ openstack_release }}"
-ansible_task_cmd: "/usr/bin/ansible localhost"
+ansible_task_cmd: "/usr/local/bin/ansible localhost"
 
 # loglevel for the container init script
 init_log_level: "info"
@@ -83,6 +88,8 @@ rabbitmq_port: "5672"
 rabbitmq_management_port: "15672"
 rabbitmq_cluster_port: "25672"
 rabbitmq_epmd_port: "4369"
+
+elasticsearch_port: "9210"
 
 haproxy_stats_port: "1984"
 
@@ -116,6 +123,7 @@ murano_api_port: "8082"
 
 ironic_api_port: "6385"
 
+searchlight_api_port: "9393"
 
 ####################
 # Openstack options
@@ -150,6 +158,7 @@ glance_api_host: "glance-api"
 cinder_api_host: "cinder-api"
 nova_api_host: "nova-api"
 ironic_api_host: "ironic-api"
+searchlight_api_host: "searchlight-api"
 
 
 ####################
@@ -221,7 +230,7 @@ ceph_pool_type: "replicated"
 ceph_cinder_pool_name: "volumes"
 ceph_cinder_backup_pool_name: "backups"
 ceph_glance_pool_name: "images"
-ceph_nova_pool_name: "vms"
+ceph_nova_pool_name: "cinder"
 
 ceph_erasure_profile: "k=4 m=2 ruleset-failure-domain=host"
 ceph_rule: "default host {{ 'indep' if ceph_pool_type == 'erasure' else 'firstn' }}"
@@ -236,3 +245,9 @@ get_ip_address: {% raw %}"{{ .IP }}"{% endraw %}
 get_ip_address_erlang: {% raw %}"{{ .IP_ERLANG }}"{% endraw %}
 get_hostname: {% raw %}"{{ .HOSTNAME }}"{% endraw %}
 get_ip_address_erlang: {% raw %}"{{ .IP_ERLANG }}"{% endraw %}
+
+
+###########
+# Workers
+###########
+workers: 64

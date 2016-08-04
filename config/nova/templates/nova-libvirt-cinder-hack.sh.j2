@@ -1,0 +1,9 @@
+#!/bin/bash
+
+sleep 10
+
+KEY=$(ceph auth get-key client.cinder)
+
+virsh secret-define --file /tmp/secret.xml
+
+virsh secret-set-value --secret {{ uuid }} --base64 $KEY && rm /tmp/secret.xml

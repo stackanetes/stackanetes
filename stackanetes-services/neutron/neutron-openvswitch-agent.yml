@@ -1,15 +1,17 @@
 type: generic/daemonset
 name: openvswitch-agent
-label: openstack-neutron-openvswitch-agent
+host_network: True
+label: openstack-compute-node
 ports: []
 dependencies:
   service:
     - keystone-api
     - glance-api
     - nova-api
+    - neutron-server
   job:
-    - nova-init
-    - nova-api-db-sync
+    - neutron-post
+    - nova-post
   ds:
     - openvswitch-node
 containers:

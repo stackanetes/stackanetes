@@ -1,0 +1,50 @@
+[DEFAULT]
+debug = {{ searchlight_logging_debug }}
+log_file = searchlight.log
+# log_dir = /var/log/searchlight/
+use_syslog = {{ openstack_use_syslog }}
+use_stderr = {{ openstack_use_stderr }}
+
+transport_url = rabbit://{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ rabbitmq_address }}:{{ rabbitmq_port }}/
+
+[api]
+bind_port = {{ searchlight_api_port }}
+workers = {{ workers }}
+
+[elasticsearch]
+hosts = {{ elasticsearch_host }}:{{ elasticsearch_port }}
+
+[listener]
+workers = {{ workers }}
+
+[oslo_messaging_notifications]
+driver = messaging
+transport_url = rabbit://{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ rabbitmq_address }}:{{ rabbitmq_port }}/
+topics = notifications
+
+[paste_deploy]
+flavor = keystone
+
+[keystone_authtoken]
+auth_uri = http://{{ keystone_auth_host }}:{{ keystone_public_port }}
+auth_url = http://{{ keystone_auth_host }}:{{ keystone_admin_port }}
+auth_type = password
+project_domain_id = default
+user_domain_id = default
+project_name = service
+username = {{ searchlight_keystone_user }}
+password = {{ searchlight_keystone_password }}
+
+[resource_plugin]
+enabled = false
+
+[resource_plugin:os_nova_server]
+enabled = true
+
+[service_credentials]
+auth_plugin = password
+auth_uri = http://{{ keystone_auth_host }}:{{ keystone_public_port }}
+auth_url = http://{{ keystone_auth_host }}:{{ keystone_admin_port }}
+username = {{ searchlight_keystone_user }}
+password = {{ searchlight_keystone_password }}
+tenant_name = service

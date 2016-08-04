@@ -4,14 +4,18 @@ debug = true
 use_syslog = {{ openstack_use_syslog }}
 use_stderr = {{ openstack_use_stderr }}
 
+vif_plugging_is_fatal = False
+nova_url = http://nova-api:8774/v2
+notify_nova_on_port_status_changes = True
+notify_nova_on_port_data_changes = True
 bind_host = {{ get_ip_address }}
 bind_port = {{ neutron_server_port }}
 
 #lock_path = /var/lock/neutron
 api_paste_config = /usr/share/neutron/api-paste.ini
 
-rpc_workers = 8
-api_workers = 8
+rpc_workers = {{ workers }}
+api_workers = {{ workers }}
 dhcp_agents_per_network = 3
 allow_automatic_l3agent_failover = True
 
@@ -40,8 +44,13 @@ rabbit_password = {{ rabbitmq_password }}
 rabbit_ha_queues = true
 rabbit_hosts = {{ rabbitmq_address }}
 
+[ovs]
+ovsdb_connection = unix:/var/run/openvswitch/db.sock
+ovsdb_interface = vsctl
+of_interface=ovs-ofctl
+
 [agent]
-root_helper = sudo neutron-rootwrap /etc/neutron/rootwrap.conf
+root_helper = sudo /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
 
 [database]
 connection = mysql+pymysql://{{ neutron_database_user }}:{{ neutron_database_password }}@{{ neutron_database_address }}/{{ neutron_database_name }}

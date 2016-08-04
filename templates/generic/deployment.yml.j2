@@ -33,13 +33,17 @@ metadata:
   namespace: {{ namespace }}
   name: {{ service_name }}
 spec:
-  replicas: 1
+  replicas: {{ replicas }}
   template:
     metadata:
       namespace: {{ namespace }}
       labels:
         app: {{ service_name }}
       name: {{ service_name }}
+      annotations:
+{%- for key, value in annotations.iteritems() %}
+        {{ key }}: {{value}}
+{%- endfor %}
     spec:
       nodeSelector:
         {{ label }}: enabled
@@ -50,6 +54,10 @@ spec:
       {%- endif %}
       containers:
         - name: {{ service_name }}
+{%- if privileged %}
+          securityContext:
+            privileged: true
+{%- endif %}
 {%- if image %}
           image: {{ docker_registry }}/{{ image_prefix }}{{ image }}:{{ image_version }}
 {%- else %}
@@ -71,14 +79,22 @@ spec:
             - name: {{ env.keys()[0] }}
               value: "{{ env.values()[0] }}"
 {%- endfor %}
-{%- if ports != [] %}
-          readinessProbe:
-            tcpSocket:
-              port: {{ ports[0]['target_port'] }}
           ports:
+{%- if ports != [] %}
     {%- for port in ports %}
           - containerPort: {{ port['target_port'] }}
             name: {{ service_name.split('-')[0] }}{{ port['target_port'] }}
+            protocol: TCP
+    {%- endfor %}
+          readinessProbe:
+            tcpSocket:
+              port: {{ ports[0]['target_port'] }}
+{%- endif %}
+{%- if host_ports != [] %}
+    {%- for port in host_ports %}
+          - hostPort: {{ port['port'] }}
+            containerPort: {{ port['port'] }}
+            name: {{ service_name.split('-')[0] }}{{ port['port'] }}
             protocol: TCP
     {%- endfor %}
 {%- endif %}
@@ -105,6 +121,9 @@ spec:
             - name: {{ emptydir['name'] }}
               mountPath: {{ emptydir['container_path'] }}
 {%- endfor %}
+{%- if host_network %}
+      hostNetwork: true
+{%- endif %}
       volumes:
 {%- for configmap in configmaps %}
         - name: {{ configmap['configmap_name'] }}
