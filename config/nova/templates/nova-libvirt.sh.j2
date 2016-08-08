@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/bin/env bash
+set -e
 
 if [[ -f /var/run/libvirtd.pid ]]; then
-   echo "Libvirtd daemon is running"
-   test -d /proc/$(< /var/run/libvirtd.pid) && exit 10
+   test -d /proc/$(< /var/run/libvirtd.pid) && \
+   ( echo "Libvirtd daemon is running" && exit 10 )
 fi
 
 rm -f /var/run/libvirtd.pid

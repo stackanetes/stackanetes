@@ -54,6 +54,8 @@ root_helper = sudo /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwra
 
 [database]
 connection = mysql+pymysql://{{ neutron_database_user }}:{{ neutron_database_password }}@{{ neutron_database_address }}/{{ neutron_database_name }}
+max_pool_size = {{ workers }}
+max_overflow  = {{ workers }}
 
 [keystone_authtoken]
 auth_uri = http://{{ keystone_auth_host }}:{{ keystone_public_port }}

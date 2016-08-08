@@ -250,4 +250,4 @@ get_ip_address_erlang: {% raw %}"{{ .IP_ERLANG }}"{% endraw %}
 ###########
 # Workers
 ###########
-workers: 64
+workers: 8

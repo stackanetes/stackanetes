@@ -23,6 +23,8 @@ dnsmasq_interface = {{ api_interface }}
 
 [database]
 connection = mysql+pymysql://{{ ironic_database_user }}:{{ ironic_database_password }}@{{ ironic_database_address }}/{{ ironic_database_name }}
+max_pool_size = {{ workers }}
+max_overflow  = {{ workers }}
 
 [keystone_authtoken]
 auth_url = http://{{ keystone_auth_host }}:{{ keystone_public_port }}
