@@ -1,0 +1,13 @@
+---
+package:
+  name: quentinm/stackanetes
+  author: Quentin Machu
+  version: 0.1.0
+  description: mariadb
+  license: Apache 2.0
+
+variables:
+
+deploy:
+  - name: kpm.sh/quentinm/mariadb
+    variables: "{{$.variables}}"
