@@ -1,0 +1,43 @@
+---
+package:
+  name: quentinm/mariadb
+  author: Quentin Machu
+  version: 0.1.0
+  description: mariadb
+  license: Apache 2.0
+
+variables:
+  mariadb_image: quay.io/stackanetes/stackanetes-mariadb:barcelona
+
+  mariadb_password: password
+
+  mariadb_node_name: "{{ .HOSTNAME }}"
+  mariadb_cluster_name: mariadb
+
+  mariadb_port: 3306
+  mariadb_wsrep_port: 4567
+  mariadb_ist_port: 4568
+  mariadb_sst_port: 4444
+
+resources:
+  # Services
+  - file: service.yaml
+    name: mariadb
+    type: service
+
+  # Daemons
+  - file: deployment.yaml
+    name: mariadb
+    type: deployment
+
+  # Config maps
+  - file: configmaps/my.cnf.yaml
+    name: mariadb-mycnf
+    type: configmap
+
+  - file: configmaps/start.sh.yaml
+    name: mariadb-startsh
+    type: configmap
+
+deploy:
+  - name: $self

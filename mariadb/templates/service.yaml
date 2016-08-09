@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: mariadb
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mariadb

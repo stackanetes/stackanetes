@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-startsh
+data:
+  start.sh: |-
+    #!/bin/bash
+    set -x
+
+    # Setup folders and permissions.
+    chown mysql: /var/lib/mysql
+
+    mkdir -p /var/log/kolla/mariadb
+    chmod 755 /var/log/kolla/mariadb
+
+    su mysql
+
+    # Initialize system database.
+    mysql_install_db
+
+    # Start mariadb and wait for it to be ready.
+    mysqld_safe --wsrep-new-cluster &
+
+    TIMEOUT=120
+    while [[ ! -f /var/lib/mysql/mariadb.pid ]]; do
+    if [[ ${TIMEOUT} -gt 0 ]]; then
+        let TIMEOUT-=1
+        sleep 1
+    else
+        exit 1
+    fi
+    done
+
+    # Reset permissions.
+    sudo -E kolla_security_reset
+    mysql -u root --password="{{ mariadb_password }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '{{ mariadb_password }}' WITH GRANT OPTION;"
+    mysql -u root --password="{{ mariadb_password }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '{{ mariadb_password }}' WITH GRANT OPTION;"
+
+    # Restart database.
+    mysqladmin -uroot -p"{{ mariadb_password }}" shutdown
+    mysqld_safe --wsrep-new-cluster
