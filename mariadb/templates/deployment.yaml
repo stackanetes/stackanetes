@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: default
+  namespace: {{ namespace }}
   name: mariadb
 spec:
   replicas: 1
@@ -13,10 +13,13 @@ spec:
         app: mariadb
     spec:
       nodeSelector:
-        openstack-control-plane: enabled
+        {{ node_label }}: enabled
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
       containers:
         - name: mariadb
-          image: {{ mariadb_image }}
+          image: {{ image }}
           imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME
@@ -34,10 +37,10 @@ spec:
             - name: DEPENDENCY_CONFIG
               value: "/tmp/start.sh,/etc/mysql/my.cnf"
           ports:
-            - containerPort: 3306
+            - containerPort: {{ port }}
           readinessProbe:
             tcpSocket:
-              port: 3306
+              port: {{ port }}
           volumeMounts:
             - name: startsh
               mountPath: /configmaps/start.sh
@@ -48,9 +51,9 @@ spec:
       volumes:
         - name: startsh
           configMap:
-            name: startsh
+            name: mariadb-startsh
         - name: mycnf
           configMap:
-            name: mycnf
+            name: mariadb-mycnf
         - name: mysql
           emptyDir: {}

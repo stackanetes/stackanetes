@@ -7,29 +7,25 @@ package:
   license: Apache 2.0
 
 variables:
-  mariadb_image: quay.io/stackanetes/stackanetes-mariadb:barcelona
+  namespace: default
+  node_label: openstack-control-plane
+  image: quay.io/stackanetes/stackanetes-mariadb:barcelona
+  password: password
 
-  mariadb_password: password
+  # TODO: Replace node_name. {{ .HOSTNAME }} can't get replaced properly
+  # by the kubernetes-entrypoint on rkt because the ev variable doesn't
+  # exist. POD_NAME however does exist but it would be better to just get
+  # it from the container instead.
+  node_name: master
+  cluster_name: mariadb
 
-  mariadb_node_name: "{{ .HOSTNAME }}"
-  mariadb_cluster_name: mariadb
-
-  mariadb_port: 3306
-  mariadb_wsrep_port: 4567
-  mariadb_ist_port: 4568
-  mariadb_sst_port: 4444
+  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
+  port: 3306
+  wsrep_port: 4567
+  ist_port: 4568
+  sst_port: 4444
 
 resources:
-  # Services
-  - file: service.yaml
-    name: mariadb
-    type: service
-
-  # Daemons
-  - file: deployment.yaml
-    name: mariadb
-    type: deployment
-
   # Config maps
   - file: configmaps/my.cnf.yaml
     name: mariadb-mycnf
@@ -38,6 +34,16 @@ resources:
   - file: configmaps/start.sh.yaml
     name: mariadb-startsh
     type: configmap
+
+  # Daemons
+  - file: deployment.yaml
+    name: mariadb
+    type: deployment
+
+  # Services
+  - file: service.yaml
+    name: mariadb
+    type: service
 
 deploy:
   - name: $self
