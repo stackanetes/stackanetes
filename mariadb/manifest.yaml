@@ -37,12 +37,12 @@ resources:
 
   # Daemons
   - file: deployment.yaml
-    name: mariadb
+    name: mariadb-deployment
     type: deployment
 
   # Services
   - file: service.yaml
-    name: mariadb
+    name: mariadb-service
     type: service
 
 deploy:

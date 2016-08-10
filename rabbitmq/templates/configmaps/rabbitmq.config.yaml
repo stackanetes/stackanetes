@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ namespace }}
+  name: rabbitmq-rabbitmqconfig
+data:
+  rabbitmq.config: |-
+    [
+      {kernel, [
+        {inet_dist_use_interface, { {{ ip_address_erlang }} }},
+        {inet_dist_listen_min, {{ cluster_port }} },
+        {inet_dist_listen_max, {{ cluster_port }} }
+      ]},
+      {rabbit, [
+        {tcp_listeners, [
+          { "{{ ip_address }}", {{ port }} }
+        ]},
+        {default_user, <<"{{ user }}">>},
+        {default_pass, <<"{{ password }}">>},
+        {cluster_partition_handling, autoheal}
+      ]},
+      {rabbitmq_management, [
+        {listener, [
+          {ip, "{{ ip_address }}"},
+          {port, {{ management_port }} }
+        ]}
+      ]},
+      {rabbitmq_clusterer, [{config, "/etc/rabbitmq/rabbitmq-clusterer.config"}]}
+    ].
+    % EOF

@@ -11,3 +11,6 @@ variables:
 deploy:
   - name: kpm.sh/quentinm/mariadb
     variables: "{{$.variables}}"
+
+  - name: kpm.sh/quentinm/rabbitmq
+    variables: "{{$.variables}}"

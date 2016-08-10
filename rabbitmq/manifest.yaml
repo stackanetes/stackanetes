@@ -1,0 +1,54 @@
+---
+package:
+  name: quentinm/rabbitmq
+  author: Quentin Machu
+  version: 0.1.0
+  description: rabbitmq
+  license: Apache 2.0
+
+variables:
+  namespace: default
+  node_label: openstack-control-plane
+  image: quay.io/stackanetes/stackanetes-rabbitmq:barcelona
+
+  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
+  ip_address_erlang: "{% raw %}{{ .IP_ERLANG }}{% endraw %}"
+  port: 5672
+  epmd_port: 4369
+  cluster_port: 25672
+  management_port: 15672
+
+  user: openstack
+  password: password
+  erlang_cookie: ERLANG_COOKIE
+
+resources:
+  # Config maps
+  - file: configmaps/rabbitmq-clusterer.config.yaml
+    name: rabbitmq-rabbitmqclustererconfig
+    type: configmap
+
+  - file: configmaps/rabbitmq-env.conf.yaml
+    name: rabbitmq-rabbitmqenvconf
+    type: configmap
+
+  - file: configmaps/start.sh.yaml
+    name: rabbitmq-startsh
+    type: configmap
+
+  - file: configmaps/rabbitmq.config.yaml
+    name: rabbitmq-rabbitmqconfig
+    type: configmap
+
+  # Daemons
+  - file: deployment.yaml
+    name: rabbitmq
+    type: deployment
+
+  # Services
+  - file: service.yaml
+    name: rabbitmq
+    type: service
+
+deploy:
+  - name: $self

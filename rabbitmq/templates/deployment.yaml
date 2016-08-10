@@ -2,15 +2,15 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   namespace: {{ namespace }}
-  name: mariadb
+  name: rabbitmq
 spec:
   replicas: 1
   template:
     metadata:
-      namespace: default
-      name: mariadb
+      namespace: {{ namespace }}
+      name: rabbitmq
       labels:
-        app: mariadb
+        app: rabbitmq
     spec:
       nodeSelector:
         {{ node_label }}: enabled
@@ -18,9 +18,12 @@ spec:
       securityContext:
         runAsUser: 0
       containers:
-        - name: mariadb
+        - name: rabbitmq
           image: {{ image }}
           imagePullPolicy: Always
+          # TODO(DTadrzak): it must be removed in future
+          securityContext:
+            privileged: true
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -35,7 +38,7 @@ spec:
             - name: COMMAND
               value: "bash /tmp/start.sh"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/start.sh,/etc/mysql/my.cnf"
+              value: "/tmp/start.sh,/etc/rabbitmq/rabbitmq-env.conf,/etc/rabbitmq/rabbitmq.config,/etc/rabbitmq/rabbitmq-clusterer.config"
           ports:
             - containerPort: {{ port }}
           readinessProbe:
@@ -44,16 +47,22 @@ spec:
           volumeMounts:
             - name: startsh
               mountPath: /configmaps/start.sh
-            - name: mycnf
-              mountPath: /configmaps/my.cnf
-            - name: mysql
-              mountPath: /var/lib/mysql
+            - name: rabbitmqenvconf
+              mountPath: /configmaps/rabbitmq-env.conf
+            - name: rabbitmqconfig
+              mountPath: /configmaps/rabbitmq.config
+            - name: rabbitmqclustererconfig
+              mountPath: /configmaps/rabbitmq-clusterer.config
       volumes:
         - name: startsh
           configMap:
-            name: mariadb-startsh
-        - name: mycnf
+            name: rabbitmq-startsh
+        - name: rabbitmqenvconf
           configMap:
-            name: mariadb-mycnf
-        - name: mysql
-          emptyDir: {}
+            name: rabbitmq-rabbitmqenvconf
+        - name: rabbitmqconfig
+          configMap:
+            name: rabbitmq-rabbitmqconfig
+        - name: rabbitmqclustererconfig
+          configMap:
+            name: rabbitmq-rabbitmqclustererconfig
