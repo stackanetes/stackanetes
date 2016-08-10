@@ -10,8 +10,18 @@ variables:
   namespace: default
   node_label: openstack-control-plane
   image: quay.io/stackanetes/stackanetes-mariadb:barcelona
+
+  # Network.
+  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
+  port: 3306
+  wsrep_port: 4567
+  ist_port: 4568
+  sst_port: 4444
+
+  # Initial root password.
   password: password
 
+  # Cluster configuration.
   # TODO: Replace node_name. {{ .HOSTNAME }} can't get replaced properly
   # by the kubernetes-entrypoint on rkt because the ev variable doesn't
   # exist. POD_NAME however does exist but it would be better to just get
@@ -19,14 +29,8 @@ variables:
   node_name: master
   cluster_name: mariadb
 
-  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
-  port: 3306
-  wsrep_port: 4567
-  ist_port: 4568
-  sst_port: 4444
-
 resources:
-  # Config maps
+  # Config maps.
   - file: configmaps/my.cnf.yaml
     name: mariadb-mycnf
     type: configmap
@@ -35,14 +39,14 @@ resources:
     name: mariadb-startsh
     type: configmap
 
-  # Daemons
+  # Daemons.
   - file: deployment.yaml
-    name: mariadb-deployment
+    name: mariadb
     type: deployment
 
-  # Services
+  # Services.
   - file: service.yaml
-    name: mariadb-service
+    name: mariadb
     type: service
 
 deploy:

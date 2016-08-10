@@ -11,15 +11,16 @@ variables:
   node_label: openstack-control-plane
   image: quay.io/stackanetes/stackanetes-memcached:barcelona
 
+  # Network.
   port: 11211
 
 resources:
-  # Daemons
+  # Daemons.
   - file: deployment.yaml
     name: memcached
     type: deployment
 
-  # Services
+  # Services.
   - file: service.yaml
     name: memcached
     type: service

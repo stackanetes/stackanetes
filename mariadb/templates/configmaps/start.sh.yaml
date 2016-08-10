@@ -6,7 +6,7 @@ metadata:
 data:
   start.sh: |-
     #!/bin/bash
-    set -x
+    set -ex
 
     # Setup folders and permissions.
     chown mysql: /var/lib/mysql

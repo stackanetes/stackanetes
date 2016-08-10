@@ -6,7 +6,7 @@ metadata:
 data:
   start.sh: |-
     #!/bin/bash
-    set -x
+    set -ex
 
     mkdir -p /var/lib/rabbitmq
 

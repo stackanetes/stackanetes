@@ -9,8 +9,8 @@ package:
 variables:
 
 deploy:
-  # Control plane
-  ## Data
+  # Control plane.
+  ## Database services.
   - name: kpm.sh/quentinm/mariadb
     variables: "{{$.variables}}"
 

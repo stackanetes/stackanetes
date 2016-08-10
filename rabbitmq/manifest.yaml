@@ -11,6 +11,7 @@ variables:
   node_label: openstack-control-plane
   image: quay.io/stackanetes/stackanetes-rabbitmq:barcelona
 
+  # Network.
   ip_address: "{% raw %}{{ .IP }}{% endraw %}"
   ip_address_erlang: "{% raw %}{{ .IP_ERLANG }}{% endraw %}"
   port: 5672
@@ -18,12 +19,13 @@ variables:
   cluster_port: 25672
   management_port: 15672
 
-  user: openstack
+  # Credentials.
+  user: rabbitmq
   password: password
   erlang_cookie: ERLANG_COOKIE
 
 resources:
-  # Config maps
+  # Config maps.
   - file: configmaps/rabbitmq-clusterer.config.yaml
     name: rabbitmq-rabbitmqclustererconfig
     type: configmap
@@ -40,12 +42,12 @@ resources:
     name: rabbitmq-rabbitmqconfig
     type: configmap
 
-  # Daemons
+  # Daemons.
   - file: deployment.yaml
     name: rabbitmq
     type: deployment
 
-  # Services
+  # Services.
   - file: service.yaml
     name: rabbitmq
     type: service
