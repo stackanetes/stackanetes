@@ -1,0 +1,88 @@
+---
+package:
+  name: quentinm/keystone
+  author: Quentin Machu
+  version: 0.1.0
+  description: keystone
+  license: Apache 2.0
+
+variables:
+  namespace: default
+  node_label: openstack-control-plane
+  image: quay.io/stackanetes/stackanetes-keystone-api:barcelona
+  image_init: quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona
+  replicas: 1
+
+  # Network.
+  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
+  external_host: identity.openstack.cluster
+  public_port: 5000
+  admin_port: 35357
+
+  # Initial region, project and user.
+  username: admin
+  password: password
+  project_name: admin
+  region_name: RegionOne
+
+  # Database access.
+  database_address: mariadb
+  database_port: 3306
+  database_user: root
+  database_password: password
+  keystone_database_user: keystone
+  keystone_database_name: keystone
+  keystone_database_password: password
+
+  # Misc.
+  debug: True
+  workers: 8
+
+resources:
+  # Config maps.
+  - file: configmaps/init.sh.yaml
+    name: keystone-initsh
+    type: configmap
+
+  - file: configmaps/db-sync.sh.yaml
+    name: keystone-dbsyncsh
+    type: configmap
+
+  - file: configmaps/start.sh.yaml
+    name: keystone-startsh
+    type: configmap
+
+  - file: configmaps/keystone.conf.yaml
+    name: keystone-keystoneconf
+    type: configmap
+
+  - file: configmaps/wsgi-keystone.conf.yaml
+    name: keystone-wsgikeystone
+    type: configmap
+
+  # Init.
+  - file: init.yaml
+    name: keystone-init
+    type: job
+
+  - file: db-sync.yaml
+    name: keystone-db-sync
+    type: job
+
+  # Daemons.
+  - file: deployment.yaml
+    name: keystone-api
+    type: deployment
+
+  # Services.
+  - file: service.yaml
+    name: keystone-api
+    type: service
+
+  # Ingresses.
+  - file: ingress.yaml
+    name: keystone-api
+    type: ingress
+
+deploy:
+  - name: $self

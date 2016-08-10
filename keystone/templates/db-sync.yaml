@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ namespace }}
+  name: keystone-db-sync
+spec:
+  template:
+    metadata:
+      namespace: {{ namespace }}
+      name: keystone-db-sync
+    spec:
+      restartPolicy: OnFailure
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: keystone-init
+          image: {{ image }}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/db-sync.sh"
+            - name: DEPENDENCY_JOBS
+              value: "keystone-init"
+            - name: DEPENDENCY_SERVICE
+              value: "mariadb"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/keystone/keystone.conf,/tmp/db-sync.sh"
+          volumeMounts:
+            - name: keystoneconf
+              mountPath: /configmaps/keystone.conf
+            - name: dbsyncsh
+              mountPath: /configmaps/db-sync.sh
+      volumes:
+        - name: keystoneconf
+          configMap:
+            name: keystone-keystoneconf
+        - name: dbsyncsh
+          configMap:
+            name: keystone-dbsyncsh

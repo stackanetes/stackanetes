@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ namespace }}
+  name: keystone-wsgikeystone
+data:
+  wsgi-keystone.conf: |-
+    Listen {{ ip_address }}:{{ public_port }}
+    Listen {{ ip_address }}:{{ admin_port }}
+
+    <VirtualHost *:{{ public_port }}>
+        WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+        WSGIProcessGroup keystone-public
+        WSGIScriptAlias / /var/www/cgi-bin/keystone/main
+        WSGIApplicationGroup %{GLOBAL}
+        WSGIPassAuthorization On
+        <IfVersion >= 2.4>
+          ErrorLogFormat "%{cu}t %M"
+        </IfVersion>
+        ErrorLog "|$/bin/cat 1>&2"
+        CustomLog "|/bin/cat" combined
+    </VirtualHost>
+
+    <VirtualHost *:{{ admin_port }}>
+        WSGIDaemonProcess keystone-admin processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+        WSGIProcessGroup keystone-admin
+        WSGIScriptAlias / /var/www/cgi-bin/keystone/admin
+        WSGIApplicationGroup %{GLOBAL}
+        WSGIPassAuthorization On
+        <IfVersion >= 2.4>
+          ErrorLogFormat "%{cu}t %M"
+        </IfVersion>
+        ErrorLog "|$/bin/cat 1>&2"
+        CustomLog "|/bin/cat" combined
+    </VirtualHost>

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ namespace }}
+  name: keystone-keystoneconf
+data:
+  keystone.conf: |-
+    [DEFAULT]
+    debug = {{ debug }}
+    use_syslog = False
+    use_stderr = True
+    workers = {{ workers }}
+
+    [database]
+    connection = mysql+pymysql://{{ keystone_database_user }}:{{ keystone_database_password }}@{{ database_address }}/{{ keystone_database_name }}
+    max_pool_size = {{ workers }}
+    max_overflow  = {{ workers }}

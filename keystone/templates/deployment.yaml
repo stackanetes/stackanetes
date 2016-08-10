@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: {{ namespace }}
+  name: keystone-api
+spec:
+  replicas: {{ replicas }}
+  template:
+    metadata:
+      namespace: {{ namespace }}
+      name: keystone-api
+      labels:
+        app: keystone-api
+    spec:
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      nodeSelector:
+        {{ node_label }}: enabled
+      containers:
+        - name: keystone-api
+          image: {{ image }}
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/start.sh"
+            - name: DEPENDENCY_JOBS
+              value: "keystone-init,keystone-db-sync"
+            - name: DEPENDENCY_SERVICE
+              value: "mariadb,rabbitmq"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/keystone/keystone.conf,/etc/apache2/conf-enabled/wsgi-keystone.conf,/tmp/start.sh"
+          ports:
+            - containerPort: {{ public_port }}
+            - containerPort: {{ admin_port }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ public_port }}
+          volumeMounts:
+            - name: keystoneconf
+              mountPath: /configmaps/keystone.conf
+            - name: wsgikeystone
+              mountPath: /configmaps/wsgi-keystone.conf
+            - name: startsh
+              mountPath: /configmaps/start.sh
+      volumes:
+        - name: keystoneconf
+          configMap:
+            name: keystone-keystoneconf
+        - name: wsgikeystone
+          configMap:
+            name: keystone-wsgikeystone
+        - name: startsh
+          configMap:
+            name: keystone-startsh

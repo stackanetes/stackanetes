@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: {{ namespace }}
+  name: keystone-api
+spec:
+  rules:
+  - host: {{ external_host }}
+    http:
+      paths:
+      -  backend:
+          serviceName: keystone-api
+          servicePort: {{ public_port }}

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ namespace }}
+  name: keystone-api
+spec:
+  ports:
+  - name: keystone-api-public
+    port: {{ public_port }}
+  - name: keystone-api-admin
+    port: {{ admin_port }}
+  selector:
+    app: keystone-api

@@ -19,3 +19,7 @@ deploy:
 
   - name: kpm.sh/quentinm/memcached
     variables: "{{$.variables}}"
+
+  # OpenStack APIs services.
+  - name: kpm.sh/quentinm/keystone
+    variables: "{{$.variables}}"
