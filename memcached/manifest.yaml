@@ -1,0 +1,28 @@
+---
+package:
+  name: quentinm/memcached
+  author: Quentin Machu
+  version: 0.1.0
+  description: memcached
+  license: Apache 2.0
+
+variables:
+  namespace: default
+  node_label: openstack-control-plane
+  image: quay.io/stackanetes/stackanetes-memcached:barcelona
+
+  port: 11211
+
+resources:
+  # Daemons
+  - file: deployment.yaml
+    name: memcached
+    type: deployment
+
+  # Services
+  - file: service.yaml
+    name: memcached
+    type: service
+
+deploy:
+  - name: $self

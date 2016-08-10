@@ -9,8 +9,13 @@ package:
 variables:
 
 deploy:
+  # Control plane
+  ## Data
   - name: kpm.sh/quentinm/mariadb
     variables: "{{$.variables}}"
 
   - name: kpm.sh/quentinm/rabbitmq
+    variables: "{{$.variables}}"
+
+  - name: kpm.sh/quentinm/memcached
     variables: "{{$.variables}}"
