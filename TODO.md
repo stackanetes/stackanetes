@@ -1,0 +1,6 @@
+- kpm-powered sharding for rabbitmq/mariadb/memcached
+- Re-implement Ingress work
+  - Public endpoints
+    - Expose external_host/external_port
+- Add Ingress feature flag
+- Fix .HOSTNAME issue with rkt
