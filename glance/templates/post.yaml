@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ namespace }}
+  name: glance-post
+spec:
+  template:
+    metadata:
+      namespace: {{ namespace }}
+      name: glance-post
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: glance-post
+          image: {{ image_init }}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/post.sh"
+            - name: DEPENDENCY_SERVICE
+              value: "keystone-api,glance-api,glance-registry"
+            - name: DEPENDENCY_CONFIG
+              value: "/tmp/post.sh"
+          volumeMounts:
+            - name: postsh
+              mountPath: /configmaps/post.sh
+      volumes:
+        - name: postsh
+          configMap:
+            name: glance-postsh

@@ -12,6 +12,6 @@ data:
     workers = {{ workers }}
 
     [database]
-    connection = mysql+pymysql://{{ keystone_database_user }}:{{ keystone_database_password }}@{{ database_address }}/{{ keystone_database_name }}
+    connection = mysql+pymysql://{{ database_keystone_user }}:{{ database_keystone_password }}@{{ database_address }}/{{ database_keystone_name }}
     max_pool_size = {{ workers }}
     max_overflow  = {{ workers }}

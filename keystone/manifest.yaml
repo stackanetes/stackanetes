@@ -30,13 +30,13 @@ variables:
   database_port: 3306
   database_user: root
   database_password: password
-  keystone_database_user: keystone
-  keystone_database_name: keystone
-  keystone_database_password: password
+  database_keystone_user: keystone
+  database_keystone_name: keystone
+  database_keystone_password: password
 
   # Misc.
-  debug: True
   workers: 8
+  debug: True
 
 resources:
   # Config maps.

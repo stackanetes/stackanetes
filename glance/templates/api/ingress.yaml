@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: {{ namespace }}
+  name: glance-api
+spec:
+  rules:
+  - host: {{ external_host }}
+    http:
+      paths:
+      -  backend:
+          serviceName: glance-api
+          servicePort: {{ api_port }}

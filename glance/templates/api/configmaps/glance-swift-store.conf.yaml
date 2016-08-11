@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ namespace }}
+  name: glance-glanceswitchstoreconf
+data:
+  glance-swift-store.conf: |-
+    [ref1]
+    auth_address = {{ ceph_swift_auth }}
+    key = {{ ceph_admin_keyring }}
+    user = {{ ceph_swift_user }}

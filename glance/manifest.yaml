@@ -1,0 +1,121 @@
+---
+package:
+  name: quentinm/glance
+  author: Quentin Machu
+  version: 0.1.0
+  description: glance
+  license: Apache 2.0
+
+variables:
+  namespace: default
+  node_label: openstack-control-plane
+  image_api: quay.io/stackanetes/stackanetes-glance-api:barcelona
+  image_registry: quay.io/stackanetes/stackanetes-glance-registry:barcelona
+  image_init: quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona
+  replicas: 1
+
+  # Network.
+  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
+  api_port: 9292
+  registry_port: 9191
+  external_host: image.openstack.cluster
+
+  # Database access.
+  database_address: mariadb
+  database_port: 3306
+  database_user: root
+  database_password: password
+  database_glance_user: glance
+  database_glance_password: password
+  database_glance_name: glance
+
+  # Keystone access and registration.
+  keystone_auth_uri: http://keystone-api:5000
+  keystone_auth_url: http://keystone-api:35357
+  keystone_user: admin
+  keystone_password: password
+  keystone_project_name: admin
+  keystone_glance_user: glance
+  keystone_glance_password: password
+  region_name: RegionOne
+  keystone_region_name: "{{ region_name }}"
+  keystone_auth: "{'auth_url':'{{ keystone_auth_url }}','username':'{{ keystone_user }}','password':'{{ keystone_password }}','project_name':'{{ keystone_project_name }}','domain_name':'default'}"
+
+  # Ceph configuration.
+  ceph_enabled: true
+  ceph_swift_auth: http://rados-gateway:6000/auth/1.0
+  ceph_swift_user: glance:swift
+  ceph_admin_keyring: ""
+
+  # Misc.
+  debug: False
+  workers: 8
+
+resources:
+  # Config maps.
+  - file: configmaps/init.sh.yaml
+    name: glance-initsh
+    type: configmap
+
+  - file: configmaps/db-sync.sh.yaml
+    name: glance-dbsyncsh
+    type: configmap
+
+  - file: configmaps/post.sh.yaml
+    name: glance-post
+    type: configmap
+
+  - file: api/configmaps/glance-api.conf.yaml
+    name: glance-glanceapiconf
+    type: configmap
+
+  - file: api/configmaps/glance-swift-store.conf.yaml
+    name: glance-glanceswitchstoreconf
+    type: configmap
+
+  - file: api/configmaps/start.sh.yaml
+    name: glance-startsh
+    type: configmap
+
+  - file: registry/configmaps/glance-registry.conf.yaml
+    name: glance-glanceregistryconf
+    type: configmap
+
+  # Init.
+  - file: init.yaml
+    name: glance-init
+    type: job
+
+  - file: db-sync.yaml
+    name: glance-db-sync
+    type: job
+
+  - file: post.yaml
+    name: glance-post
+    type: job
+
+  # Daemons.
+  - file: api/deployment.yaml
+    name: glance-api
+    type: deployment
+
+  - file: registry/deployment.yaml
+    name: glance-registry
+    type: deployment
+
+  # Services.
+  - file: api/service.yaml
+    name: glance-api
+    type: service
+
+  - file: registry/service.yaml
+    name: glance-registry
+    type: service
+
+  # Ingresses.
+  - file: api/ingress.yaml
+    name: glance-api
+    type: ingress
+
+deploy:
+  - name: $self

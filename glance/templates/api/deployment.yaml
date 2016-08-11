@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: {{ namespace }}
+  name: glance-api
+spec:
+  replicas: {{ replicas }}
+  template:
+    metadata:
+      namespace: {{ namespace }}
+      name: glance-api
+      labels:
+        app: glance-api
+    spec:
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      nodeSelector:
+        {{ node_label }}: enabled
+      containers:
+        - name: glance-api
+          image: {{ image_api }}
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/start.sh"
+            - name: DEPENDENCY_JOBS
+              value: "glance-init,glance-db-sync"
+            - name: DEPENDENCY_SERVICE
+              value: "mariadb,rabbitmq,keystone-api,rgw"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/glance/glance-api.conf,/etc/glance/glance-swift-store.conf,/tmp/start.sh"
+          ports:
+            - containerPort: {{ api_port }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ api_port }}
+          volumeMounts:
+            - name: glanceapiconf
+              mountPath: /configmaps/glance-api.conf
+            - name: glanceswitchstoreconf
+              mountPath: /configmaps/glance-swift-store.conf
+            - name: startsh
+              mountPath: /configmaps/start.sh
+      volumes:
+        - name: glanceapiconf
+          configMap:
+            name: glance-glanceapiconf
+        - name: glanceswitchstoreconf
+          configMap:
+            name: glance-glanceswitchstoreconf
+        - name: startsh
+          configMap:
+            name: glance-startsh

@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: {{ namespace }}
+  name: rados-gateway
+spec:
+  replicas: 1
+  template:
+    metadata:
+      namespace: default
+      labels:
+        app: rados-gateway
+      name: rados-gateway
+    spec:
+      nodeSelector:
+        {{ node_label }}: enabled
+      containers:
+        - name: rados-gateway
+          image: ceph/daemon:latest
+          imagePullPolicy: Always
+          command:
+            - bash
+            - /configmaps/start.sh/start.sh
+          readinessProbe:
+            tcpSocket:
+              port: {{ port }}
+          ports:
+            - containerPort: {{ port }}
+          volumeMounts:
+            - name: cephconf
+              mountPath: /configmaps/ceph.conf
+            - name: cephclientadminkeyring
+              mountPath: /configmaps/ceph.client.admin.keyring
+            - name: startsh
+              mountPath: /configmaps/start.sh
+      volumes:
+        - name: cephconf
+          configMap:
+            name: rados-gateway-cephconf
+        - name: cephclientadminkeyring
+          configMap:
+            name: rados-gateway-cephclientadminkeyring
+        - name: startsh
+          configMap:
+            name: rados-gateway-startsh

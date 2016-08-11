@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ namespace }}
+  name: rados-gateway-startsh
+data:
+  start.sh: |-
+    #!/bin/bash
+    set -ex
+
+    # Copy configuration files.
+    cp /configmaps/ceph.conf/ceph.conf /etc/ceph/
+    cp /configmaps/ceph.client.admin.keyring/ceph.client.admin.keyring /etc/ceph/
+
+    # Create initial user.
+    radosgw-admin user info --uid={{ user_uid }}
+    if [ $? -gt 0 ]; then
+            radosgw-admin user create --uid={{ user_uid }} --display-name="{{ user_display_name }}"
+            radosgw-admin subuser create --uid={{ user_uid }} --subuser={{ subuser }} --access=full
+            radosgw-admin key create --subuser={{ subuser }} --key-type=swift --secret={{ ceph_admin_keyring }}
+            radosgw-admin user modify --uid={{ user_uid }} --temp-url-key=glance_temp_url_key
+    fi
+
+    # Get bootstrap-rgw keyring.
+    ceph auth get client.bootstrap-rgw -o /var/lib/ceph/bootstrap-rgw/ceph.keyring || exit 1
+
+    # Configure and start Ceph entrypoint.
+    export CEPH_DAEMON="rgw"
+    export RGW_CIVETWEB_PORT="{{port}}"
+    /entrypoint.sh
