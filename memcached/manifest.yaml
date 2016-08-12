@@ -7,12 +7,14 @@ package:
   license: Apache 2.0
 
 variables:
-  namespace: default
-  node_label: openstack-control-plane
-  image: quay.io/stackanetes/stackanetes-memcached:barcelona
+  deployment:
+    namespace: default
+    node_label: openstack-control-plane
+    replicas: 1
+    image: quay.io/stackanetes/stackanetes-memcached:barcelona
 
-  # Network.
-  port: 11211
+  network:
+    port: 11211
 
 resources:
   # Daemons.

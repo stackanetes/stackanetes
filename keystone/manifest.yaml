@@ -7,36 +7,45 @@ package:
   license: Apache 2.0
 
 variables:
-  namespace: default
-  node_label: openstack-control-plane
-  image: quay.io/stackanetes/stackanetes-keystone-api:barcelona
-  image_init: quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona
-  replicas: 1
+  deployment:
+    namespace: default
+    node_label: openstack-control-plane
+    replicas: 1
+    
+    image:
+      api: quay.io/stackanetes/stackanetes-keystone-api:barcelona
+      init: quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona
 
-  # Network.
-  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
-  external_host: identity.openstack.cluster
-  public_port: 5000
-  admin_port: 35357
+  network:
+    ip_address: "{% raw %}{{ .IP }}{% endraw %}"
+    port:
+      public: 5000
+      admin: 35357
+    ingress:
+      enabled: true
+      host: identity.openstack.cluster
 
-  # Initial region, project and user.
-  username: admin
-  password: password
-  project_name: admin
-  region_name: RegionOne
+  database:
+    # Dependency configuration.
+    address: mariadb
+    port: 3306
+    root_user: root
+    root_password: password
 
-  # Database access.
-  database_address: mariadb
-  database_port: 3306
-  database_user: root
-  database_password: password
-  database_keystone_user: keystone
-  database_keystone_name: keystone
-  database_keystone_password: password
+    # Keystone configuration.
+    keystone_user: keystone
+    keystone_password: password
+    keystone_database_name: keystone
 
-  # Misc.
-  workers: 8
-  debug: true
+  # Initial admin's region, project and user.
+  admin_user: admin
+  admin_password: password
+  admin_project_name: admin
+  admin_region_name: RegionOne
+
+  misc:
+    workers: 8
+    debug: true
 
 resources:
   # Config maps.

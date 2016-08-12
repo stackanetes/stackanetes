@@ -7,21 +7,23 @@ package:
   license: Apache 2.0
 
 variables:
-  namespace: default
-  node_label: openstack-control-plane
-  image: quay.io/stackanetes/stackanetes-rabbitmq:barcelona
+  deployment:
+    namespace: default
+    node_label: openstack-control-plane
+    image: quay.io/stackanetes/stackanetes-rabbitmq:barcelona
 
-  # Network.
-  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
-  ip_address_erlang: "{% raw %}{{ .IP_ERLANG }}{% endraw %}"
-  port: 5672
-  epmd_port: 4369
-  cluster_port: 25672
-  management_port: 15672
+  network:
+    ip_address: "{% raw %}{{ .IP }}{% endraw %}"
+    ip_address_erlang: "{% raw %}{{ .IP_ERLANG }}{% endraw %}"
+    port:
+      rabbitmq: 5672
+      epmd: 4369
+      cluster: 25672
+      management: 15672
 
   # Credentials.
-  user: rabbitmq
-  password: password
+  admin_user: rabbitmq
+  admin_password: password
   erlang_cookie: ERLANG_COOKIE
 
 resources:

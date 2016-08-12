@@ -7,22 +7,24 @@ package:
   license: Apache 2.0
 
 variables:
-  namespace: default
-  node_label: openstack-control-plane
-  image: quay.io/stackanetes/stackanetes-mariadb:barcelona
+  deployment:
+    namespace: default
+    node_label: openstack-control-plane
+    image: quay.io/stackanetes/stackanetes-mariadb:barcelona
 
-  # Network.
-  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
-  port: 3306
-  wsrep_port: 4567
-  ist_port: 4568
-  sst_port: 4444
+  network:
+    ip_address: "{% raw %}{{ .IP }}{% endraw %}"
+    port:
+      mariadb: 3306
+      wsrep: 4567
+      ist: 4568
+      sst: 4444
 
-  # Initial root password.
-  password: password
+  # Initial root's password.
+  root_password: password
 
   # Cluster configuration.
-  # TODO: Replace node_name. {{ .HOSTNAME }} can't get replaced properly
+  # TODO: Replace node_name. .HOSTNAME can't get replaced properly
   # by the kubernetes-entrypoint on rkt because the ev variable doesn't
   # exist. POD_NAME however does exist but it would be better to just get
   # it from the container instead.

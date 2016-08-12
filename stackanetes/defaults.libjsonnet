@@ -1,0 +1,101 @@
+{
+  set_vars(dependency, vars):: (
+    local variables =
+      if std.objectHas(self.default_vars(vars), dependency.name) == true then
+        self.default_vars(vars)[dependency.name] + vars
+      else
+        [ ];
+  ),
+
+  default_vars(env): {
+    local this = self,
+
+    local deployment = {
+      namespace: "default",
+      replicas: 1,
+    },
+
+    local network = {
+      network: {
+        ingress: {
+          enabled: true
+        },
+      },
+    },
+
+    local database = {
+      address: "mariadb",
+      port: "3306",
+      root_user: "root",
+      root_password: "password",
+    },
+
+    local rados_gateway = {
+      enabled: env.ceph_enabled,
+      swift_auth: "http://rados-gateway:6000/auth/1.0",
+      swift_user: "glance:swift",
+      ceph_admin_keyring: env.ceph_admin_keyring,
+      ceph_monitors: env.ceph_monitors,
+    },
+
+    local rabbitmq = {
+      admin_user: "rabbitmq",
+      admin_password: password,
+    },
+
+    local keystone = {
+      auth_uri: "http://keystone-api:5000",
+      auth_url: "http://keystone-api:35357",
+      admin_user: "admin",
+      admin_password: "password",
+      admin_project_name: "admin",
+      admin_region_name: "RegionOne",
+    },
+
+    local misc = {
+      workers: 8,
+      debug: false,
+    },
+
+    // Data plane.
+    "quentinm/mariadb": {
+      deployment: deployment,
+      network: network,
+    } + database,
+
+    "quentinm/rabbitmq": {
+      deployment: deployment,
+      network: network,
+    } + rabbitmq,
+
+    "quentinm/memcached": {
+      deployment: deployment,
+      network: network,
+    },
+
+    "quentinm/rados-gateway": {
+      deployment: deployment,
+      network: network,
+      database: database,
+      keystone: keystone,
+      misc: misc,
+    } + rados_gateway,
+
+    // OpenStack APIs.
+    "quentinm/keystone": {
+      deployment: deployment,
+      network: network,
+      database: database,
+      misc: misc,
+    } + keystone,
+
+    "quentinm/glance": {
+      deployment: deployment,
+      network: network,
+      database: database,
+      keystone: keystone,
+      rados_gateway: rados_gateway,
+      misc: misc,
+    },
+  },
+}

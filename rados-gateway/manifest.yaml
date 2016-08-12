@@ -7,21 +7,21 @@ package:
   license: Apache 2.0
 
 variables:
-  namespace: default
-  node_label: openstack-control-plane
+  deployment:
+    namespace: default
+    node_label: openstack-control-plane
+    replicas: 1
 
-  # Network.
-  external_ips: []
-  port: 6000
+  network:
+    external_ips: []
+    port: 6000
 
-  # Ceph configuration.
-  ceph_monitors: []
+  # Ceph / Swift configuration.
   ceph_admin_keyring: ""
-
-  # Initial user.
-  user_uid: glance
-  user_display_name: User for Glance
-  subuser: glance:swift
+  ceph_monitors: []
+  swift_user_uid: glance
+  swift_user_display_name: User for Glance
+  swift_user: glance:swift
 
 resources:
   # Config maps.

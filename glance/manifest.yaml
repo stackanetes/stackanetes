@@ -7,49 +7,61 @@ package:
   license: Apache 2.0
 
 variables:
-  namespace: default
-  node_label: openstack-control-plane
-  image_api: quay.io/stackanetes/stackanetes-glance-api:barcelona
-  image_registry: quay.io/stackanetes/stackanetes-glance-registry:barcelona
-  image_init: quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona
-  replicas: 1
+  deployment:
+    namespace: default
+    node_label: openstack-control-plane
+    replicas: 1
 
-  # Network.
-  ip_address: "{% raw %}{{ .IP }}{% endraw %}"
-  api_port: 9292
-  registry_port: 9191
-  external_host: image.openstack.cluster
+    image:
+      api: quay.io/stackanetes/stackanetes-glance-api:barcelona
+      registry: quay.io/stackanetes/stackanetes-glance-registry:barcelona
+      init: quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona
 
-  # Database access.
-  database_address: mariadb
-  database_port: 3306
-  database_user: root
-  database_password: password
-  database_glance_user: glance
-  database_glance_password: password
-  database_glance_name: glance
+  network:
+    ip_address: "{% raw %}{{ .IP }}{% endraw %}"
+    port:
+      api: 9292
+      registry: 9191
+    ingress:
+      enabled: true
+      host: image.openstack.cluster
 
-  # Keystone access and registration.
-  keystone_auth_uri: http://keystone-api:5000
-  keystone_auth_url: http://keystone-api:35357
-  keystone_user: admin
-  keystone_password: password
-  keystone_project_name: admin
-  keystone_glance_user: glance
-  keystone_glance_password: password
-  region_name: RegionOne
-  keystone_region_name: "{{ region_name }}"
-  keystone_auth: "{'auth_url':'{{ keystone_auth_url }}','username':'{{ keystone_user }}','password':'{{ keystone_password }}','project_name':'{{ keystone_project_name }}','domain_name':'default'}"
+  database:
+    # Dependency configuration.
+    address: mariadb
+    port: 3306
+    root_user: root
+    root_password: password
 
-  # Ceph configuration.
-  ceph_enabled: true
-  ceph_swift_auth: http://rados-gateway:6000/auth/1.0
-  ceph_swift_user: glance:swift
-  ceph_admin_keyring: ""
+    # Glance configuration.
+    glance_user: glance
+    glance_password: password
+    glance_database_name: glance
 
-  # Misc.
-  debug: false
-  workers: 8
+  keystone:
+    # Dependency configuration.
+    auth_uri: http://keystone-api:5000
+    auth_url: http://keystone-api:35357
+    admin_user: admin
+    admin_password: password
+    admin_project_name: admin
+    admin_region_name: RegionOne
+
+    # Glance configuration.
+    glance_user: glance
+    glance_password: password
+    glance_region_name: RegionOne
+    auth: "{'auth_url':'{{ keystone.auth_url }}','username':'{{ keystone.admin_user }}','password':'{{ keystone.admin_password }}','project_name':'{{ keystone.admin_project_name }}','domain_name':'default'}"
+
+  rados_gateway:
+    enabled: true
+    swift_auth: http://rados-gateway:6000/auth/1.0
+    swift_user: glance:swift
+    ceph_admin_keyring: ""
+
+  misc:
+    debug: false
+    workers: 8
 
 resources:
   # Config maps.
