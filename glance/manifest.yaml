@@ -48,7 +48,7 @@ variables:
   ceph_admin_keyring: ""
 
   # Misc.
-  debug: False
+  debug: false
   workers: 8
 
 resources:

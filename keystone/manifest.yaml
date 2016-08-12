@@ -36,7 +36,7 @@ variables:
 
   # Misc.
   workers: 8
-  debug: True
+  debug: true
 
 resources:
   # Config maps.
