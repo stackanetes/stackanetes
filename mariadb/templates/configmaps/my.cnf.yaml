@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ namespace }}
+  namespace: {{ deployment.namespace }}
   name: mariadb-mycnf
 data:
   my.cnf: |-
     [mysqld]
-    bind-address={{ ip_address }}
-    port={{ port }}
+    bind-address={{ network.ip_address }}
+    port={{ network.port.mariadb }}
 
     binlog_format=ROW
     default-storage-engine=innodb
@@ -16,16 +16,16 @@ data:
     datadir=/var/lib/mysql/
 
     wsrep_cluster_address=gcomm://
-    wsrep_provider_options="gmcast.listen_addr=tcp://{{ ip_address }}:{{ wsrep_port }};ist.recv_addr={{ ip_address }}:{{ ist_port }}"
+    wsrep_provider_options="gmcast.listen_addr=tcp://{{ network.ip_address }}:{{ wsrep_port }};ist.recv_addr={{ network.ip_address }}:{{ ist_port }}"
 
-    #wsrep_node_address={{ ip_address }}:{{ wsrep_port }}
-    #wsrep_sst_receive_address={{ ip_address }}:{{ sst_port }}
+    #wsrep_node_address={{ network.ip_address }}:{{ network.port.wsrep }}
+    #wsrep_sst_receive_address={{ network.ip_address }}:{{ network.port.sst }}
 
     wsrep_provider=/usr/lib/galera/libgalera_smm.so
     wsrep_cluster_name="{{ cluster_name }}"
     wsrep_node_name={{ node_name }}
     wsrep_sst_method=xtrabackup-v2
-    wsrep_sst_auth=root:{{ password }}
+    wsrep_sst_auth=root:{{ root_password }}
     wsrep_slave_threads=4
 
     max_connections=1000

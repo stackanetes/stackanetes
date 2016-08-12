@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ namespace }}
+  namespace: {{ deployment.namespace }}
   name: glance-api
 spec:
-  replicas: {{ replicas }}
+  replicas: {{ deployment.replicas }}
   template:
     metadata:
-      namespace: {{ namespace }}
+      namespace: {{ deployment.namespace }}
       name: glance-api
       labels:
         app: glance-api
@@ -16,10 +16,10 @@ spec:
       securityContext:
         runAsUser: 0
       nodeSelector:
-        {{ node_label }}: enabled
+        {{ deployment.node_label }}: enabled
       containers:
         - name: glance-api
-          image: {{ image_api }}
+          image: {{ deployment.image.api }}
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -40,10 +40,10 @@ spec:
             - name: DEPENDENCY_CONFIG
               value: "/etc/glance/glance-api.conf,/etc/glance/glance-swift-store.conf,/tmp/start.sh"
           ports:
-            - containerPort: {{ api_port }}
+            - containerPort: {{ network.port.api }}
           readinessProbe:
             tcpSocket:
-              port: {{ api_port }}
+              port: {{ network.port.api }}
           volumeMounts:
             - name: glanceapiconf
               mountPath: /configmaps/glance-api.conf

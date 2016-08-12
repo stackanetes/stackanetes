@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ namespace }}
+  namespace: {{ deployment.namespace }}
   name: keystone-dbsyncsh
 data:
   db-sync.sh: |-
@@ -9,4 +9,4 @@ data:
     set -ex
 
     keystone-manage db_sync
-    kolla_keystone_bootstrap {{ username }} {{ password }} {{ project_name }} admin http://keystone-api:{{ admin_port }}/v3 http://keystone-api:{{ public_port }}/v3 http://keystone-api:{{ public_port }}/v3 {{ region_name }}
+    kolla_keystone_bootstrap {{ admin_user }} {{ admin_password }} {{ admin_project_name }} admin http://keystone-api:{{ network.api.admin }}/v3 http://keystone-api:{{ network.port.public }}/v3 http://keystone-api:{{ network.port.public }}/v3 {{ admin_region_name }}

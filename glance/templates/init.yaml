@@ -1,18 +1,18 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: {{ namespace }}
+  namespace: {{ deployment.namespace }}
   name: glance-init
 spec:
   template:
     metadata:
-      namespace: {{ namespace }}
+      namespace: {{ deployment.namespace }}
       name: glance-init
     spec:
       restartPolicy: OnFailure
       containers:
         - name: glance-init
-          image: {{ image_init }}
+          image: {{ deployment.image.init }}
           imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME

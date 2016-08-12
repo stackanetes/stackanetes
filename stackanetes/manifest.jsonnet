@@ -17,6 +17,8 @@ kpm.package({
   },
 
   variables: {
+    namespace: default,
+
     external_ips: [
       "192.168.0.201",
     ],
@@ -45,5 +47,5 @@ kpm.package({
       { name: "quentinm/keystone", key: "keystone"},
       { name: "quentinm/glance", key: "glance"},
     ]
-  ]
+  ])
 }, params)

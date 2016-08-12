@@ -7,8 +7,9 @@ package:
   license: Apache 2.0
 
 variables:
-  deployment:
-    namespace: default
+  namespace: default
+
+  deployment:  
     node_label: openstack-control-plane
     replicas: 1
     image: quay.io/stackanetes/stackanetes-memcached:barcelona

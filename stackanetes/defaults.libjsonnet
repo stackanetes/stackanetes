@@ -1,17 +1,17 @@
 {
   set_vars(dependency, vars):: (
-    local variables =
-      if std.objectHas(self.default_vars(vars), dependency.name) == true then
+    local variables = if std.objectHas(self.default_vars(vars), dependency.name) == true then
         self.default_vars(vars)[dependency.name] + vars
       else
-        [ ];
+        vars;
+
+    dependency { variables: variables }
   ),
 
   default_vars(env): {
     local this = self,
 
     local deployment = {
-      namespace: "default",
       replicas: 1,
     },
 

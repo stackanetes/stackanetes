@@ -1,6 +1,7 @@
-- kpm-powered sharding for rabbitmq/mariadb/memcached
+- convert to full jsonnet to have conditionals (ingress)
+- add Ingress feature flag
 - Re-implement Ingress work
   - Public endpoints
     - Expose external_host/external_port
-- Add Ingress feature flag
+- kpm-powered sharding for rabbitmq/mariadb/memcached
 - Fix .HOSTNAME issue with rkt

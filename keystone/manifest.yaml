@@ -7,14 +7,16 @@ package:
   license: Apache 2.0
 
 variables:
-  deployment:
-    namespace: default
+  namespace: default
+
+  deployment:  
     node_label: openstack-control-plane
     replicas: 1
-    
+
     image:
       api: quay.io/stackanetes/stackanetes-keystone-api:barcelona
       init: quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona
+      db_sync: quay.io/stackanetes/stackanetes-keystone-api:barcelona
 
   network:
     ip_address: "{% raw %}{{ .IP }}{% endraw %}"
