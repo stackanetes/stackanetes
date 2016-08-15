@@ -5,8 +5,8 @@ metadata:
   name: rados-gateway
 spec:
   sessionAffinity: ClientIP
-  externalIPs: {{ external_ips }}
+  externalIPs: {{ network.external_ips }}
   ports:
-  - port: {{ port }}
+  - port: {{ network.port }}
   selector:
     app: rados-gateway

@@ -17,7 +17,7 @@ kpm.package({
   },
 
   variables: {
-    namespace: default,
+    namespace: "default",
 
     external_ips: [
       "192.168.0.201",
@@ -34,18 +34,18 @@ kpm.package({
     ingress_enabled: true,
   },
 
-  deploy: kpm.compact([defaults.set_vars(dependency, $.variables) for dependency in
+  deploy: [defaults.set_vars(dependency, $.variables) for dependency in
     [
       // Data plane.
-      { name: "quentinm/mariadb", key: "mariadb" },
-      { name: "quentinm/rabbitmq", key: "rabbitmq" },
-      { name: "quentinm/memcached", key: "memcached" },
-      if $.variables.ceph_enabled then
-        { name: "quentinm/rados-gateway", key: "rados_gateway"},
+      //{ name: "quentinm/mariadb" },
+      //{ name: "quentinm/rabbitmq" },
+      // { name: "quentinm/memcached" },
+      //if $.variables.ceph_enabled then
+      //  { name: "quentinm/rados-gateway" },
 
       // OpenStack APIs.
-      { name: "quentinm/keystone", key: "keystone"},
-      { name: "quentinm/glance", key: "glance"},
+      { name: "quentinm/keystone" },
+      //{ name: "quentinm/glance" },
     ]
-  ])
+  ]
 }, params)

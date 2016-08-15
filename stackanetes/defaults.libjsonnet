@@ -16,16 +16,14 @@
     },
 
     local network = {
-      network: {
-        ingress: {
-          enabled: true
-        },
+      ingress: {
+        enabled: true,
       },
     },
 
     local database = {
       address: "mariadb",
-      port: "3306",
+      port: 3306,
       root_user: "root",
       root_password: "password",
     },
@@ -40,7 +38,7 @@
 
     local rabbitmq = {
       admin_user: "rabbitmq",
-      admin_password: password,
+      admin_password: "password",
     },
 
     local keystone = {

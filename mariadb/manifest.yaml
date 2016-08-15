@@ -9,7 +9,7 @@ package:
 variables:
   namespace: default
 
-  deployment:  
+  deployment:
     node_label: openstack-control-plane
     image: quay.io/stackanetes/stackanetes-mariadb:barcelona
 

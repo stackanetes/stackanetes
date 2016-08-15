@@ -9,4 +9,4 @@ data:
     set -ex
 
     keystone-manage db_sync
-    kolla_keystone_bootstrap {{ admin_user }} {{ admin_password }} {{ admin_project_name }} admin http://keystone-api:{{ network.api.admin }}/v3 http://keystone-api:{{ network.port.public }}/v3 http://keystone-api:{{ network.port.public }}/v3 {{ admin_region_name }}
+    kolla_keystone_bootstrap {{ admin_user }} {{ admin_password }} {{ admin_project_name }} admin http://keystone-api:{{ network.port.admin }}/v3 http://keystone-api:{{ network.port.public }}/v3 http://keystone-api:{{ network.port.public }}/v3 {{ admin_region_name }}

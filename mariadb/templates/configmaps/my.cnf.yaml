@@ -16,7 +16,7 @@ data:
     datadir=/var/lib/mysql/
 
     wsrep_cluster_address=gcomm://
-    wsrep_provider_options="gmcast.listen_addr=tcp://{{ network.ip_address }}:{{ wsrep_port }};ist.recv_addr={{ network.ip_address }}:{{ ist_port }}"
+    wsrep_provider_options="gmcast.listen_addr=tcp://{{ network.ip_address }}:{{ network.port.wsrep }};ist.recv_addr={{ network.ip_address }}:{{ network.port.ist }}"
 
     #wsrep_node_address={{ network.ip_address }}:{{ network.port.wsrep }}
     #wsrep_sst_receive_address={{ network.ip_address }}:{{ network.port.sst }}
