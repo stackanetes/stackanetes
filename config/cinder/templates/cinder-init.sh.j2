@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 {{ ansible_task_cmd }} -m mysql_db -a "login_host='{{ database_address }}' login_port='{{ mariadb_port }}' login_user='{{ database_user }}' login_password='{{ database_password }}' name='{{ cinder_database_name }}'"
 {{ ansible_task_cmd }} -m mysql_user -a "login_host='{{ database_address }}' login_port='{{ mariadb_port }}' login_user='{{ database_user }}' login_password='{{ database_password }}' name='{{ cinder_database_name }}' password='{{ cinder_database_password }}' host='%' priv='{{ cinder_database_name }}.*:ALL' append_privs='yes'"
 {{ ansible_task_cmd }} -m kolla_keystone_service -a "service_name=cinder service_type=volume description='Openstack Block Storage' endpoint_region={{ openstack_region_name }} url='http://{{ cinder_api_host }}:{{ cinder_api_port }}/v2/%(tenant_id)s' region_name={{ openstack_region_name }} interface=admin auth='{{ openstack_cinder_auth }}' " -e "{'openstack_cinder_auth':{{ openstack_cinder_auth }}}"
