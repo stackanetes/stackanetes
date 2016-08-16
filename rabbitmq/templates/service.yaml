@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: rabbitmq
 spec:
   ports:
-  - port: {{ network.port.rabbitmq }}
+  - port: {{ variables.network.port.rabbitmq }}
   selector:
     app: rabbitmq

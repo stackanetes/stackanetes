@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: glance-registry
 spec:
   ports:
   - name: keystone-api-public
-    port: {{ network.port.registry }}
+    port: {{ variables.network.port.registry }}
   selector:
     app: glance-registry

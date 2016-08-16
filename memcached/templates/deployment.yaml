@@ -1,22 +1,22 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: memcached
 spec:
-  replicas: {{ deployment.replicas }}
+  replicas: {{ variables.deployment.replicas }}
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
+      namespace: {{ variables.deployment.namespace }}
       name: memcached
       labels:
         app: memcached
     spec:
       nodeSelector:
-        {{ deployment.node_label }}: enabled
+        {{ variables.deployment.node_label }}: enabled
       containers:
         - name: memcached
-          image: {{ deployment.image }}
+          image: {{ variables.deployment.image }}
           imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME
@@ -30,9 +30,9 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: COMMAND
-              value: "memcached -v -p {{ network.port }} -U 0"
+              value: "memcached -v -p {{ variables.network.port }} -U 0"
           ports:
-            - containerPort: {{ network.port }}
+            - containerPort: {{ variables.network.port }}
           readinessProbe:
             tcpSocket:
-              port: {{ network.port }}
+              port: {{ variables.network.port }}

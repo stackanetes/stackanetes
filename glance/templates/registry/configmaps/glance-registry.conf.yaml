@@ -1,34 +1,34 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: glance-glanceregistryconf
 data:
   glance-registry.conf: |-
     [DEFAULT]
-    debug = {{ misc.debug }}
+    debug = {{ variables.misc.debug }}
     use_syslog = False
     use_stderr = True
 
-    bind_host = {{ network.ip_address }}
-    bind_port = {{ network.port.registry }}
+    bind_host = {{ variables.network.ip_address }}
+    bind_port = {{ variables.network.port.registry }}
 
-    workers = {{ misc.workers }}
+    workers = {{ variables.misc.workers }}
 
     [database]
-    connection = mysql+pymysql://{{ database.glance_user }}:{{ database.glance_password }}@{{ database.address }}/{{ database.glance_database_name }}
-    max_pool_size = {{ misc.workers }}
-    max_overflow  = {{ misc.workers }}
+    connection = mysql+pymysql://{{ variables.database.glance_user }}:{{ variables.database.glance_password }}@{{ variables.database.address }}/{{ variables.database.glance_database_name }}
+    max_pool_size = {{ variables.misc.workers }}
+    max_overflow  = {{ variables.misc.workers }}
 
     [keystone_authtoken]
-    auth_uri = {{ keystone.auth_uri }}
-    auth_url = {{ keystone.auth_url }}
+    auth_uri = {{ variables.keystone.auth_uri }}
+    auth_url = {{ variables.keystone.auth_url }}
     auth_type = password
     project_domain_id = default
     user_domain_id = default
     project_name = service
-    username = {{ keystone.glance_user }}
-    password = {{ keystone.glance_password }}
+    username = {{ variables.keystone.glance_user }}
+    password = {{ variables.keystone.glance_password }}
 
     [paste_deploy]
     flavor = keystone

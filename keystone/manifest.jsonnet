@@ -29,7 +29,7 @@ kpm.package({
     },
 
     network: {
-      ip_address: "{% raw %}{{ .IP }}{% endraw %}",
+      ip_address: "{{ .IP }}",
       port: {
         public: 5000,
         admin: 35357,
@@ -134,13 +134,12 @@ kpm.package({
     },
 
     // Ingresses.
-    if $.variables.network.ingress.enabled then
-      {
-        file: "ingress.yaml",
-        template: (importstr "templates/ingress.yaml"),
-        name: "keystone-api",
-        type: "ingress",
-      },
+    {
+      file: "ingress.yaml",
+      template: (importstr "templates/ingress.yaml"),
+      name: "keystone-api",
+      type: "ingress",
+    },
   ],
 
   deploy: [

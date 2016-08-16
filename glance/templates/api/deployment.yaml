@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: glance-api
 spec:
-  replicas: {{ deployment.replicas }}
+  replicas: {{ variables.deployment.replicas }}
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
+      namespace: {{ variables.deployment.namespace }}
       name: glance-api
       labels:
         app: glance-api
@@ -16,10 +16,10 @@ spec:
       securityContext:
         runAsUser: 0
       nodeSelector:
-        {{ deployment.node_label }}: enabled
+        {{ variables.deployment.node_label }}: enabled
       containers:
         - name: glance-api
-          image: {{ deployment.image.api }}
+          image: {{ variables.deployment.image.api }}
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -36,14 +36,14 @@ spec:
             - name: DEPENDENCY_JOBS
               value: "glance-init,glance-db-sync"
             - name: DEPENDENCY_SERVICE
-              value: "mariadb,rabbitmq,keystone-api,rgw"
+              value: "mariadb,rabbitmq,keystone-api,rados-gateway"
             - name: DEPENDENCY_CONFIG
               value: "/etc/glance/glance-api.conf,/etc/glance/glance-swift-store.conf,/tmp/start.sh"
           ports:
-            - containerPort: {{ network.port.api }}
+            - containerPort: {{ variables.network.port.api }}
           readinessProbe:
             tcpSocket:
-              port: {{ network.port.api }}
+              port: {{ variables.network.port.api }}
           volumeMounts:
             - name: glanceapiconf
               mountPath: /configmaps/glance-api.conf
@@ -51,6 +51,8 @@ spec:
               mountPath: /configmaps/glance-swift-store.conf
             - name: startsh
               mountPath: /configmaps/start.sh
+            - name: etcglance
+              mountPath: /etc/glance
       volumes:
         - name: glanceapiconf
           configMap:
@@ -61,3 +63,5 @@ spec:
         - name: startsh
           configMap:
             name: glance-startsh
+        - name: etcglance
+          emptyDir: {}

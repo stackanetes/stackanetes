@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: glance-db-sync
 spec:
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
+      namespace: {{ variables.deployment.namespace }}
       name: glance-db-sync
     spec:
       restartPolicy: OnFailure
@@ -15,7 +15,7 @@ spec:
         runAsUser: 0
       containers:
         - name: glance-init
-          image: {{ deployment.image.db_sync }}
+          image: {{ variables.deployment.image.db_sync }}
           imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME

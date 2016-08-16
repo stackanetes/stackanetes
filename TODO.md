@@ -1,4 +1,4 @@
-- convert to full jsonnet to have conditionals (ingress)
+- protect resources
 - add Ingress feature flag
 - Re-implement Ingress work
   - Public endpoints

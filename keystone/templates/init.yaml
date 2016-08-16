@@ -1,18 +1,18 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: keystone-init
 spec:
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
+      namespace: {{ variables.deployment.namespace }}
       name: keystone-init
     spec:
       restartPolicy: OnFailure
       containers:
         - name: keystone-init
-          image: {{ deployment.image.init }}
+          image: {{ variables.deployment.image.init }}
           imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME

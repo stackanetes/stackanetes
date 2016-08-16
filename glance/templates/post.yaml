@@ -1,19 +1,25 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: glance-post
 spec:
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
+      namespace: {{ variables.deployment.namespace }}
       name: glance-post
     spec:
       restartPolicy: OnFailure
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
       containers:
         - name: glance-post
-          image: {{ deployment.image.post }}
+          image: {{ variables.deployment.image.post }}
           imagePullPolicy: Always
+          # TODO(DTadrzak): it must be removed in future
+          securityContext:
+            privileged: true
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -31,6 +37,8 @@ spec:
               value: "keystone-api,glance-api,glance-registry"
             - name: DEPENDENCY_CONFIG
               value: "/tmp/post.sh"
+            - name: ANSIBLE_LIBRARY
+              value: /usr/share/ansible/
           volumeMounts:
             - name: postsh
               mountPath: /configmaps/post.sh

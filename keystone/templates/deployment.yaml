@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: keystone-api
 spec:
-  replicas: {{ deployment.replicas }}
+  replicas: {{ variables.deployment.replicas }}
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
+      namespace: {{ variables.deployment.namespace }}
       name: keystone-api
       labels:
         app: keystone-api
@@ -16,10 +16,10 @@ spec:
       securityContext:
         runAsUser: 0
       nodeSelector:
-        {{ deployment.node_label }}: enabled
+        {{ variables.deployment.node_label }}: enabled
       containers:
         - name: keystone-api
-          image: {{ deployment.image.api }}
+          image: {{ variables.deployment.image.api }}
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -40,11 +40,11 @@ spec:
             - name: DEPENDENCY_CONFIG
               value: "/etc/keystone/keystone.conf,/etc/apache2/conf-enabled/wsgi-keystone.conf,/tmp/start.sh"
           ports:
-            - containerPort: {{ network.port.public }}
-            - containerPort: {{ network.port.admin }}
+            - containerPort: {{ variables.network.port.public }}
+            - containerPort: {{ variables.network.port.admin }}
           readinessProbe:
             tcpSocket:
-              port: {{ network.port.public }}
+              port: {{ variables.network.port.public }}
           volumeMounts:
             - name: keystoneconf
               mountPath: /configmaps/keystone.conf

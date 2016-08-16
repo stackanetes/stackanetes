@@ -16,8 +16,9 @@
     },
 
     local network = {
+      external_ips: env.external_ips,
       ingress: {
-        enabled: true,
+        enabled: env.ingress_enabled,
       },
     },
 

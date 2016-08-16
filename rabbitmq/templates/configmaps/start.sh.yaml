@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: rabbitmq-rabbitmqenvconf
 data:
   start.sh: |-
@@ -10,7 +10,7 @@ data:
 
     mkdir -p /var/lib/rabbitmq
 
-    echo "{{ erlang_cookie }}" > /var/lib/rabbitmq/.erlang.cookie
+    echo "{{ variables.erlang_cookie }}" > /var/lib/rabbitmq/.erlang.cookie
     chmod 400 /var/lib/rabbitmq/.erlang.cookie
 
     chown -R rabbitmq: /var/lib/rabbitmq

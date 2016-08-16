@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: glance-registry
 spec:
-  replicas: {{ deployment.replicas }}
+  replicas: {{ variables.deployment.replicas }}
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
+      namespace: {{ variables.deployment.namespace }}
       name: glance-registry
       labels:
         app: glance-registry
@@ -16,10 +16,10 @@ spec:
       securityContext:
         runAsUser: 0
       nodeSelector:
-        {{ deployment.node_label }}: enabled
+        {{ variables.deployment.node_label }}: enabled
       containers:
         - name: glance-registry
-          image: {{ image_registry }}
+          image: {{ variables.deployment.image.registry }}
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -36,14 +36,14 @@ spec:
             - name: DEPENDENCY_JOBS
               value: "glance-init,glance-db-sync"
             - name: DEPENDENCY_SERVICE
-              value: "mariadb,rabbitmq,keystone-api,glance-apirgw"
+              value: "mariadb,rabbitmq,keystone-api,glance-api,rados-gateway"
             - name: DEPENDENCY_CONFIG
               value: "/etc/glance/glance-registry.conf"
           ports:
-            - containerPort: {{ network.port.registry }}
+            - containerPort: {{ variables.network.port.registry }}
           readinessProbe:
             tcpSocket:
-              port: {{ network.port.registry }}
+              port: {{ variables.network.port.registry }}
           volumeMounts:
             - name: glanceregistryconf
               mountPath: /configmaps/glance-registry.conf

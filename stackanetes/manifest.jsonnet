@@ -37,15 +37,15 @@ kpm.package({
   deploy: [defaults.set_vars(dependency, $.variables) for dependency in
     [
       // Data plane.
-      //{ name: "quentinm/mariadb" },
-      //{ name: "quentinm/rabbitmq" },
-      // { name: "quentinm/memcached" },
+      { name: "quentinm/mariadb" },
+      { name: "quentinm/rabbitmq" },
+      { name: "quentinm/memcached" },
       //if $.variables.ceph_enabled then
-      //  { name: "quentinm/rados-gateway" },
+        { name: "quentinm/rados-gateway" },
 
       // OpenStack APIs.
       { name: "quentinm/keystone" },
-      //{ name: "quentinm/glance" },
+      { name: "quentinm/glance" },
     ]
   ]
 }, params)

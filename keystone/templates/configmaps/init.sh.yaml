@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ deployment.namespace }}
+  namespace: {{ variables.deployment.namespace }}
   name: keystone-initsh
 data:
   init.sh: |-
     #!/bin/bash
     set -ex
 
-    ansible localhost -vvv -m mysql_db -a "login_host='{{ database.address }}' login_port='{{ database.port }}' login_user='{{ database.root_user }}' login_password='{{ database.root_password }}' name='{{ database.keystone_database_name }}'"
-    ansible localhost -vvv -m mysql_user -a "login_host='{{ database.address }}' login_port='{{ database.port }}' login_user='{{ database.root_user }}' login_password='{{ database.root_password }}' name='{{ database.keystone_user }}' password='{{ database.keystone_password }}' host='%' priv='{{ database.keystone_database_name }}.*:ALL' append_privs='yes'"
+    ansible localhost -vvv -m mysql_db -a "login_host='{{ variables.database.address }}' login_port='{{ variables.database.port }}' login_user='{{ variables.database.root_user }}' login_password='{{ variables.database.root_password }}' name='{{ variables.database.keystone_database_name }}'"
+    ansible localhost -vvv -m mysql_user -a "login_host='{{ variables.database.address }}' login_port='{{ variables.database.port }}' login_user='{{ variables.database.root_user }}' login_password='{{ variables.database.root_password }}' name='{{ variables.database.keystone_user }}' password='{{ variables.database.keystone_password }}' host='%' priv='{{ variables.database.keystone_database_name }}.*:ALL' append_privs='yes'"
