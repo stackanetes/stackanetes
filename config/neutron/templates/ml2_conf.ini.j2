@@ -16,11 +16,11 @@ vni_ranges = 1:1000
 vxlan_group = 239.1.1.1
 
 [securitygroup]
-firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+firewall_driver = neutron.agent.firewall.NoopFirewallDriver
 
 [agent]
 tunnel_types = vxlan
-l2_population = true
+l2_population = false
 arp_responder = true
 
 [ovs]
