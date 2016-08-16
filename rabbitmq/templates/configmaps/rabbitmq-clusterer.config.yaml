@@ -2,12 +2,12 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: rabbitmq-rabbitmqclustererconfig
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
 data:
   rabbitmq-clusterer.config: |-
     [{version, 1},
-     {nodes, [" {{ variables.network.ip_address }}" ]},
+     {nodes, [" {{ network.ip_address }}" ]},
      {gospel,
-      {node, "rabbit@{{ variables.network.ip_address }}" }
+      {node, "rabbit@{{ network.ip_address }}" }
      }
      ].

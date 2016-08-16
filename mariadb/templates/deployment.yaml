@@ -1,25 +1,25 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: mariadb
 spec:
-  replicas: {{ variables.deployment.replicas }}
+  replicas: {{ deployment.replicas }}
   template:
     metadata:
-      namespace: {{ variables.deployment.namespace }}
+      namespace: {{ deployment.namespace }}
       name: mariadb
       labels:
         app: mariadb
     spec:
       nodeSelector:
-        {{ variables.deployment.node_label }}: enabled
+        {{ deployment.node_label }}: enabled
       # TODO(DTadrzak): it must be removed in future
       securityContext:
         runAsUser: 0
       containers:
         - name: mariadb
-          image: {{ variables.deployment.image }}
+          image: {{ deployment.image }}
           imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME
@@ -37,10 +37,10 @@ spec:
             - name: DEPENDENCY_CONFIG
               value: "/tmp/start.sh,/etc/mysql/my.cnf"
           ports:
-            - containerPort: {{ variables.network.port.mariadb }}
+            - containerPort: {{ network.port.mariadb }}
           readinessProbe:
             tcpSocket:
-              port: {{ variables.network.port.mariadb }}
+              port: {{ network.port.mariadb }}
           volumeMounts:
             - name: startsh
               mountPath: /configmaps/start.sh

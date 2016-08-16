@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: glance-initsh
 data:
   init.sh: |-
     #!/bin/bash
     set -ex
 
-    ansible localhost -vvv -m mysql_db -a "login_host='{{ variables.database.address }}' login_port='{{ variables.database.port }}' login_user='{{ variables.database.root_user }}' login_password='{{ variables.database.root_password }}' name='{{ variables.database.glance_database_name }}'"
-    ansible localhost -vvv -m mysql_user -a "login_host='{{ variables.database.address }}' login_port='{{ variables.database.port }}' login_user='{{ variables.database.root_user }}' login_password='{{ variables.database.root_password }}' name='{{ variables.database.glance_user }}' password='{{ variables.database.glance_password }}' host='%' priv='{{ variables.database.glance_database_name }}.*:ALL' append_privs='yes'"
+    ansible localhost -vvv -m mysql_db -a "login_host='{{ database.address }}' login_port='{{ database.port }}' login_user='{{ database.root_user }}' login_password='{{ database.root_password }}' name='{{ database.glance_database_name }}'"
+    ansible localhost -vvv -m mysql_user -a "login_host='{{ database.address }}' login_port='{{ database.port }}' login_user='{{ database.root_user }}' login_password='{{ database.root_password }}' name='{{ database.glance_user }}' password='{{ database.glance_password }}' host='%' priv='{{ database.glance_database_name }}.*:ALL' append_privs='yes'"

@@ -1,25 +1,25 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: rabbitmq
 spec:
   replicas: 1
   template:
     metadata:
-      namespace: {{ variables.deployment.namespace }}
+      namespace: {{ deployment.namespace }}
       name: rabbitmq
       labels:
         app: rabbitmq
     spec:
       nodeSelector:
-        {{ variables.deployment.node_label }}: enabled
+        {{ deployment.node_label }}: enabled
       # TODO(DTadrzak): it must be removed in future
       securityContext:
         runAsUser: 0
       containers:
         - name: rabbitmq
-          image: {{ variables.deployment.image }}
+          image: {{ deployment.image }}
           imagePullPolicy: Always
           # TODO(DTadrzak): it must be removed in future
           securityContext:
@@ -40,10 +40,10 @@ spec:
             - name: DEPENDENCY_CONFIG
               value: "/tmp/start.sh,/etc/rabbitmq/rabbitmq-env.conf,/etc/rabbitmq/rabbitmq.config,/etc/rabbitmq/rabbitmq-clusterer.config"
           ports:
-            - containerPort: {{ variables.network.port.rabbitmq }}
+            - containerPort: {{ network.port.rabbitmq }}
           readinessProbe:
             tcpSocket:
-              port: {{ variables.network.port.rabbitmq }}
+              port: {{ network.port.rabbitmq }}
           volumeMounts:
             - name: startsh
               mountPath: /configmaps/start.sh

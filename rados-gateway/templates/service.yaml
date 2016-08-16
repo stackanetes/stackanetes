@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: rados-gateway
 spec:
   sessionAffinity: ClientIP
-  externalIPs: {{ variables.network.external_ips }}
+  externalIPs: {{ network.external_ips }}
   ports:
-  - port: {{ variables.network.port }}
+  - port: {{ network.port }}
   selector:
     app: rados-gateway

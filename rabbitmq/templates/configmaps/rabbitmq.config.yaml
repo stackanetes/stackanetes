@@ -1,28 +1,28 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: rabbitmq-rabbitmqconfig
 data:
   rabbitmq.config: |-
     [
       {kernel, [
-        {inet_dist_use_interface, { {{ variables.network.ip_address_erlang }} }},
-        {inet_dist_listen_min, {{ variables.network.port.cluster }} },
-        {inet_dist_listen_max, {{ variables.network.port.cluster }} }
+        {inet_dist_use_interface, { {{ network.ip_address_erlang }} }},
+        {inet_dist_listen_min, {{ network.port.cluster }} },
+        {inet_dist_listen_max, {{ network.port.cluster }} }
       ]},
       {rabbit, [
         {tcp_listeners, [
-          { "{{ variables.network.ip_address }}", {{ variables.network.port.rabbitmq }} }
+          { "{{ network.ip_address }}", {{ network.port.rabbitmq }} }
         ]},
-        {default_user, <<"{{ variables.admin_user }}">>},
-        {default_pass, <<"{{ variables.admin_password }}">>},
+        {default_user, <<"{{ admin_user }}">>},
+        {default_pass, <<"{{ admin_password }}">>},
         {cluster_partition_handling, autoheal}
       ]},
       {rabbitmq_management, [
         {listener, [
-          {ip, "{{ variables.network.ip_address }}"},
-          {port, {{ variables.network.port.management }} }
+          {ip, "{{ network.ip_address }}"},
+          {port, {{ network.port.management }} }
         ]}
       ]},
       {rabbitmq_clusterer, [{config, "/etc/rabbitmq/rabbitmq-clusterer.config"}]}

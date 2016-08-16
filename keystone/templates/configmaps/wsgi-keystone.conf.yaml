@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: keystone-wsgikeystone
 data:
   wsgi-keystone.conf: |-
-    Listen {{ variables.network.ip_address }}:{{ variables.network.port.public }}
-    Listen {{ variables.network.ip_address }}:{{ variables.network.port.admin }}
+    Listen {{ network.ip_address }}:{{ network.port.public }}
+    Listen {{ network.ip_address }}:{{ network.port.admin }}
 
-    <VirtualHost *:{{ variables.network.port.public }}>
+    <VirtualHost *:{{ network.port.public }}>
         WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
         WSGIProcessGroup keystone-public
         WSGIScriptAlias / /var/www/cgi-bin/keystone/main
@@ -21,7 +21,7 @@ data:
         CustomLog "|/bin/cat" combined
     </VirtualHost>
 
-    <VirtualHost *:{{ variables.network.port.admin }}>
+    <VirtualHost *:{{ network.port.admin }}>
         WSGIDaemonProcess keystone-admin processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
         WSGIProcessGroup keystone-admin
         WSGIScriptAlias / /var/www/cgi-bin/keystone/admin

@@ -1,10 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: rados-gateway
 spec:
-  replicas: {{ variables.deployment.replicas }}
+  replicas: {{ deployment.replicas }}
   template:
     metadata:
       namespace: default
@@ -13,19 +13,19 @@ spec:
       name: rados-gateway
     spec:
       nodeSelector:
-        {{ variables.deployment.node_label }}: enabled
+        {{ deployment.node_label }}: enabled
       containers:
         - name: rados-gateway
-          image: {{ variables.deployment.image }}
+          image: {{ deployment.image }}
           imagePullPolicy: Always
           command:
             - bash
             - /configmaps/start.sh/start.sh
           readinessProbe:
             tcpSocket:
-              port: {{ variables.network.port }}
+              port: {{ network.port }}
           ports:
-            - containerPort: {{ variables.network.port }}
+            - containerPort: {{ network.port }}
           volumeMounts:
             - name: cephconf
               mountPath: /configmaps/ceph.conf

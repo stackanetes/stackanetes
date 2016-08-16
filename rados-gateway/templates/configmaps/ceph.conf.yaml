@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: rados-gateway-cephconf
 data:
   ceph.conf: |-
@@ -9,7 +9,7 @@ data:
     rgw_thread_pool_size = 1024
     rgw_num_rados_handles = 100
     [mon]
-    {%- for mon in variables.ceph_monitors %}
+    {%- for mon in ceph_monitors %}
         [mon.{{mon}}]
           host = {{mon}}
           mon_addr = {{mon}}

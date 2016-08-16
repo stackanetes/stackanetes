@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: rados-gateway-cephclientadminkeyring
 data:
   ceph.client.admin.keyring: |-
     [client.admin]
-        key = {{ variables.ceph_admin_keyring }}
+        key = {{ ceph_admin_keyring }}

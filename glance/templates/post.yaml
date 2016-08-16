@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: glance-post
 spec:
   template:
     metadata:
-      namespace: {{ variables.deployment.namespace }}
+      namespace: {{ deployment.namespace }}
       name: glance-post
     spec:
       restartPolicy: OnFailure
@@ -15,7 +15,7 @@ spec:
         runAsUser: 0
       containers:
         - name: glance-post
-          image: {{ variables.deployment.image.post }}
+          image: {{ deployment.image.post }}
           imagePullPolicy: Always
           # TODO(DTadrzak): it must be removed in future
           securityContext:

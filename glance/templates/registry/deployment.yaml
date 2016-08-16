@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: glance-registry
 spec:
-  replicas: {{ variables.deployment.replicas }}
+  replicas: {{ deployment.replicas }}
   template:
     metadata:
-      namespace: {{ variables.deployment.namespace }}
+      namespace: {{ deployment.namespace }}
       name: glance-registry
       labels:
         app: glance-registry
@@ -16,10 +16,10 @@ spec:
       securityContext:
         runAsUser: 0
       nodeSelector:
-        {{ variables.deployment.node_label }}: enabled
+        {{ deployment.node_label }}: enabled
       containers:
         - name: glance-registry
-          image: {{ variables.deployment.image.registry }}
+          image: {{ deployment.image.registry }}
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -40,10 +40,10 @@ spec:
             - name: DEPENDENCY_CONFIG
               value: "/etc/glance/glance-registry.conf"
           ports:
-            - containerPort: {{ variables.network.port.registry }}
+            - containerPort: {{ network.port.registry }}
           readinessProbe:
             tcpSocket:
-              port: {{ variables.network.port.registry }}
+              port: {{ network.port.registry }}
           volumeMounts:
             - name: glanceregistryconf
               mountPath: /configmaps/glance-registry.conf

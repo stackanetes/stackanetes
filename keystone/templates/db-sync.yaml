@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: keystone-db-sync
 spec:
   template:
     metadata:
-      namespace: {{ variables.deployment.namespace }}
+      namespace: {{ deployment.namespace }}
       name: keystone-db-sync
     spec:
       restartPolicy: OnFailure
@@ -15,7 +15,7 @@ spec:
         runAsUser: 0
       containers:
         - name: keystone-init
-          image: {{ variables.deployment.image.db_sync }}
+          image: {{ deployment.image.db_sync }}
           imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME

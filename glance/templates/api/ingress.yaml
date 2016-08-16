@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  namespace: {{ variables.deployment.namespace }}
+  namespace: {{ deployment.namespace }}
   name: glance-api
 spec:
   rules:
-  - host: {{ variables.network.ingress.host }}
+  - host: {{ network.ingress.host }}
     http:
       paths:
       -  backend:
           serviceName: glance-api
-          servicePort: {{ variables.network.port.api }}
+          servicePort: {{ network.port.api }}
