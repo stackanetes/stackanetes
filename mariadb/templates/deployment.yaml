@@ -1,14 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
-metadata:
-  namespace: {{ deployment.namespace }}
-  name: mariadb
 spec:
   replicas: {{ deployment.replicas }}
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
-      name: mariadb
       labels:
         app: mariadb
     spec:

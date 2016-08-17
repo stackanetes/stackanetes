@@ -17,8 +17,6 @@ kpm.package({
   },
 
   variables: {
-    namespace: "default",
-
     external_ips: [
       "192.168.0.201",
     ],

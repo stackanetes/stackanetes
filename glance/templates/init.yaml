@@ -1,13 +1,7 @@
 apiVersion: batch/v1
 kind: Job
-metadata:
-  namespace: {{ deployment.namespace }}
-  name: glance-init
 spec:
   template:
-    metadata:
-      namespace: {{ deployment.namespace }}
-      name: glance-init
     spec:
       restartPolicy: OnFailure
       containers:

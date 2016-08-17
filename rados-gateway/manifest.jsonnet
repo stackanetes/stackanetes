@@ -15,8 +15,6 @@ kpm.package({
   },
 
   variables: {
-    namespace: "default",
-
     deployment: {
       node_label: "openstack-control-plane",
       image: "ceph/daemon:latest",

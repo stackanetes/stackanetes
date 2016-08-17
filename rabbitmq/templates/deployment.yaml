@@ -1,14 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
-metadata:
-  namespace: {{ deployment.namespace }}
-  name: rabbitmq
 spec:
   replicas: 1
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
-      name: rabbitmq
       labels:
         app: rabbitmq
     spec:

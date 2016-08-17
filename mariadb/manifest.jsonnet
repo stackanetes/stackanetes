@@ -15,33 +15,31 @@ kpm.package({
   },
 
   variables: {
-      namespace: "default",
+    deployment: {
+      node_label: "openstack-control-plane",
+      image: "quay.io/stackanetes/stackanetes-mariadb:barcelona",
+    },
 
-      deployment: {
-        node_label: "openstack-control-plane",
-        image: "quay.io/stackanetes/stackanetes-mariadb:barcelona",
+    network: {
+      ip_address: "{{ .IP }}",
+      port: {
+        mariadb: 3306,
+        wsrep: 4567,
+        ist: 4568,
+        sst: 4444,
       },
+    },
 
-      network: {
-        ip_address: "{{ .IP }}",
-        port: {
-          mariadb: 3306,
-          wsrep: 4567,
-          ist: 4568,
-          sst: 4444,
-        },
-      },
+    // Initial root's password.
+    root_password: "password",
 
-      // Initial root's password.
-      root_password: "password",
-
-      // Cluster configuration.
-      // TODO: Replace node_name. .HOSTNAME can't get replaced properly
-      // by the kubernetes-entrypoint on rkt because the ev variable doesn't
-      // exist. POD_NAME however does exist but it would be better to just get
-      // it from the container instead.
-      node_name: "master",
-      cluster_name: "mariadb",
+    // Cluster configuration.
+    // TODO: Replace node_name. .HOSTNAME can't get replaced properly
+    // by the kubernetes-entrypoint on rkt because the ev variable doesn't
+    // exist. POD_NAME however does exist but it would be better to just get
+    // it from the container instead.
+    node_name: "master",
+    cluster_name: "mariadb",
   },
 
   resources: [

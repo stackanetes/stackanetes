@@ -1,13 +1,7 @@
 apiVersion: batch/v1
 kind: Job
-metadata:
-  namespace: {{ deployment.namespace }}
-  name: glance-post
 spec:
   template:
-    metadata:
-      namespace: {{ deployment.namespace }}
-      name: glance-post
     spec:
       restartPolicy: OnFailure
       # TODO(DTadrzak): it must be removed in future

@@ -1,16 +1,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
-metadata:
-  namespace: {{ deployment.namespace }}
-  name: rados-gateway
 spec:
   replicas: {{ deployment.replicas }}
   template:
     metadata:
-      namespace: default
       labels:
         app: rados-gateway
-      name: rados-gateway
     spec:
       nodeSelector:
         {{ deployment.node_label }}: enabled

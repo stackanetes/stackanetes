@@ -1,14 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
-metadata:
-  namespace: {{ deployment.namespace }}
-  name: glance-registry
 spec:
   replicas: {{ deployment.replicas }}
   template:
     metadata:
-      namespace: {{ deployment.namespace }}
-      name: glance-registry
       labels:
         app: glance-registry
     spec:
