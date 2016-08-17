@@ -2,7 +2,8 @@
 [DEFAULT]
 debug = {{ nova_logging_debug }}
 vif_plugging_is_fatal = False
-vif_plugging_timeout = 1
+vif_plugging_timeout = 10
+default_ephemeral_format = ext3
 
 api_paste_config = /etc/nova/api-paste.ini
 state_path = /var/lib/nova
@@ -22,7 +23,7 @@ ec2_workers = {{ workers }}
 notification_driver = noop
 
 use_neutron = True
-security_group_api = neutron
+security_group_api = nova
 network_api_class = nova.network.neutronv2.api.API
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 
@@ -143,7 +144,7 @@ password = {{ nova_keystone_password }}
 [libvirt]
 connection_uri = "qemu+tcp://{{ get_ip_address }}/system"
 {% if ceph_enabled %}
-images_type = rbd
+images_type = qcow2
 images_rbd_pool = {{ ceph_nova_pool_name }}
 images_rbd_ceph_conf = /etc/ceph/ceph.conf
 rbd_user = cinder
