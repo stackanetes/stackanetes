@@ -5,7 +5,7 @@ metadata:
   name: glance-api
 spec:
   rules:
-  - host: {{ network.ingress.host }}
+  - host: {{ network.ingress.named_host }}
     http:
       paths:
       -  backend:

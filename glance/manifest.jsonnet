@@ -37,13 +37,18 @@ kpm.package({
         registry: 9191,
       },
       ingress: {
+        // External dependency configuration.
         enabled: true,
-        host: "image.openstack.cluster",
+        host: "%s.openstack.cluster",
+        port: 30080,
+
+        // Glance configuration.
+        named_host: $.variables.network.ingress.host % "image",
       },
     },
 
     database: {
-      // Dependency configuration.
+      // External dependency configuration.
       address: "mariadb",
       port: 3306,
       root_user: "root",
@@ -56,7 +61,7 @@ kpm.package({
     },
 
     keystone: {
-      // Dependency configuration.
+      // External dependency configuration.
       auth_uri: "http://keystone-api:5000",
       auth_url: "http://keystone-api:35357",
       admin_user: "admin",
@@ -68,10 +73,11 @@ kpm.package({
       glance_user: "glance",
       glance_password: "password",
       glance_region_name: "RegionOne",
-      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'default'}" %       [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name],
+      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'default'}" % [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name],
     },
 
     rados_gateway: {
+      // External dependency configuration.
       enabled: true,
       swift_auth: "http://rados-gateway:6000/auth/1.0",
       swift_user: "glance:swift",
@@ -186,15 +192,17 @@ kpm.package({
       name: "glance-registry",
       type: "service",
     },
-
-    // Ingresses.
+  ]
+  // Ingresses.
+  + if $.variables.network.ingress.enabled == true then
+  [
     {
       file: "api/ingress.yaml",
       template: (importstr "templates/api/ingress.yaml"),
       name: "glance-api",
       type: "ingress",
     },
-  ],
+  ] else [ ],
 
   deploy: [
     {

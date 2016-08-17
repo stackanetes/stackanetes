@@ -19,6 +19,8 @@
       external_ips: env.external_ips,
       ingress: {
         enabled: env.ingress_enabled,
+        host: env.ingress_host,
+        port: env.ingress_port,
       },
     },
 

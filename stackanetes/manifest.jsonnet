@@ -32,20 +32,30 @@ kpm.package({
     ceph_admin_keyring: "AQCW84RXpk6mERAA9hfAIKzV1uwYC5C1ogN4QA==",
 
     ingress_enabled: true,
+    ingress_host: "%s.openstack.cluster",
+    ingress_port: 30080,
   },
 
-  deploy: [defaults.set_vars(dependency, $.variables) for dependency in
-    [
-      // Data plane.
-      { name: "quentinm/mariadb" },
-      { name: "quentinm/rabbitmq" },
-      { name: "quentinm/memcached" },
-      //if $.variables.ceph_enabled then
-        { name: "quentinm/rados-gateway" },
+  local dependencies = [
+    // Data plane.
+    { name: "quentinm/mariadb" },
+    { name: "quentinm/rabbitmq" },
+    { name: "quentinm/memcached" },
 
-      // OpenStack APIs.
-      { name: "quentinm/keystone" },
-      { name: "quentinm/glance" },
-    ]
+    // OpenStack APIs.
+    { name: "quentinm/keystone" },
+    { name: "quentinm/glance" },
   ]
+  // Ceph-specific dependencies
+  + (if $.variables.ceph_enabled == true then
+  [
+    { name: "quentinm/rados-gateway" }
+  ] else [ ])
+  // Ingress-specific dependencies
+  + (if $.variables.ingress_enabled == true then
+  [
+    { name: "quentinm/traefik" }
+  ] else [ ]),
+
+  deploy: [defaults.set_vars(dependency, $.variables) for dependency in dependencies]
 }, params)

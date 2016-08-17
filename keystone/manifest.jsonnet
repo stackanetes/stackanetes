@@ -35,13 +35,18 @@ kpm.package({
         admin: 35357,
       },
       ingress: {
+        // External dependency configuration.
         enabled: true,
-        host: "identity.openstack.cluster",
+        host: "%s.openstack.cluster",
+        port: 30080,
+
+        // Glance configuration.
+        named_host: $.variables.network.ingress.host % "identity",
       },
     },
 
     database: {
-      // Dependency configuration.
+      // External dependency configuration.
       address: "mariadb",
       port: 3306,
       root_user: "root",
@@ -132,15 +137,17 @@ kpm.package({
       name: "keystone-api",
       type: "service",
     },
-
-    // Ingresses.
+  ]
+  // Ingresses.
+  + if $.variables.network.ingress.enabled == true then
+  [
     {
-      file: "ingress.yaml",
+      file: "api/ingress.yaml",
       template: (importstr "templates/ingress.yaml"),
       name: "keystone-api",
       type: "ingress",
     },
-  ],
+  ] else [ ],
 
   deploy: [
     {
