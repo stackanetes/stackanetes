@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: traefik
+spec:
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: {{ deployment.image }}
+        name: traefik
+        ports:
+          - containerPort: 80
+          - containerPort: 443
+          - containerPort: 8080
+        args:
+        - --web
+        - --kubernetes
