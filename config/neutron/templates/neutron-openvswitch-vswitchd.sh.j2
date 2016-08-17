@@ -4,4 +4,4 @@ set -e
 modprobe openvswitch
 ovs-vsctl --no-wait show
 bash /tmp/ovs-ensure-configured.sh {{ neutron_bridge_name }} {{ interface_name }}
-/usr/sbin/ovs-vswitchd unix:/run/openvswitch/db.sock --mlockall
+exec /usr/sbin/ovs-vswitchd unix:/run/openvswitch/db.sock --mlockall
