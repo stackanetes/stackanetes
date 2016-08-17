@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: {{ deployment.replicas }}
+  template:
+    metadata:
+      labels:
+        app: horizon
+    spec:
+      nodeSelector:
+        {{ deployment.node_label }}: enabled
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: horizon
+          # TODO(DTadrzak): it must be removed in future
+          securityContext:
+            privileged: true
+          image: {{ deployment.image.horizon }}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/start.sh"
+            - name: DEPENDENCY_SERVICE
+              value: "memcached,keystone-api"
+            - name: DEPENDENCY_CONFIG
+              value: "/tmp/start.sh,/etc/apache2/conf-enabled/000-default.conf,/etc/openstack-dashboard/local_settings"
+          ports:
+            - containerPort: {{ network.port }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ network.port }}
+          volumeMounts:
+            - name: startsh
+              mountPath: /configmaps/start.sh
+            - name: horizonconf
+              mountPath: /configmaps/000-default.conf
+            - name: localsettings
+              mountPath: /configmaps/local_settings
+      volumes:
+        - name: startsh
+          configMap:
+            name: horizon-startsh
+        - name: horizonconf
+          configMap:
+            name: horizon-horizonconf
+        - name: localsettings
+          configMap:
+            name: horizon-localsettings
+            items:
+              # https://github.com/kubernetes/kubernetes/issues/23722
+              - key: local-settings
+                path: local_settings

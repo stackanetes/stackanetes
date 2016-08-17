@@ -85,7 +85,7 @@
       misc: misc,
     } + rados_gateway,
 
-    // OpenStack APIs.
+    // OpenStack services.
     "quentinm/keystone": {
       deployment: deployment,
       network: network,
@@ -99,6 +99,13 @@
       database: database,
       keystone: keystone,
       rados_gateway: rados_gateway,
+      misc: misc,
+    },
+
+    "quentinm/horizon": {
+      deployment: deployment,
+      network: network,
+      keystone: keystone,
       misc: misc,
     },
   },

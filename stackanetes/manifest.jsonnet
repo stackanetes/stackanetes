@@ -42,9 +42,10 @@ kpm.package({
     { name: "quentinm/rabbitmq" },
     { name: "quentinm/memcached" },
 
-    // OpenStack APIs.
+    // OpenStack services.
     { name: "quentinm/keystone" },
     { name: "quentinm/glance" },
+    { name: "quentinm/horizon" },
   ]
   // Ceph-specific dependencies
   + (if $.variables.ceph_enabled == true then
