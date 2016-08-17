@@ -1,7 +1,6 @@
 type: generic/daemonset
 name: openvswitch-agent
 host_network: True
-label: openstack-compute-node
 ports: []
 dependencies:
   service:
