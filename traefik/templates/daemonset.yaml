@@ -11,7 +11,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 60
       containers:
-      - image: {{ deployment.image }}
+      - image: {{ deployment.image.traefik }}
         name: traefik
         ports:
           - containerPort: 80

@@ -17,8 +17,10 @@ kpm.package({
   variables: {
     deployment: {
       node_label: "openstack-control-plane",
-      image: "ceph/daemon:latest",
       replicas: 1,
+      image: {
+        ceph_daemon: "ceph/daemon:latest"
+      },
     },
 
     network: {

@@ -11,7 +11,7 @@ spec:
         {{ deployment.node_label }}: enabled
       containers:
         - name: memcached
-          image: {{ deployment.image }}
+          image: {{ deployment.image.memcached }}
           imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME

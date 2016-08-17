@@ -20,9 +20,10 @@ kpm.package({
       replicas: 1,
 
       image: {
-          api: "quay.io/stackanetes/stackanetes-keystone-api:barcelona",
-          init: "quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona",
-          db_sync: "quay.io/stackanetes/stackanetes-keystone-api:barcelona",
+        base: "quay.io/stackanetes/stackanetes-%s:barcelona",
+        
+        init: $.variables.deployment.image.base % "kolla-toolbox",
+        api: $.variables.deployment.image.base % "keystone-api",
       },
     },
 

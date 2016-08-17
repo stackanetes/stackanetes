@@ -17,7 +17,10 @@ kpm.package({
   variables: {
     deployment: {
       node_label: "openstack-control-plane",
-      image: "quay.io/stackanetes/stackanetes-rabbitmq:barcelona",
+      image: {
+        base: "quay.io/stackanetes/stackanetes-%s:barcelona",
+        rabbitmq: $.variables.deployment.image.base % "rabbitmq",
+      },
     },
 
     network: {

@@ -17,6 +17,8 @@ kpm.package({
   },
 
   variables: {
+    image_base: "quay.io/stackanetes/stackanetes-%s:barcelona",
+
     external_ips: [
       "192.168.0.201",
     ],

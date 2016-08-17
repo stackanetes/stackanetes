@@ -16,7 +16,9 @@ kpm.package({
 
   variables: {
     deployment: {
-      image: "traefik",
+      image: {
+        traefik: "traefik:latest",
+      },
     },
 
     network: {

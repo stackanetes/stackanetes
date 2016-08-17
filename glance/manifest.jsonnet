@@ -20,11 +20,13 @@ kpm.package({
       replicas: 1,
 
       image: {
-        init: "quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona",
-        db_sync: "quay.io/stackanetes/stackanetes-glance-api:barcelona",
-        api: "quay.io/stackanetes/stackanetes-glance-api:barcelona",
-        registry: "quay.io/stackanetes/stackanetes-glance-registry:barcelona",
-        post: "quay.io/stackanetes/stackanetes-kolla-toolbox:barcelona",
+        base: "quay.io/stackanetes/stackanetes-%s:barcelona",
+
+        init: $.variables.deployment.image.base % "kolla-toolbox",
+        db_sync: $.variables.deployment.image.base % "glance-api",
+        api: $.variables.deployment.image.base % "glance-api",
+        registry: $.variables.deployment.image.base % "glance-registry",
+        post: $.variables.deployment.image.base % "kolla-toolbox",
       },
     },
 

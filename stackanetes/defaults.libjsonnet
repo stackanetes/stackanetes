@@ -13,6 +13,9 @@
 
     local deployment = {
       replicas: 1,
+      image: {
+        base: env.image_base,
+      },
     },
 
     local network = {

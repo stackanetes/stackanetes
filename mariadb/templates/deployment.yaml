@@ -14,7 +14,7 @@ spec:
         runAsUser: 0
       containers:
         - name: mariadb
-          image: {{ deployment.image }}
+          image: {{ deployment.image.mariadb }}
           imagePullPolicy: Always
           env:
             - name: INTERFACE_NAME

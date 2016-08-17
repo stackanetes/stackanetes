@@ -14,7 +14,7 @@ spec:
         runAsUser: 0
       containers:
         - name: rabbitmq
-          image: {{ deployment.image }}
+          image: {{ deployment.image.rabbitmq }}
           imagePullPolicy: Always
           # TODO(DTadrzak): it must be removed in future
           securityContext:

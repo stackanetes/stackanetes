@@ -11,7 +11,7 @@ spec:
         {{ deployment.node_label }}: enabled
       containers:
         - name: rados-gateway
-          image: {{ deployment.image }}
+          image: {{ deployment.image.ceph_daemon }}
           imagePullPolicy: Always
           command:
             - bash

@@ -18,7 +18,10 @@ kpm.package({
     deployment: {
       node_label: "openstack-control-plane",
       replicas: 1,
-      image: "quay.io/stackanetes/stackanetes-memcached:barcelona",
+      image: {
+        base: "quay.io/stackanetes/stackanetes-%s:barcelona",
+        memcached: $.variables.deployment.image.base % "memcached"
+      },
     },
 
     network: {
