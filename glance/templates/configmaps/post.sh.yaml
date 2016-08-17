@@ -11,7 +11,7 @@ data:
       ansible localhost -vvv -m kolla_keystone_service -a "service_name=glance service_type=image description='Openstack Image' endpoint_region={{ keystone.glance_region_name }} url='http://{{ network.ingress.named_host}}:{{ network.ingress.port }}' interface=public region_name={{ keystone.admin_region_name }} auth='{{ keystone.auth }}' " -e "{ 'openstack_glance_auth': {{ keystone.auth }} }"
     {%- else -%}
       ansible localhost -vvv -m kolla_keystone_service -a "service_name=glance service_type=image description='Openstack Image' endpoint_region={{ keystone.glance_region_name }} url='http://glance-api:{{ network.port.api }}' interface=public region_name={{ keystone.admin_region_name }} auth='{{ keystone.auth }}' " -e "{ 'openstack_glance_auth': {{ keystone.auth }} }"
-    {%- endif -%}
+    {%- endif %}
 
     ansible localhost -vvv -m kolla_keystone_user -a "project=service user=glance password={{ keystone.glance_password }} role=admin region_name={{ keystone.admin_region_name }} auth='{{ keystone.auth }}'" -e "{'openstack_glance_auth':{{ keystone.auth }}}"
     ansible localhost -vvv -m mysql_db -a "login_host='{{ database.address }}' login_port='{{ database.port }}' login_user='{{ database.root_user }}' login_password='{{ database.root_password }}' name='{{ database.glance_database_name }}'"
