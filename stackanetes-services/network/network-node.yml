@@ -1,6 +1,6 @@
 type: generic/daemonset
 name: network-node
-label: openstack-compute-node
+label: openstack-control-plane
 host_network: True
 ports: []
 dependencies:
@@ -43,14 +43,19 @@ containers:
         container_path: /etc
         templates:
         - common/templates/resolv.conf.j2
+      - file_name: hosts
+        configmap_name: hosts
+        container_path: /etc
+        templates:
+        - neutron/templates/hosts.j2
     mounts:
       - container_path: /lib/modules
         name: lib-modules
         read_only: true
         host_path: /lib/modules
-      - container_path: /run
-        name: run
-        host_path: /run
+      - container_path: /run/openvswitch
+        name: run-openvswitch
+        host_path: /run/openvswitch
         read_only: false
       - container_path: /usr/sbin/ip
         name: usr-sbin-ip
@@ -96,9 +101,9 @@ containers:
         name: lib-modules
         read_only: true
         host_path: /lib/modules
-      - container_path: /run
-        name: run
-        host_path: /run
+      - container_path: /run/openvswitch
+        name: run-openvswitch
+        host_path: /run/openvswitch
         read_only: false
       - container_path: /usr/sbin/ip
         name: usr-sbin-ip
