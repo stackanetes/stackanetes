@@ -12,7 +12,6 @@
     local this = self,
 
     local deployment = {
-      namespace: env.namespace,
       replicas: 1,
     },
 
