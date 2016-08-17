@@ -26,12 +26,13 @@ GENERIC_TYPES = ['job', 'deployment', 'daemonset']
 CUSTOM_TYPES = ['fluentd-elasticsearch', 'rgw']
 DEPENDENCY_PREFIX = "DEPENDENCY_"
 
+
 class Manifest(object):
     def __init__(self, configuration, service_dir):
         self.service_dir = service_dir
         self.type = configuration['type']
         self.service_name = configuration['name']
-        self.label = configuration.get('label')
+        self.label = configuration.get('label', None)
         self.external_ip_enabled = configuration.get('external_ip_enabled',
                                                      False)
         self.replicas = configuration.get('replicas', CONF.stackanetes.replicas)
