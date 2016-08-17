@@ -51,7 +51,7 @@ def create_namespace(namespace):
     subprocess.call(cmd)
 
 
-def check_if_namespace_exist(namespace):
+def check_if_namespace_exists(namespace):
     cmd = get_kubectl_command(namespace)
     cmd.extend(['get', 'namespace', namespace])
     output = subprocess.Popen(cmd,

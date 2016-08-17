@@ -20,7 +20,7 @@ from oslo_log import log as logging
 
 from stackanetes.configmap import ConfigMap
 from stackanetes.manifest import Manifest
-from stackanetes.common.utils import (check_if_namespace_exist,
+from stackanetes.common.utils import (check_if_namespace_exists,
                                       create_namespace, get_kubectl_command)
 
 
@@ -37,7 +37,7 @@ class K8sInstance(object):
         self.service_type = service_name.split("-")[0]
         self.service_dir = service_dir
         self._load_service_variables()
-        if not check_if_namespace_exist(self.namespace):
+        if not check_if_namespace_exists(self.namespace):
             create_namespace(CONF.stackanetes.namespace)
         self._load_configmaps()
 
@@ -56,25 +56,24 @@ class K8sInstance(object):
         self.files = variables.get('files', [])
         self.containers = variables.get('containers', [])
         self.namespace = variables.get('namespace', CONF.stackanetes.namespace)
-        LOG.error("k8s_instances: {}".format(self.namespace))
 
     def _load_configmaps(self):
         if self.containers:
             files = []
             [files.extend(x.get('files', [])) for x in self.containers]
-            for file_configuration in files:
+            for configuration_file in files:
                 LOG.debug("Preparing configmap: {} for {}".format(
-                    file_configuration['configmap_name'], self.service_name))
-                file_configuration['namespace'] = self.namespace
-                configmap = ConfigMap(self.service_dir, file_configuration)
+                    configuration_file['configmap_name'], self.service_name))
+                configuration_file['namespace'] = self.namespace
+                configmap = ConfigMap(self.service_dir, configuration_file)
                 configmap.remove()
                 configmap.upload()
 
-        for file_configuration in self.files:
+        for configuration_file in self.files:
             LOG.debug("Preparing configmap: {} for {}".format(
-                file_configuration['configmap_name'], self.service_name))
-            file_configuration['namespace'] = self.namespace
-            configmap = ConfigMap(self.service_dir, file_configuration)
+                configuration_file['configmap_name'], self.service_name))
+            configuration_file['namespace'] = self.namespace
+            configmap = ConfigMap(self.service_dir, configuration_file)
             configmap.remove()
             configmap.upload()
 

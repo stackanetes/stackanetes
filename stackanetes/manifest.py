@@ -45,7 +45,6 @@ class Manifest(object):
         self.host_network = configuration.get('host_network', False)
         self.namespace = configuration.get('namespace',
                                            CONF.stackanetes.namespace)
-        LOG.error("manifest: {}".format(self.namespace))
         self.annotations = configuration.get('annotations', {})
         self.ports = configuration.get('ports', [])
         self.host_ports = configuration.get('host_ports', [])

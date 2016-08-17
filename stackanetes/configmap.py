@@ -48,7 +48,6 @@ class ConfigMap(object):
             'ceph_admin_keyring': CONF.ceph['ceph_admin_keyring'],
             'uuid': CONF.ceph['uuid'],
         }
-        LOG.error("configmap: {}".format(self.variables['namespace']))
 
     def _set_type(self, template_path):
         self.type = template_path.split('/')[0]
