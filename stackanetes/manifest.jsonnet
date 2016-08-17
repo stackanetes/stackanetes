@@ -37,26 +37,22 @@ kpm.package({
   },
 
   local dependencies = [
+    // Utility services.
+    if $.variables.ingress_enabled == true then
+      { name: "quentinm/traefik" },
+
     // Data plane.
     { name: "quentinm/mariadb" },
     { name: "quentinm/rabbitmq" },
     { name: "quentinm/memcached" },
+    if $.variables.ceph_enabled == true then
+      { name: "quentinm/rados-gateway" },
 
     // OpenStack services.
     { name: "quentinm/keystone" },
     { name: "quentinm/glance" },
     { name: "quentinm/horizon" },
-  ]
-  // Ceph-specific dependencies
-  + (if $.variables.ceph_enabled == true then
-  [
-    { name: "quentinm/rados-gateway" }
-  ] else [ ])
-  // Ingress-specific dependencies
-  + (if $.variables.ingress_enabled == true then
-  [
-    { name: "quentinm/traefik" }
-  ] else [ ]),
+  ],
 
   deploy: [defaults.set_vars(dependency, $.variables) for dependency in dependencies]
 }, params)

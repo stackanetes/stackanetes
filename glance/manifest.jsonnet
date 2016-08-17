@@ -192,17 +192,16 @@ kpm.package({
       name: "glance-registry",
       type: "service",
     },
-  ]
-  // Ingresses.
-  + if $.variables.network.ingress.enabled == true then
-  [
-    {
-      file: "api/ingress.yaml",
-      template: (importstr "templates/api/ingress.yaml"),
-      name: "glance-api",
-      type: "ingress",
-    },
-  ] else [ ],
+
+    // Ingresses.
+    if $.variables.network.ingress.enabled == true then
+      {
+        file: "api/ingress.yaml",
+        template: (importstr "templates/api/ingress.yaml"),
+        name: "glance-api",
+        type: "ingress",
+      },
+  ],
 
   deploy: [
     {

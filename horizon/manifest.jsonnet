@@ -87,17 +87,16 @@ kpm.package({
       name: "horizon",
       type: "service",
     },
-  ]
-  // Ingresses.
-  + if $.variables.network.ingress.enabled == true then
-  [
-    {
-      file: "ingress.yaml",
-      template: (importstr "templates/ingress.yaml"),
-      name: "horizon",
-      type: "ingress",
-    },
-  ] else [ ],
+
+    // Ingresses.
+    if $.variables.network.ingress.enabled == true then
+      {
+        file: "ingress.yaml",
+        template: (importstr "templates/ingress.yaml"),
+        name: "horizon",
+        type: "ingress",
+      },
+  ],
 
   deploy: [
     {

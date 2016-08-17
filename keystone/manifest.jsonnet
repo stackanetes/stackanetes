@@ -21,7 +21,7 @@ kpm.package({
 
       image: {
         base: "quay.io/stackanetes/stackanetes-%s:barcelona",
-        
+
         init: $.variables.deployment.image.base % "kolla-toolbox",
         api: $.variables.deployment.image.base % "keystone-api",
       },
@@ -136,17 +136,16 @@ kpm.package({
       name: "keystone-api",
       type: "service",
     },
-  ]
-  // Ingresses.
-  + if $.variables.network.ingress.enabled == true then
-  [
-    {
-      file: "api/ingress.yaml",
-      template: (importstr "templates/ingress.yaml"),
-      name: "keystone-api",
-      type: "ingress",
-    },
-  ] else [ ],
+
+    // Ingresses.
+    if $.variables.network.ingress.enabled == true then
+      {
+        file: "api/ingress.yaml",
+        template: (importstr "templates/ingress.yaml"),
+        name: "keystone-api",
+        type: "ingress",
+      },
+  ],
 
   deploy: [
     {
