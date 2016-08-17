@@ -47,6 +47,11 @@ containers:
         container_path: /etc/ceph
         templates:
         - rgw/templates/ceph.client.admin.keyring.j2
+      - file_name: hosts
+        configmap_name: hosts
+        container_path: /etc
+        templates:
+        - neutron/templates/hosts.j2
     mounts:
       - container_path: /lib/modules
         name: lib-modules
