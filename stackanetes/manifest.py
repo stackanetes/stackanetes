@@ -26,6 +26,7 @@ GENERIC_TYPES = ['job', 'deployment', 'daemonset']
 CUSTOM_TYPES = ['fluentd-elasticsearch', 'rgw']
 DEPENDENCY_PREFIX = "DEPENDENCY_"
 
+
 class Manifest(object):
     def __init__(self, configuration, service_dir):
         self.service_dir = service_dir
@@ -42,6 +43,7 @@ class Manifest(object):
         self.external_ip = CONF.stackanetes.external_ip
         self.image_prefix = CONF.stackanetes.image_prefix
         self.host_network = configuration.get('host_network', False)
+        self.host_pid = configuration.get('host_pid', False)
         self.namespace = CONF.stackanetes.namespace
         self.annotations = configuration.get('annotations', {})
         self.ports = configuration.get('ports', [])

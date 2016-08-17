@@ -45,6 +45,9 @@ spec:
         {{ key }}: {{value}}
 {%- endfor %}
     spec:
+{%- if host_pid %}
+      hostPID: true
+{%- endif %}
       nodeSelector:
         {{ label }}: enabled
       {%- if  not non_root %}
