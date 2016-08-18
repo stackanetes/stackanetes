@@ -40,6 +40,7 @@
       swift_user: "glance:swift",
       ceph_admin_keyring: env.ceph_admin_keyring,
       ceph_monitors: env.ceph_monitors,
+      secret_uuid: env.ceph_rbd_secret_uuid,
     },
 
     local rabbitmq = {
@@ -99,6 +100,16 @@
       database: database,
       keystone: keystone,
       rados_gateway: rados_gateway,
+      misc: misc,
+    },
+
+    "quentinm/cinder": {
+      deployment: deployment,
+      network: network,
+      database: database,
+      keystone: keystone,
+      rados_gateway: rados_gateway,
+      rabbitmq: rabbitmq,
       misc: misc,
     },
 

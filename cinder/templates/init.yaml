@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: cinder-init
+          image: {{ deployment.image.init }}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/init.sh"
+            - name: DEPENDENCY_SERVICE
+              value: "mariadb,keystone-api"
+            - name: DEPENDENCY_CONFIG
+              value: "/tmp/init.sh"
+            - name: ANSIBLE_LIBRARY
+              value: /usr/share/ansible/
+          volumeMounts:
+            - name: initsh
+              mountPath: /configmaps/init.sh
+      volumes:
+        - name: initsh
+          configMap:
+            name: cinder-initsh

@@ -1,0 +1,10 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+spec:
+  rules:
+  - host: {{ network.ingress.named_host }}
+    http:
+      paths:
+      -  backend:
+          serviceName: cinder-api
+          servicePort: {{ network.port }}

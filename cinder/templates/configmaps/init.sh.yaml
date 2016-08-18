@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  init.sh: |-
+    #!/bin/bash
+    set -ex
+
+    ansible localhost -vvv -m mysql_db -a "login_host='{{ database.address }}' login_port='{{ database.port }}' login_user='{{ database.root_user }}' login_password='{{ database.root_password }}' name='{{ database.cinder_database_name }}'"
+    ansible localhost -vvv -m mysql_user -a "login_host='{{ database.address }}' login_port='{{ database.port }}' login_user='{{ database.root_user }}' login_password='{{ database.root_password }}' name='{{ database.cinder_user }}' password='{{ database.cinder_password }}' host='%' priv='{{ database.cinder_database_name }}.*:ALL' append_privs='yes'"
+
+    ansible localhost -vvv -m kolla_keystone_service -a "service_name=cinder service_type=volume description='Openstack Block Storage' endpoint_region={{ keystone.cinder_region_name }} url='http://cinder-api:{{ network.port.api }}/v2/%(tenant_id)s' region_name={{ keystone.cinder_region_name }} interface=admin auth='{{ keystone.auth }}' " -e "{'keystone.auth ':{{ keystone.auth  }}}"
+    ansible localhost -vvv -m kolla_keystone_service -a "service_name=cinderv2 service_type=volumev2 description='Openstack Block Storage' endpoint_region={{ keystone.cinder_region_name }} url='http://cinder-api:{{ network.port.api }}/v2/%(tenant_id)s' region_name={{ keystone.cinder_region_name }} interface=admin auth='{{ keystone.auth }}' " -e "{'keystone.auth ':{{ keystone.auth  }}}"
+
+    ansible localhost -vvv -m kolla_keystone_service -a "service_name=cinder service_type=volume description='Openstack Block Storage' endpoint_region={{ keystone.cinder_region_name }} url='http://cinder-api:{{ network.port.api }}/v2/%(tenant_id)s' region_name={{ keystone.cinder_region_name }} interface=internal auth='{{ keystone.auth }}'"
+    ansible localhost -vvv -m kolla_keystone_service -a "service_name=cinderv2 service_type=volumev2 description='Openstack Block Storage' endpoint_region={{ keystone.cinder_region_name }} url='http://cinder-api:{{ network.port.api }}/v2/%(tenant_id)s' region_name={{ keystone.cinder_region_name }} interface=internal auth='{{ keystone.auth }}'"
+
+    {% if network.ingress.enabled -%}
+      ansible localhost -vvv -m kolla_keystone_service -a "service_name=cinder service_type=volume description='Openstack Block Storage' endpoint_region={{ keystone.cinder_region_name }} url='http://{{ network.ingress.named_host}}:{{ network.ingress.port }}/v2/%(tenant_id)s' region_name={{ keystone.cinder_region_name }} interface=public auth='{{ keystone.auth  }}'"
+      ansible localhost -vvv -m kolla_keystone_service -a "service_name=cinderv2 service_type=volumev2 description='Openstack Block Storage' endpoint_region={{ keystone.cinder_region_name }} url='http://{{ network.ingress.named_host}}:{{ network.ingress.port }}/v2/%(tenant_id)s' region_name={{ keystone.cinder_region_name }} interface=public auth='{{ keystone.auth  }}'"
+    {%- else -%}
+      ansible localhost -vvv -m kolla_keystone_service -a "service_name=cinder service_type=volume description='Openstack Block Storage' endpoint_region={{ keystone.cinder_region_name }} url='http://cinder-api:{{ network.port.api }}/v2/%(tenant_id)s' region_name={{ keystone.cinder_region_name }} interface=public auth='{{ keystone.auth }}'"
+      ansible localhost -vvv -m kolla_keystone_service -a "service_name=cinderv2 service_type=volumev2 description='Openstack Block Storage' endpoint_region={{ keystone.cinder_region_name }} url='http://cinder-api:{{ network.port.api }}/v2/%(tenant_id)s' region_name={{ keystone.cinder_region_name }} interface=public auth='{{ keystone.auth }}'"
+    {%- endif %}
+
+    ansible localhost -vvv  -m kolla_keystone_user -a "project=service user=cinder password={{ cinder_keystone_password }} role=admin region_name={{ keystone.cinder_region_name }} auth='{{ keystone.auth  }}'"
