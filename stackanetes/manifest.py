@@ -32,7 +32,7 @@ class Manifest(object):
         self.service_dir = service_dir
         self.type = configuration['type']
         self.service_name = configuration['name']
-        self.label = configuration.get('label')
+        self.label = configuration.get('label', None)
         self.external_ip_enabled = configuration.get('external_ip_enabled',
                                                      False)
         self.replicas = configuration.get('replicas', CONF.stackanetes.replicas)

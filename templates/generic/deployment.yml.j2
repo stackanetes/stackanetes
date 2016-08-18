@@ -48,8 +48,10 @@ spec:
 {%- if host_pid %}
       hostPID: true
 {%- endif %}
+{%- if label %}
       nodeSelector:
         {{ label }}: enabled
+{% endif %}
       {%- if  not non_root %}
       # TODO(DTadrzak): it must be removed in future
       securityContext:

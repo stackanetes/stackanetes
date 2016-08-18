@@ -47,8 +47,10 @@ spec:
 {%- if host_pid %}
       hostPID: true
 {%- endif %}
+{%- if label %}
       nodeSelector:
         {{ label }}: enabled
+{% endif %}
       securityContext:
         runAsUser: 0
       dnsPolicy: ClusterFirst

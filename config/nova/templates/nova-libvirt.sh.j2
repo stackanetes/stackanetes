@@ -31,4 +31,4 @@ ceph auth get client.cinder -o /etc/ceph/ceph.client.cinder.keyring
 bash /tmp/nova-libvirt-cinder-hack.sh &
 {%- endif %}
 
-libvirtd -v --listen
+exec libvirtd -v --listen
