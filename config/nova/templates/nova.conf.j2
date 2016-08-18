@@ -138,13 +138,13 @@ auth_plugin = password
 project_domain_id = default
 user_domain_id = default
 project_name = service
-username = nova
+username = neutron
 password = {{ nova_keystone_password }}
 
 [libvirt]
 connection_uri = "qemu+tcp://{{ get_ip_address }}/system"
-{% if ceph_enabled %}
 images_type = qcow2
+{% if ceph_enabled %}
 images_rbd_pool = {{ ceph_nova_pool_name }}
 images_rbd_ceph_conf = /etc/ceph/ceph.conf
 rbd_user = cinder

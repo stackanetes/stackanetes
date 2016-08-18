@@ -4,10 +4,11 @@ debug = true
 mechanism_drivers = openvswitch,l2population
 
 [securitygroup]
-firewall_driver = neutron.agent.firewall.NoopFirewallDriver
+firewall_driver = noop
 
 [agent]
 tunnel_types = vxlan
+# TODO(DTadrzak): FIX ME
 l2_population = false
 arp_responder = true
 
