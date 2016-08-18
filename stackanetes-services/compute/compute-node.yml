@@ -2,7 +2,7 @@ type: generic/daemonset
 name: compute-node
 label: openstack-compute-node
 host_network: True
-host_pid: true
+host_pid: True
 ports: []
 dependencies:
   service:
