@@ -4,6 +4,7 @@ debug = true
 mechanism_drivers = openvswitch,l2population
 
 [securitygroup]
+# TODO(DTadrzak): FIX ME
 firewall_driver = noop
 
 [agent]
@@ -17,5 +18,6 @@ bridge_mappings = physnet1:{{ neutron_bridge_name }}
 local_ip = {{ get_ip_address }}
 
 [vxlan]
+# TODO(DTadrzak): FIX ME
 l2_population = false
 local_ip = {{ get_ip_address }}

@@ -1,6 +1,7 @@
 # nova.conf
 [DEFAULT]
 debug = {{ nova_logging_debug }}
+# TODO(DTadrzak): FIX ME
 vif_plugging_is_fatal = False
 vif_plugging_timeout = 10
 default_ephemeral_format = ext3
@@ -23,8 +24,9 @@ ec2_workers = {{ workers }}
 notification_driver = noop
 
 use_neutron = True
-security_group_api = nova
+security_group_api = neutron
 network_api_class = nova.network.neutronv2.api.API
+# TODO(DTadrzak): FIX ME
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 
 {% if neutron_plugin_agent == "openvswitch" %}
@@ -138,7 +140,7 @@ auth_plugin = password
 project_domain_id = default
 user_domain_id = default
 project_name = service
-username = neutron
+username = nova
 password = {{ nova_keystone_password }}
 
 [libvirt]
