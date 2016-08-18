@@ -5,4 +5,4 @@ ceph auth get client.cinder -o /etc/ceph/ceph.client.cinder.keyring
 
 {% endif %}
 
-nova-compute --config-file /etc/nova/nova.conf
+exec nova-compute --config-file /etc/nova/nova.conf

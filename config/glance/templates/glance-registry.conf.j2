@@ -7,8 +7,11 @@ bind_host = {{ get_ip_address }}
 bind_port = {{ glance_registry_port }}
 
 workers = {{ workers }}
+
 [database]
 connection = mysql+pymysql://{{ glance_database_user }}:{{ glance_database_password }}@{{ glance_database_address }}/{{ glance_database_name }}
+max_pool_size = {{ workers }}
+max_overflow  = {{ workers }}
 
 [keystone_authtoken]
 auth_uri = http://{{ keystone_auth_host }}:{{ keystone_public_port }}

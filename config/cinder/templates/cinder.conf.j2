@@ -11,6 +11,7 @@ glance_api_version = 2
 
 os_region_name = {{ openstack_region_name }}
 
+osapi_volume_workers = {{ workers }}
 osapi_volume_listen = {{ get_ip_address }}
 osapi_volume_listen_port = {{ cinder_api_port }}
 
@@ -33,6 +34,8 @@ restore_discard_excess_bytes = true
 
 [database]
 connection = mysql+pymysql://{{ cinder_database_user }}:{{ cinder_database_password }}@{{ cinder_database_address }}/{{ cinder_database_name }}
+max_pool_size = {{ workers }}
+max_overflow  = {{ workers }}
 
 [keystone_authtoken]
 auth_uri = http://{{ keystone_auth_host }}:{{ keystone_public_port }}

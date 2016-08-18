@@ -2,6 +2,7 @@ type: generic/daemonset
 name: compute-node
 label: openstack-compute-node
 host_network: True
+host_pid: True
 ports: []
 dependencies:
   service:
@@ -47,6 +48,11 @@ containers:
         container_path: /etc/ceph
         templates:
         - rgw/templates/ceph.client.admin.keyring.j2
+      - file_name: hosts
+        configmap_name: hosts
+        container_path: /etc
+        templates:
+        - neutron/templates/hosts.j2
     mounts:
       - container_path: /lib/modules
         name: lib-modules

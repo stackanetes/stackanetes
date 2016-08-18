@@ -32,7 +32,7 @@ class Manifest(object):
         self.service_dir = service_dir
         self.type = configuration['type']
         self.service_name = configuration['name']
-        self.label = configuration.get('label')
+        self.label = configuration.get('label', None)
         self.external_ip_enabled = configuration.get('external_ip_enabled',
                                                      False)
         self.replicas = configuration.get('replicas', CONF.stackanetes.replicas)
@@ -45,6 +45,7 @@ class Manifest(object):
         self.host_network = configuration.get('host_network', False)
         self.namespace = configuration.get('namespace',
                                            CONF.stackanetes.namespace)
+        self.host_pid = configuration.get('host_pid', False)
         self.annotations = configuration.get('annotations', {})
         self.ports = configuration.get('ports', [])
         self.host_ports = configuration.get('host_ports', [])
