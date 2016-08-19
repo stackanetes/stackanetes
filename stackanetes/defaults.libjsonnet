@@ -36,7 +36,6 @@
 
     local rados_gateway = {
       enabled: env.ceph_enabled,
-      swift_auth: "http://rados-gateway:6000/auth/1.0",
       swift_user: "glance:swift",
       ceph_admin_keyring: env.ceph_admin_keyring,
       ceph_monitors: env.ceph_monitors,
@@ -49,12 +48,14 @@
     },
 
     local keystone = {
-      auth_uri: "http://keystone-api:5000",
-      auth_url: "http://keystone-api:35357",
       admin_user: "admin",
       admin_password: "password",
       admin_project_name: "admin",
       admin_region_name: "RegionOne",
+    },
+
+    local neutron = {
+      metadata_secret: "password",
     },
 
     local misc = {
@@ -110,6 +111,17 @@
       keystone: keystone,
       rados_gateway: rados_gateway,
       rabbitmq: rabbitmq,
+      misc: misc,
+    },
+
+    "quentinm/nova": {
+      deployment: deployment,
+      network: network,
+      database: database,
+      keystone: keystone,
+      rados_gateway: rados_gateway,
+      rabbitmq: rabbitmq,
+      neutron: neutron,
       misc: misc,
     },
 

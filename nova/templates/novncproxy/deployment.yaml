@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: {{ deployment.replicas }}
+  template:
+    metadata:
+      labels:
+        app: nova-novncproxy
+    spec:
+      nodeSelector:
+        {{ deployment.node_label }}: enabled
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: nova-novncproxy
+          image: {{ deployment.image.novncproxy }}
+          imagePullPolicy: Always
+          # TODO(DTadrzak): it must be removed in future
+          securityContext:
+            privileged: true
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "nova-novncproxy --config-file /etc/nova/nova.conf"
+            - name: DEPENDENCY_JOBS
+              value: "nova-api-db-sync"
+            - name: DEPENDENCY_SERVICE
+              value: "nova-api"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/nova/nova.conf"
+          ports:
+            - containerPort: {{ network.port.novncproxy }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ network.port.novncproxy }}
+          volumeMounts:
+            - name: novaconf
+              mountPath: /configmaps/nova.conf
+      volumes:
+        - name: novaconf
+          configMap:
+            name: nova-novaconf

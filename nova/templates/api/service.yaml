@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+spec:
+  ports:
+  - name: api
+    port: {{ network.port.api }}
+  - name: metadata
+    port: {{ network.port.metadata }}
+  selector:
+    app: nova-api

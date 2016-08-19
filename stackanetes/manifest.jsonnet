@@ -55,6 +55,7 @@ kpm.package({
     if $.variables.ceph_enabled == true then
       { name: "quentinm/cinder" },
     { name: "quentinm/horizon" },
+    { name: "quentinm/nova" },
   ],
 
   deploy: [defaults.set_vars(dependency, $.variables) for dependency in dependencies]

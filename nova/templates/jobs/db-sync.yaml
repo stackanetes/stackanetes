@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: nova-db-sync
+          image: {{ deployment.image.db_sync }}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/db-sync.sh"
+            - name: DEPENDENCY_JOBS
+              value: "nova-init"
+            - name: DEPENDENCY_SERVICE
+              value: "mariadb"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/nova/nova.conf,/tmp/db-sync.sh"
+          volumeMounts:
+            - name: novaconf
+              mountPath: /configmaps/nova.conf
+            - name: dbsyncsh
+              mountPath: /configmaps/db-sync.sh
+      volumes:
+        - name: novaconf
+          configMap:
+            name: nova-novaconf
+        - name: dbsyncsh
+          configMap:
+            name: nova-dbsyncsh
