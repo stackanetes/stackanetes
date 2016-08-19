@@ -5,6 +5,10 @@ debug = {{ nova_logging_debug }}
 vif_plugging_is_fatal = False
 vif_plugging_timeout = 10
 default_ephemeral_format = ext3
+scheduler_host_subset_size = 30
+ram_allocation_ratio=1.0
+disk_allocation_ratio=1.0
+cpu_allocation_ratio=8.0
 
 api_paste_config = /etc/nova/api-paste.ini
 state_path = /var/lib/nova
