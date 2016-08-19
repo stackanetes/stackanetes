@@ -25,6 +25,7 @@ kpm.package({
 
     network: {
       ip_address: "{{ .IP }}",
+      
       port: {
         mariadb: 3306,
         wsrep: 4567,

@@ -32,52 +32,47 @@ kpm.package({
 
     network: {
       ip_address: "{{ .IP }}",
+
       port: {
         api: 9292,
         registry: 9191,
       },
+      
       ingress: {
-        // External dependency configuration.
         enabled: true,
         host: "%s.openstack.cluster",
         port: 30080,
 
-        // Glance configuration.
         named_host: $.variables.network.ingress.host % "image",
       },
     },
 
     database: {
-      // External dependency configuration.
       address: "mariadb",
       port: 3306,
       root_user: "root",
       root_password: "password",
 
-      // Glance configuration.
       glance_user: "glance",
       glance_password: "password",
       glance_database_name: "glance",
     },
 
     keystone: {
-      // External dependency configuration.
       auth_uri: "http://keystone-api:5000",
       auth_url: "http://keystone-api:35357",
       admin_user: "admin",
       admin_password: "password",
       admin_project_name: "admin",
       admin_region_name: "RegionOne",
+      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'default'}" % [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name],
 
-      // Glance configuration.
       glance_user: "glance",
       glance_password: "password",
       glance_region_name: "RegionOne",
-      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'default'}" % [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name],
     },
 
     rados_gateway: {
-      // External dependency configuration.
       enabled: true,
       swift_auth: "http://rados-gateway:6000/auth/1.0",
       swift_user: "glance:swift",

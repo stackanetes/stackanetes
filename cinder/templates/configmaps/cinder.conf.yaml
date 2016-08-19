@@ -10,7 +10,7 @@ data:
     enable_v1_api=false
     volume_name_template = %s
 
-    glance_api_servers = {{ glance_location }}
+    glance_api_servers = {{ glance.api_url }}
     glance_api_version = 2
 
     os_region_name = {{ keystone.cinder_region_name }}
@@ -29,7 +29,7 @@ data:
 
     backup_driver = cinder.backup.drivers.ceph
     backup_ceph_conf = /etc/ceph/ceph.conf
-    backup_ceph_user = {{ rados_gateway.cinder_backup_user }}
+    backup_ceph_user = {{ rados_gateway.cinder_user }}
     backup_ceph_chunk_size = 134217728
     backup_ceph_pool = {{ rados_gateway.cinder_backup_pool }}
     backup_ceph_stripe_unit = 0

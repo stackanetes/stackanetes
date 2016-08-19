@@ -27,6 +27,7 @@ kpm.package({
 
     network: {
       port: 80,
+      
       ingress: {
         // External dependency configuration.
         enabled: true,

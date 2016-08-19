@@ -23,35 +23,34 @@ kpm.package({
         base: "quay.io/stackanetes/stackanetes-%s:barcelona",
 
         init: $.variables.deployment.image.base % "kolla-toolbox",
+        db_sync: $.variables.deployment.image.base % "keystone-api",
         api: $.variables.deployment.image.base % "keystone-api",
       },
     },
 
     network: {
       ip_address: "{{ .IP }}",
+
       port: {
         public: 5000,
         admin: 35357,
       },
+
       ingress: {
-        // External dependency configuration.
         enabled: true,
         host: "%s.openstack.cluster",
         port: 30080,
 
-        // Glance configuration.
         named_host: $.variables.network.ingress.host % "identity",
       },
     },
 
     database: {
-      // External dependency configuration.
       address: "mariadb",
       port: 3306,
       root_user: "root",
       root_password: "password",
 
-      // Keystone configuration.
       keystone_user: "keystone",
       keystone_password: "password",
       keystone_database_name: "keystone",

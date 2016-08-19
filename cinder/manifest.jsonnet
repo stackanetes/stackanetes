@@ -33,6 +33,7 @@ kpm.package({
     network: {
       ip_address: "{{ .IP }}",
       port: 8776,
+
       ingress: {
         enabled: true,
         host: "%s.openstack.cluster",
@@ -60,11 +61,11 @@ kpm.package({
       admin_password: "password",
       admin_project_name: "admin",
       admin_region_name: "RegionOne",
+      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'default'}" % [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name],
 
       cinder_user: "cinder",
       cinder_password: "password",
       cinder_region_name: "RegionOne",
-      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'default'}" % [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name],
     },
 
     rabbitmq: {
@@ -80,12 +81,15 @@ kpm.package({
       secret_uuid: "",
 
       cinder_user: "cinder",
-      cinder_pool: "cinder",
-      cinder_backup_user: "cinder-backup",
+      cinder_pool: "volumes",
       cinder_backup_pool: "backups",
+      nova_pool: "vms",
+      glance_pool: "images",
     },
 
-    glance_location: "http://glance-api:9292",
+    glance: {
+      api_url: "http://glance-api:9292",
+    },
 
     misc: {
       debug: false,

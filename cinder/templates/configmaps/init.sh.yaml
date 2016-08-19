@@ -22,4 +22,4 @@ data:
       ansible localhost -vvv -m kolla_keystone_service -a "service_name=cinderv2 service_type=volumev2 description='Openstack Block Storage' endpoint_region={{ keystone.cinder_region_name }} url='http://cinder-api:{{ network.port.api }}/v2/%(tenant_id)s' region_name={{ keystone.cinder_region_name }} interface=public auth='{{ keystone.auth }}'"
     {%- endif %}
 
-    ansible localhost -vvv  -m kolla_keystone_user -a "project=service user=cinder password={{ cinder_keystone_password }} role=admin region_name={{ keystone.cinder_region_name }} auth='{{ keystone.auth  }}'"
+    ansible localhost -vvv  -m kolla_keystone_user -a "project=service user={{ keystone.cinder_user }} password={{ keystone.cinder_password }} role=admin region_name={{ keystone.cinder_region_name }} auth='{{ keystone.auth  }}'"

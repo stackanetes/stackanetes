@@ -31,7 +31,7 @@ spec:
             - name: DEPENDENCY_JOBS
               value: "glance-init,glance-db-sync"
             - name: DEPENDENCY_SERVICE
-              value: "mariadb,rabbitmq,keystone-api,glance-api,rados-gateway"
+              value: "mariadb,rabbitmq,keystone-api,glance-api"
             - name: DEPENDENCY_CONFIG
               value: "/etc/glance/glance-registry.conf"
           ports:
