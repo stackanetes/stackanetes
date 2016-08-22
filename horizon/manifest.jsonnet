@@ -26,15 +26,14 @@ kpm.package({
     },
 
     network: {
+      external_ips: [],
       port: 80,
-      
+
       ingress: {
-        // External dependency configuration.
         enabled: true,
         host: "%s.openstack.cluster",
         port: 30080,
 
-        // Horizon configuration.
         named_host: $.variables.network.ingress.host % "horizon",
       },
     },
