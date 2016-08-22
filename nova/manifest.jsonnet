@@ -87,6 +87,7 @@ kpm.package({
 
       neutron_user: "neutron",
       neutron_password: "password",
+      neutron_region_name: "RegionOne",
 
       nova_user: "nova",
       nova_password: "password",

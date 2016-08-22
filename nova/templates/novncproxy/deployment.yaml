@@ -33,7 +33,7 @@ spec:
             - name: COMMAND
               value: "nova-novncproxy --config-file /etc/nova/nova.conf"
             - name: DEPENDENCY_JOBS
-              value: "nova-api-db-sync"
+              value: "nova-db-sync"
             - name: DEPENDENCY_SERVICE
               value: "nova-api"
             - name: DEPENDENCY_CONFIG
