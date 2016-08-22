@@ -20,6 +20,10 @@
 
     local network = {
       external_ips: env.external_ips,
+      dns: {
+        ip: env.dns_ip,
+        domain: env.dns_domain,
+      },
       ingress: {
         enabled: env.ingress_enabled,
         host: env.ingress_host,

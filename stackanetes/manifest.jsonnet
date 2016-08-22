@@ -22,6 +22,8 @@ kpm.package({
     external_ips: [
       "192.168.0.201",
     ],
+    dns_ip: "10.3.0.1",
+    dns_domain: "cluster.local",
 
     ceph_enabled: true,
     ceph_monitors: [

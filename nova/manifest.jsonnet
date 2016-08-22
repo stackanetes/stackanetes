@@ -17,6 +17,8 @@ kpm.package({
   variables: {
     deployment: {
       node_label: "openstack-control-plane",
+      compute_node_label: "openstack-compute-node",
+
       replicas: 1,
 
       image: {
@@ -29,6 +31,8 @@ kpm.package({
         scheduler: $.variables.deployment.image.base % "nova-scheduler",
         novncproxy: $.variables.deployment.image.base % "nova-novncproxy",
         consoleauth: $.variables.deployment.image.base % "nova-consoleauth",
+        compute: $.variables.deployment.image.base % "nova-compute",
+        libvirt: $.variables.deployment.image.base % "nova-libvirt",
         post: $.variables.deployment.image.base % "kolla-toolbox",
       },
     },
@@ -36,6 +40,11 @@ kpm.package({
     network: {
       ip_address: "{{ .IP }}",
       external_ips: [],
+
+      dns:  {
+        ip: "10.3.0.1",
+        domain: "cluster.local",
+      },
 
       port: {
         api: 8774,
@@ -143,6 +152,55 @@ kpm.package({
       type: "configmap",
     },
 
+    {
+      file: "configmaps/nova.sh.yaml",
+      template: (importstr "templates/configmaps/nova.sh.yaml"),
+      name: "nova-novash",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/resolv.conf.yaml",
+      template: (importstr "templates/configmaps/resolv.conf.yaml"),
+      name: "nova-resolvconf",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/libvirtd.conf.yaml",
+      template: (importstr "templates/configmaps/libvirtd.conf.yaml"),
+      name: "nova-libvirtdconf",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/ceph.client.admin.keyring.yaml",
+      template: (importstr "templates/configmaps/ceph.client.admin.keyring.yaml"),
+      name: "nova-cephclientadminkeyring",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/ceph.conf.yaml",
+      template: (importstr "templates/configmaps/ceph.conf.yaml"),
+      name: "nova-cephconf",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/libvirt.sh.yaml",
+      template: (importstr "templates/configmaps/libvirt.sh.yaml"),
+      name: "nova-libvirtsh",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/virsh-set-secret.sh.yaml",
+      template: (importstr "templates/configmaps/virsh-set-secret.sh.yaml"),
+      name: "nova-virshsetsecretsh",
+      type: "configmap",
+    },
+
     // Init.
     {
       file: "jobs/init.yaml",
@@ -183,14 +241,14 @@ kpm.package({
     {
       file: "auxiliary/scheduler.yaml",
       template: (importstr "templates/auxiliary/conductor.yaml"),
-      name: "nova-conductor",
+      name: "nova-scheduler",
       type: "deployment",
     },
 
     {
       file: "auxiliary/consoleauth.yaml",
       template: (importstr "templates/auxiliary/conductor.yaml"),
-      name: "nova-conductor",
+      name: "nova-consoleauth",
       type: "deployment",
     },
 

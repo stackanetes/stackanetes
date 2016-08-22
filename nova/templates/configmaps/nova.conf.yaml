@@ -37,9 +37,15 @@ data:
     novncproxy_host = {{ network.ip_address }}
     novncproxy_port = {{ network.port.novncproxy }}
     vncserver_listen = 0.0.0.0
-    vncserver_proxyclient_address = {{ network.ipaddress }}
-    novncproxy_base_url = http://{{ external_ip }}:6080/vnc_auto.html
+    vncserver_proxyclient_address = {{ network.ip_address }}
     vnc_enabled = True
+    {% if network.ingress.enaled %}
+    novncproxy_base_url = http://{{ network.ingress.named_host.novncproxy }}:{{ network.ingress.port }}/vnc_auto.html
+    {% elif network.external_ips|length > 0 %}
+    novncproxy_base_url = http://{{ network.external_ips[0] }}:{{ network.port.novncproxy }}/vnc_auto.html
+    {% else %}
+    novncproxy_base_url = http://{{ network.ip_address }}:{{ network.port.novncproxy }}/vnc_auto.html
+    {% endif %}
 
     [oslo_messaging_rabbit]
     rabbit_userid = {{ rabbitmq.admin_user }}

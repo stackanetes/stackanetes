@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  libvirt.sh: |-
+    #!/bin/bash
+    set -ex
+
+    if [[ -f /var/run/libvirtd.pid ]]; then
+       test -d /proc/$(< /var/run/libvirtd.pid) && \
+       ( echo "Libvirtd daemon is running" && exit 10 )
+    fi
+
+    rm -f /var/run/libvirtd.pid
+
+    if [[ -c /dev/kvm ]]; then
+        chmod 660 /dev/kvm
+        chown root:kvm /dev/kvm
+    fi
+
+    # Mount xenfs for libxl to work
+    if [[ $(lsmod | grep xenfs) ]]; then
+        mount -t xenfs xenfs /proc/xen
+    fi
+
+    if [[ ! -d "/var/log/kolla/libvirt" ]]; then
+        mkdir -p /var/log/kolla/libvirt
+    fi
+    if [[ $(stat -c %a /var/log/kolla/libvirt) != "755" ]]; then
+        chmod 755 /var/log/kolla/libvirt
+    fi
+
+    {%- if rados_gateway.enabled %}
+    ceph auth get client.{{ rados_gateway.cinder_user }} -o /etc/ceph/ceph.client.{{ rados_gateway.cinder_user }}.keyring
+    bash /tmp/virsh-set-secret.sh &
+    {%- endif %}
+
+    exec libvirtd -v --listen
