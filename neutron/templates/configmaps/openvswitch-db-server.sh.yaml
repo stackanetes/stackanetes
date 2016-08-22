@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  openvswitch-db-server.sh: |-
+    #!/bin/bash
+    set -ex
+
+    mkdir -p "/run/openvswitch"
+    if [[ ! -e "/etc/openvswitch/conf.db" ]]; then
+      ovsdb-tool create "/etc/openvswitch/conf.db"
+    fi
+
+    exec /usr/sbin/ovsdb-server /etc/openvswitch/conf.db -vconsole:emer -vsyslog:err -vfile:info --remote=punix:/run/openvswitch/db.sock --log-file=/var/log/openvswitch/ovsdb-server.log
