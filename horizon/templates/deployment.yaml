@@ -35,7 +35,7 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "memcached,keystone-api"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/start.sh,/etc/apache2/conf-enabled/000-default.conf,/etc/openstack-dashboard/local_settings"
+              value: "/tmp/start.sh,/etc/apache2/sites-enabled/000-default.conf,/etc/openstack-dashboard/local_settings"
           ports:
             - containerPort: {{ network.port }}
           readinessProbe:
