@@ -3,4 +3,4 @@ kind: ConfigMap
 data:
   ceph.client.admin.keyring: |-
     [client.admin]
-        key = {{ ceph_admin_keyring }}
+        key = {{ rados_gateway.ceph_admin_keyring }}

@@ -12,8 +12,8 @@ data:
         {tcp_listeners, [
           { "{{ network.ip_address }}", {{ network.port.rabbitmq }} }
         ]},
-        {default_user, <<"{{ admin_user }}">>},
-        {default_pass, <<"{{ admin_password }}">>},
+        {default_user, <<"{{ rabbitmq.admin_user }}">>},
+        {default_pass, <<"{{ rabbitmq.admin_password }}">>},
         {cluster_partition_handling, autoheal}
       ]},
       {rabbitmq_management, [

@@ -42,7 +42,9 @@ kpm.package({
       auth_uri: "http://keystone-api:5000",
     },
 
-    memcached_location: "memcached:11211",
+    memcached: {
+      address: "memcached:11211",
+    },
 
     misc: {
       debug: true,

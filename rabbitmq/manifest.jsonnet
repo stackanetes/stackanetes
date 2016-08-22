@@ -17,6 +17,7 @@ kpm.package({
   variables: {
     deployment: {
       node_label: "openstack-control-plane",
+
       image: {
         base: "quay.io/stackanetes/stackanetes-%s:barcelona",
         rabbitmq: $.variables.deployment.image.base % "rabbitmq",
@@ -26,6 +27,7 @@ kpm.package({
     network: {
       ip_address: "{{ .IP }}",
       ip_address_erlang: "{{ .IP_ERLANG }}",
+
       port: {
         rabbitmq: 5672,
         epmd: 4369,
@@ -35,9 +37,11 @@ kpm.package({
     },
 
     # Credentials.
-    admin_user: "rabbitmq",
-    admin_password: "password",
-    erlang_cookie: "ERLANG_COOKIE",
+    rabbitmq: {
+      admin_user: "rabbitmq",
+      admin_password: "password",
+      erlang_cookie: "ERLANG_COOKIE",
+    },
   },
 
   resources: [

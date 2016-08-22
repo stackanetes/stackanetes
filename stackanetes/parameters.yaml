@@ -1,0 +1,47 @@
+deployment:
+  replicas: 1
+  image:
+    base: "quay.io/stackanetes/stackanetes-%s:barcelona"
+
+network:
+  minion_interface_name: eno0
+  dns:
+    ip: 10.3.0.1
+    domain: cluster.local
+  ingress:
+    enabled: true
+    host: "%s.openstack.cluster"
+    port: 30080
+  external_ips: []
+
+rados_gateway:
+  enabled: true
+  secret_uuid: secret
+  ceph_admin_keyring: keyring
+  ceph_monitors: []
+
+neutron:
+  metadata_secret: password
+
+rabbitmq:
+  admin_password: password
+  erlang_cookie: "ERLANG_COOKIE"
+
+database:
+  root_password: password
+  keystone_password: password
+  cinder_password: password
+  glance_password: password
+  neutron_password: password
+  nova_password: password
+
+keystone:
+  admin_password: password
+  cinder_password: password
+  glance_password: password
+  neutron_password: password
+  nova_password: password
+
+misc:
+  workers: 8
+  debug: false

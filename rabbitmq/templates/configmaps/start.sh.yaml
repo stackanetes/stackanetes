@@ -7,7 +7,7 @@ data:
 
     mkdir -p /var/lib/rabbitmq
 
-    echo "{{ erlang_cookie }}" > /var/lib/rabbitmq/.erlang.cookie
+    echo "{{ rabbitmq.erlang_cookie }}" > /var/lib/rabbitmq/.erlang.cookie
     chmod 400 /var/lib/rabbitmq/.erlang.cookie
 
     chown -R rabbitmq: /var/lib/rabbitmq

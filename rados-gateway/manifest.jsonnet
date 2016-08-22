@@ -28,12 +28,13 @@ kpm.package({
       port: 6000,
     },
 
-    # Ceph / Swift configuration.
-    ceph_admin_keyring: "",
-    ceph_monitors: [],
-    swift_user_uid: "glance",
-    swift_user_display_name: "User for Glance",
-    swift_user: "glance:swift",
+    rados_gateway: {
+      ceph_admin_keyring: "",
+      ceph_monitors: [],
+      swift_user_uid: "glance",
+      swift_user_display_name: "User for Glance",
+      swift_user: "glance:swift",
+    },
   },
 
   resources: [

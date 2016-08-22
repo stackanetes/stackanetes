@@ -6,7 +6,7 @@ data:
     rgw_thread_pool_size = 1024
     rgw_num_rados_handles = 100
     [mon]
-    {%- for mon in ceph_monitors %}
+    {%- for mon in rados_gateway.ceph_monitors %}
         [mon.{{mon}}]
           host = {{mon}}
           mon_addr = {{mon}}
