@@ -133,7 +133,7 @@ data:
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-            'LOCATION': '{{ memcached_location }}'
+            'LOCATION': '{{ memcached.address }}'
         }
     }
 

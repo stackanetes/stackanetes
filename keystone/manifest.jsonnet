@@ -56,11 +56,13 @@ kpm.package({
       keystone_database_name: "keystone",
     },
 
-    // Initial admin's region, project and user.
-    admin_user: "admin",
-    admin_password: "password",
-    admin_project_name: "admin",
-    admin_region_name: "RegionOne",
+    keystone: {
+      // Initial admin's region, project and user.
+      admin_user: "admin",
+      admin_password: "password",
+      admin_project_name: "admin",
+      admin_region_name: "RegionOne",
+    },
 
     misc: {
       workers: 8,

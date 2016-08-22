@@ -19,10 +19,10 @@ data:
     #wsrep_sst_receive_address={{ network.ip_address }}:{{ network.port.sst }}
 
     wsrep_provider=/usr/lib/galera/libgalera_smm.so
-    wsrep_cluster_name="{{ cluster_name }}"
-    wsrep_node_name={{ node_name }}
+    wsrep_cluster_name="{{ database.cluster_name }}"
+    wsrep_node_name={{ database.node_name }}
     wsrep_sst_method=xtrabackup-v2
-    wsrep_sst_auth=root:{{ root_password }}
+    wsrep_sst_auth=root:{{ database.root_password }}
     wsrep_slave_threads=4
 
     max_connections=1000
