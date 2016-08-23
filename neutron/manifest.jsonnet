@@ -36,7 +36,7 @@ kpm.package({
 
     network: {
       ip_address: "{{ .IP }}",
-      minion_interface_name: "eth0",
+      minion_interface_name: "eno1",
 
       dns:  {
         ip: "10.3.0.10",
