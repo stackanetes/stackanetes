@@ -7,7 +7,7 @@ function(
 
 kpm.package({
   package: {
-    name: "quentinm/stackanetes",
+    name: "stackanetes/stackanetes",
     expander: "jinja2",
     author: "Quentin Machu",
     version: "0.1.1",
@@ -20,22 +20,22 @@ kpm.package({
   deploy: [{ variables: $.variables} + dependency for dependency in [
     // Utility services.
     if $.variables.network.ingress.enabled == true then
-      { name: "quentinm/traefik" },
+      { name: "stackanetes/traefik" },
 
     // Data plane.
-    { name: "quentinm/mariadb" },
-    { name: "quentinm/rabbitmq" },
-    { name: "quentinm/memcached" },
+    { name: "stackanetes/mariadb" },
+    { name: "stackanetes/rabbitmq" },
+    { name: "stackanetes/memcached" },
     if $.variables.rados_gateway.enabled == true then
-      { name: "quentinm/rados-gateway" },
+      { name: "stackanetes/rados-gateway" },
 
     // OpenStack services.
-    { name: "quentinm/keystone" },
-    { name: "quentinm/glance" },
+    { name: "stackanetes/keystone" },
+    { name: "stackanetes/glance" },
     if $.variables.rados_gateway.enabled == true then
-      { name: "quentinm/cinder" },
-    { name: "quentinm/nova" },
-    { name: "quentinm/neutron" },
-    { name: "quentinm/horizon" },
+      { name: "stackanetes/cinder" },
+    { name: "stackanetes/nova" },
+    { name: "stackanetes/neutron" },
+    { name: "stackanetes/horizon" },
   ]]
 }, params)

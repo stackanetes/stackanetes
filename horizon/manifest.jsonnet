@@ -6,7 +6,7 @@ function(
 
 kpm.package({
   package: {
-    name: "quentinm/horizon",
+    name: "stackanetes/horizon",
     expander: "jinja2",
     author: "Quentin Machu",
     version: "0.1.0",

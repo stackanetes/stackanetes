@@ -6,7 +6,7 @@ function(
 
 kpm.package({
   package: {
-    name: "quentinm/neutron",
+    name: "stackanetes/neutron",
     expander: "jinja2",
     author: "Quentin Machu",
     version: "0.1.0",

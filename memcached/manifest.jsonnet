@@ -6,7 +6,7 @@ function(
 
 kpm.package({
   package: {
-    name: "quentinm/memcached",
+    name: "stackanetes/memcached",
     expander: "jinja2",
     author: "Quentin Machu",
     version: "0.1.0",
