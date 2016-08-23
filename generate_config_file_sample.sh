@@ -16,7 +16,7 @@ set -e
 
 GEN_CMD=oslo-config-generator
 
-if ! type "$GEN_CMD" > /dev/null; then
+if ! type -p "$GEN_CMD" > /dev/null ; then
     echo "ERROR: $GEN_CMD not installed on the system."
     exit 1
 fi
