@@ -1,144 +1,94 @@
 # Stackanetes
 
+Stackanetes is an initiative to make operating OpenStack as simple as running any application on Kubernetes.
+Stackanetes deploys standard OpenStack services into containers and uses Kubernetes’ robust application lifecycle management capabilities to deliver a single platform for companies to run OpenStack Infrastructure-as-a-Service (IaaS) and container workloads.
+
 ## Overview
 
-Stackanetes is heavily based on kolla-mesos (project abandoned).
-Link to base [kolla repo](https://github.com/openstack/kolla)
+### Services
 
-Stackanetes is an easy way to deploy OpenStack on Kubernetes. This includes the control plane (keystone, nova, etc) and a "nova compute" container that runs virtual machines (VMs) under a hypervisor.
+Stackanetes sets up the following OpenStack components:
+- Cinder (with external Ceph storage)
+- Glance (with external Ceph storage or local filesystem)
+- Horizon
+- Keystone
+- Neutron + Open vSwitch
+- Nova
 
-***_This code is heavily experimental and should only be used for demo purposes. The architecture of this project will change significantly._***
+In addition to these, a few other applications are deployed:
+- MariaDB
+- Memcached
+- RabbitMQ
+- RADOS Gateway
+- Traefik
 
-Checkout the video overview:
+Services are divided and scheduled into two groups, except from few services that run everywhere (e.g. Open vSwitch agents, Traefik):
+- The control plane, which runs all the OpenStack APIs and every other supporting applications,
+- The compute plane, which is dedicated to run Nova's virtual machines.
 
-[![Stackanetes Overview](https://img.youtube.com/vi/DPYJxYulxO4/0.jpg)](https://www.youtube.com/watch?v=DPYJxYulxO4)
+### Requirements
 
-## Requirements
+For Stackanetes to run, there is a single requirement:
+- Kubernetes 1.3+
+  - Two nodes available for scheduling,
+  - Virtualization support for compute nodes,
+  - Kubelet running with `--allow-privileged=true`,
+  - Network connectivity between the containers across nodes (e.g. flanneld),
+  - DNS add-on.
 
--  Kubernetes 1.3 cluster with minimum 2 kubernetes minions/workers
-  - see guides for [CoreOS Kubernetes](https://coreos.com/kubernetes/docs/latest/)
--  Operation system with systemd version<=225
+To deploy Stackanetes, you simply need any container runtime (e.g. rkt).
+
+### High-availability & Networking
+
+Thanks to Kubernetes' [deployments](http://kubernetes.io/docs/user-guide/deployments/), common OpenStack APIs can be made highly-available using a single parameter, called `replicas`.
+
+Internal traffic (i.e. inside the Kubernetes cluster) is load-balanced natively using Kubernetes' [services](http://kubernetes.io/docs/user-guide/services/). When Ingress is enabled, external access (i.e. from outside of the Kubernetes cluster), can be done and guaranteed using a simple Round-Robin DNS pointing to every nodes exposing Traefik (i.e. every nodes labeled to deploy Stackanetes). Traefik will then forward requests through the Kubernetes load-balancing mechanism, which has awareness of each service health.
+
+If Ceph is enabled, data availability for Cinder and Glance is assured by the storage backend itself.
+
 ## Getting started
 
-### Building Configuration
+### Customize
 
-Ensure the following packages are installed on the workstation that controls the Kubernetes cluster: git, python2.7, pip, [kubectl](https://github.com/kubernetes/kubernetes/releases) v1.3+.
+    TODO
 
-Clone this repo: `git clone https://github.com/stackanetes/stackanetes` and move into the kolla directory `cd stackanetes`.
+### Deploy
 
-Install all python dependencies from requirements.txt and generate the `/etc/stackanetes` config directory.
+First of all, at least two nodes must be labelled for Stackanetes' usage:
 
-```
-pip install -r requirements.txt
-python setup.py build && python setup.py install
-sudo ./generate_config_file_sample.sh
-```
+    kubectl label node minion1 openstack-control-plane=enabled
+    kubectl label node minion2 openstack-compute-node=enabled
 
-Now, set the following variables in /etc/stackanetes/stackanetes.conf:
+If Ingress is enabled (default), the DNS environment should be configured to resolve the following names (modulo a custom Ingress host that may have been configured) to the nodes that have been labeled:
 
-```
-[stackanetes]
-context = /home/core/context // Path to context file
-host = localhost:8001 // k8s API, this can be easily be configured by using 'kubectl proxy'
-kubectl_path = /opt/bin/kubectl // absolute path to kubectl binary
-docker_image_tag = barcelona // tag for images
-docker_registry = 192.168.0.1 // docker registry name
-minion_interface_name = eno1 // set physical interface name of minions
-dns_ip = 10.2.0.10 // ip of k8s dns
-cluster_name = cluster.local // k8s dns domain
-external_ip = 192.168.0.1 // external ip for services like horizon
-memory = 4096Mi // specify amount memory
-image-prefix = // specify image-prefixy if necessary
-namespace = stackanetes // specify kubernetes namespace
-```
+    identity.openstack.cluster
+    horizon.openstack.cluster
+    image.openstack.cluster
+    network.openstack.cluster
+    volume.openstack.cluster
+    compute.openstack.cluster
+    novnc.compute.openstack.cluster
 
-### Label kubernetes nodes
+Then,
 
-Control plane (mariadb, rabbitmq, nova-api, etc) will be labeled as such:
+    TODO
 
-```
-kubectl label node minion1 openstack-control-plane=enabled
-```
+### Access
 
-Compute node will run couple of daemonsets like (compute-node, openvswitch-node, dhcp and l3-agent):
+Once Stackanetes is entirely deployed, we can log in to Horizon or use the CLI directly.
 
-```
-kubectl label node minion2  openstack-compute-node=enabled
-```
+If Ingress is enabled, Horizon may be accessed on http://horizon.openstack.cluster:30080/. Otherwise, it will be available on port 80 of any defined external IP. The default credentials are _admin_ / _password_.
 
-## Docker images
-Stackanetes requires images based on Kolla (To be changed). Those images also need a special entrypoint. Entrypoint code can be found here:
-```
-https://github.com/stackanetes/kubernetes-entrypoint
-```
-You can also use images stored on quay.io/stackanetes.
+The file [env_openstack.sh](env_openstack.sh) contains the default environment variables required to interact with OpenStack using the `openstack` client.
 
-## Deploy OpenStack services
+### Update
 
-You can run service one by one:
+    TODO
 
-```
-stackanetes run <name-of-service>
-```
+## Limitations
 
-Or deploy all with manage_all/py script:
-
-```
-./manage_all.py run
-```
-
-To kill all of OpenStack services use the same script but with kill parameter:
-
-```
-./manage_all.py kill
-```
-## Deploy Stackanetes via stackanetes-deployer POD
-
-You can either use pre-build stackanetes-deployer docker image:
-- quay.io/stackanetes/stackanetes-deployer:barcelona
-
-or build your own image by executing
-
-```
-docker build -t stackanetes-deployer .
-```
-
-To install Stackanetes vis stackanetes-deployer POD you still have to label your nodes.
-
-in `stackanetes-deployer.yml` change environment variables to fit your need:
-- IMAGE_VERSION
-- HOST_INTERFACE
-- DOCKER_REGISTRY
-- DNS_IP
-- CLUSTER_NAME
-- EXTERNAL_IP
-- NAMESPACE
-- IMAGE_PREFIX
-
-```
-    env:
-    - name: IMAGE_VERSION
-      value: "barcelona" # tag for images
-    - name: HOST_INTERFACE
-      value: "eno2" # name of physical interface for compute node
-    - name: DOCKER_REGISTRY
-      value: "192.168.0.1" # docker registry name
-    - name: DNS_IP
-      value: "10.2.0.10" # ip of k8s dns
-    - name: CLUSTER_NAME
-      value:  "cluster.local" # k8s dns domain
-    - name: EXTERNAL_IP
-      value: "192.168.0.1" # external ip for services like horizon
-    - name: NAMESPACE
-      value: "stackanetes"
-    - name: IMAGE_PREFIX
-      value: "stackanetes-"
-```
-
-then run:
-```
-kubectl create -f stackanetes-deployer.yml
-```
-## Known issues
-
-Please refer to [issues](https://github.com/stackanetes/stackanetes/issues)
+Some features haven't been implemented yet in Stackanetes:
+- MariaDB, Memcached, RabbitMQ are not deployed in a highly-available manner,
+- Some OpenStack features are missing (see components list above),
+- Compute services can't be ran using the rkt container runtime,
+- SSL/TLS is not terminated.
