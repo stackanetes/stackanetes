@@ -26,7 +26,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: COMMAND
-              value: "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini upgrade a84ccf28f06a"
+              value: "bash /tmp/post.sh"
             - name: DEPENDENCY_JOBS
               value: "neutron-init"
             - name: DEPENDENCY_SERVICE
@@ -38,6 +38,8 @@ spec:
               mountPath: /configmaps/neutron.conf
             - name: ml2confini
               mountPath: /configmaps/ml2-conf.ini
+            - name: postsh
+              mountPath: /configmaps/post.sh
       volumes:
         - name: neutronconf
           configMap:
@@ -45,3 +47,6 @@ spec:
         - name: ml2confini
           configMap:
             name: neutron-ml2confini
+        - name: postsh
+          configMap:
+            name: neutron-postsh
