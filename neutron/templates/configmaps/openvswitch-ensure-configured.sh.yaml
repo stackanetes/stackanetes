@@ -3,7 +3,7 @@ kind: ConfigMap
 data:
   openvswitch-ensure-configured.sh: |-
     #!/bin/bash
-    set -ex
+    set -x
 
     bridge=$1
     port=$2

@@ -26,7 +26,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: COMMAND
-              value: "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini upgrade head"
+              value: "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini upgrade a84ccf28f06a"
             - name: DEPENDENCY_JOBS
               value: "neutron-init"
             - name: DEPENDENCY_SERVICE

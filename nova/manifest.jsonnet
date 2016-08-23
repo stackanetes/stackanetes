@@ -42,7 +42,7 @@ kpm.package({
       external_ips: [],
 
       dns:  {
-        ip: "10.3.0.1",
+        ip: "10.3.0.10",
         domain: "cluster.local",
       },
 
@@ -59,7 +59,7 @@ kpm.package({
 
         named_host: {
           api: $.variables.network.ingress.host % "compute",
-          novncproxy: $.variables.network.ingress.host % "vnc.compute",
+          novncproxy: $.variables.network.ingress.host % "novnc.compute",
         }
       },
     },
@@ -241,14 +241,14 @@ kpm.package({
 
     {
       file: "auxiliary/scheduler.yaml",
-      template: (importstr "templates/auxiliary/conductor.yaml"),
+      template: (importstr "templates/auxiliary/scheduler.yaml"),
       name: "nova-scheduler",
       type: "deployment",
     },
 
     {
       file: "auxiliary/consoleauth.yaml",
-      template: (importstr "templates/auxiliary/conductor.yaml"),
+      template: (importstr "templates/auxiliary/consoleauth.yaml"),
       name: "nova-consoleauth",
       type: "deployment",
     },

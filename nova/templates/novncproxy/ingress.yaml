@@ -7,4 +7,4 @@ spec:
       paths:
       -  backend:
           serviceName: nova-novncproxy
-          servicePort: {{ network.port.api }}
+          servicePort: {{ network.port.novncproxy }}

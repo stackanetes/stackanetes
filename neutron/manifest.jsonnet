@@ -39,7 +39,7 @@ kpm.package({
       minion_interface_name: "eth0",
 
       dns:  {
-        ip: "10.3.0.1",
+        ip: "10.3.0.10",
         domain: "cluster.local",
       },
 

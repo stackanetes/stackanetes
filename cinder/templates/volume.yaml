@@ -13,7 +13,7 @@ spec:
       securityContext:
         runAsUser: 0
       containers:
-        - name: cinder-scheduler
+        - name: cinder-volume
           image: {{ deployment.image.volume }}
           imagePullPolicy: Always
           # TODO(DTadrzak): it must be removed in future
@@ -46,7 +46,7 @@ spec:
             - name: cephconf
               mountPath: /configmaps/ceph.conf
             - name: cephclientadminkeyring
-              mountPath: /etc/ceph/ceph.client.admin.keyring
+              mountPath: /configmaps/ceph.client.admin.keyring
       volumes:
         - name: cinderconf
           configMap:
