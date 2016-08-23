@@ -36,7 +36,7 @@ For Stackanetes to run, there is a single requirement:
   - Network connectivity between the containers across nodes (e.g. flanneld),
   - DNS add-on.
 
-To deploy Stackanetes, you simply need any container runtime (e.g. rkt).
+To deploy Stackanetes, a container runtime is needed (e.g. rkt).
 
 ### High-availability & Networking
 
