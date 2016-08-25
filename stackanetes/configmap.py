@@ -33,7 +33,7 @@ class ConfigMap(object):
     def __init__(self, service_dir, configs):
         self.service_dir = service_dir
         self.file_name = configs['file_name']
-        self.dest_file_name = configs.get('dest_file_name',None)
+        self.dest_file_name = configs.get('dest_file_name', None)
         self.name = configs['configmap_name']
         self.container_path = configs['container_path']
         self.templates = configs['templates']
@@ -43,7 +43,7 @@ class ConfigMap(object):
             'cluster_name': CONF.stackanetes['cluster_name'],
             'external_ip': CONF.stackanetes['external_ip'],
             'interface_name': CONF.stackanetes['minion_interface_name'],
-            'namespace': CONF.stackanetes['namespace'],
+            'namespace': configs['namespace'],
             'monitors': CONF.ceph['ceph_mons'],
             'ceph_admin_keyring': CONF.ceph['ceph_admin_keyring'],
             'uuid': CONF.ceph['uuid'],
@@ -119,14 +119,14 @@ class ConfigMap(object):
 
     def upload(self):
         self._create_file()
-        cmd = get_kubectl_command()
+        cmd = get_kubectl_command(self.variables['namespace'])
         LOG.debug("Uploading configMap: {}".format(self.name))
         cmd.extend(["create", "configmap", self.name])
         cmd.extend(["--from-file", self.file_path])
         subprocess.call(cmd)
 
     def remove(self):
-        cmd = get_kubectl_command()
+        cmd = get_kubectl_command(self.variables['namespace'])
         LOG.debug("Removing configMap: {}".format(self.name))
         cmd.extend(["delete", "configmap", self.name])
         subprocess.call(cmd)
