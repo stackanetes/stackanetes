@@ -16,6 +16,8 @@ kpm.package({
 
   variables: {
     deployment: {
+      replicas: 1,
+
       image: {
         traefik: "traefik:latest",
       },
@@ -33,10 +35,10 @@ kpm.package({
   resources: [
     // Daemons.
     {
-      file: "daemonset.yaml",
-      template: (importstr "templates/daemonset.yaml"),
+      file: "deployment.yaml",
+      template: (importstr "templates/deployment.yaml"),
       name: "traefik",
-      type: "daemonset",
+      type: "deployment",
     },
 
     // Services.

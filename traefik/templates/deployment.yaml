@@ -1,9 +1,10 @@
 apiVersion: extensions/v1beta1
-kind: DaemonSet
+kind: Deployment
 metadata:
   labels:
     app: traefik
 spec:
+  replicas: {{ deployment.replicas }}
   template:
     metadata:
       labels:
