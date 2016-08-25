@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 set -e
-cp `find / -name glance-api-paste.ini` /etc/glance/
+# TODO(DTadrzak): FIX ME
+cp `find / -not -path "/etc" -name glance-api-paste.ini` /etc/glance/
 glance-api
