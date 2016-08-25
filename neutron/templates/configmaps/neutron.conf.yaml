@@ -33,6 +33,7 @@ data:
     auth_plugin = password
     project_domain_id = default
     user_domain_id = default
+    endpoint_type = internal
     region_name = {{ keystone.nova_region_name }}
     project_name = service
     username = {{ keystone.nova_user }}
