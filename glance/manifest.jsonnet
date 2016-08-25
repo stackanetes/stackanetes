@@ -37,7 +37,7 @@ kpm.package({
         api: 9292,
         registry: 9191,
       },
-      
+
       ingress: {
         enabled: true,
         host: "%s.openstack.cluster",
@@ -72,11 +72,13 @@ kpm.package({
       glance_region_name: "RegionOne",
     },
 
-    rados_gateway: {
+    ceph: {
       enabled: true,
-      swift_auth: "http://rados-gateway:6000/auth/1.0",
-      swift_user: "glance:swift",
-      ceph_admin_keyring: "",
+      monitors: [],
+
+      glance_user: "glance",
+      glance_pool: "images",
+      glance_keyring: "",
     },
 
     misc: {
@@ -109,16 +111,23 @@ kpm.package({
     },
 
     {
-      file: "api/configmaps/glance-api.conf.yaml",
-      template: (importstr "templates/api/configmaps/glance-api.conf.yaml"),
-      name: "glance-glanceapiconf",
+      file: "api/configmaps/ceph.client.glance.keyring.yaml",
+      template: (importstr "templates/api/configmaps/ceph.client.glance.keyring.yaml"),
+      name: "glance-cephclientglancekeyring",
       type: "configmap",
     },
 
     {
-      file: "api/configmaps/glance-swift-store.conf.yaml",
-      template: (importstr "templates/api/configmaps/glance-swift-store.conf.yaml"),
-      name: "glance-glanceswitchstoreconf",
+      file: "api/configmaps/ceph.conf.yaml",
+      template: (importstr "templates/api/configmaps/ceph.conf.yaml"),
+      name: "glance-cephconf",
+      type: "configmap",
+    },
+
+    {
+      file: "api/configmaps/glance-api.conf.yaml",
+      template: (importstr "templates/api/configmaps/glance-api.conf.yaml"),
+      name: "glance-glanceapiconf",
       type: "configmap",
     },
 

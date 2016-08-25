@@ -13,6 +13,9 @@ data:
     workers = {{ misc.workers }}
     registry_host = glance-registry
 
+    # Enable Copy-on-Write
+    show_image_direct_url = True
+
     [database]
     connection = mysql+pymysql://{{ database.glance_user }}:{{ database.glance_password }}@{{ database.address }}/{{ database.glance_database_name }}
     max_pool_size = {{ misc.workers }}
@@ -37,18 +40,14 @@ data:
     [glance_store]
     filesystem_store_datadir = /var/lib/glance/images/
 
-    {% if not rados_gateway.enabled -%}
+    {% if not ceph.enabled -%}
     stores = file, http
     default_store = file
     {%- else -%}
-    stores = file, http, swift
-    default_store = swift
-    swift_store_auth_version = 1
-    swift_store_auth_address = {{ rados_gateway.swift_auth }}
-    swift_store_user = {{ rados_gateway.swift_user }}
-    swift_store_key = {{ rados_gateway.ceph_admin_keyring }}
-    default_swift_reference = ref1
-    swift_store_config_file = /etc/glance/glance-swift-store.conf
-    swift_store_container = glance
-    swift_store_create_container_on_put = True
+    stores = file, http, rbd
+    default_store = rbd
+    rbd_store_pool = {{ ceph.glance_pool }}
+    rbd_store_user = {{ ceph.glance_user }}
+    rbd_store_ceph_conf = /etc/ceph/ceph.conf
+    rbd_store_chunk_size = 8
     {%- endif -%}

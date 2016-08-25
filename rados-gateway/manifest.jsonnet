@@ -28,21 +28,28 @@ kpm.package({
       port: 6000,
     },
 
+    ceph: {
+      monitors: [],
+
+      rgw_user: "rgw",
+      rgw_keyring: "",
+    },
+
     rados_gateway: {
-      ceph_admin_keyring: "",
-      ceph_monitors: [],
-      swift_user_uid: "glance",
-      swift_user_display_name: "User for Glance",
-      swift_user: "glance:swift",
+      user_uid: "glance",
+      user_display_name: "User for Glance",
+      user_temp_url_key: "glance_temp_url_key",
+      subuser: "glance:swift",
+      subuser_secret: "",
     },
   },
 
   resources: [
     // Config maps.
     {
-      file: "configmaps/ceph.client.admin.keyring.yaml",
-      template: (importstr "templates/configmaps/ceph.client.admin.keyring.yaml"),
-      name: "rados-gateway-cephclientadminkeyring",
+      file: "configmaps/ceph.client.rgw.keyring.yaml",
+      template: (importstr "templates/configmaps/ceph.client.rgw.keyring.yaml"),
+      name: "rados-gateway-cephclientrgwkeyring",
       type: "configmap",
     },
 

@@ -31,32 +31,27 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: COMMAND
-              value: "bash /tmp/cinder-volume.sh"
+              value: "cinder-volume"
             - name: DEPENDENCY_JOBS
               value: "cinder-init,cinder-db-sync"
             - name: DEPENDENCY_SERVICE
-              value: "mariadb,rabbitmq,keystone-api,rados-gateway"
+              value: "mariadb,rabbitmq,keystone-api"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/cinder/cinder.conf,/tmp/cinder-volume.sh,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.admin.keyring"
+              value: "/etc/cinder/cinder.conf,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring"
           volumeMounts:
             - name: cinderconf
               mountPath: /configmaps/cinder.conf
-            - name: cindervolumesh
-              mountPath: /configmaps/cinder-volume.sh
             - name: cephconf
               mountPath: /configmaps/ceph.conf
-            - name: cephclientadminkeyring
-              mountPath: /configmaps/ceph.client.admin.keyring
+            - name: cephclientcinderkeyring
+              mountPath: /configmaps/ceph.client.{{ ceph.cinder_user }}.keyring
       volumes:
         - name: cinderconf
           configMap:
             name: cinder-cinderconf
-        - name: cindervolumesh
-          configMap:
-            name: cinder-cindervolumesh
         - name: cephconf
           configMap:
             name: cinder-cephconf
-        - name: cephclientadminkeyring
+        - name: cephclientcinderkeyring
           configMap:
-            name: cinder-cephclientadminkeyring
+            name: cinder-cephclientcinderkeyring

@@ -100,14 +100,14 @@ kpm.package({
       admin_password: "password",
     },
 
-    rados_gateway: {
+    ceph: {
       enabled: true,
-      ceph_admin_keyring: "",
-      ceph_monitors: [],
-      secret_uuid: "",
+      monitors: [],
 
       cinder_user: "cinder",
+      cinder_keyring: "",
       nova_pool: "vms",
+      secret_uuid: "",
     },
 
     glance: {
@@ -177,9 +177,9 @@ kpm.package({
     },
 
     {
-      file: "configmaps/ceph.client.admin.keyring.yaml",
-      template: (importstr "templates/configmaps/ceph.client.admin.keyring.yaml"),
-      name: "nova-cephclientadminkeyring",
+      file: "configmaps/ceph.client.cinder.keyring.yaml",
+      template: (importstr "templates/configmaps/ceph.client.cinder.keyring.yaml"),
+      name: "nova-cephclientcinderkeyring",
       type: "configmap",
     },
 

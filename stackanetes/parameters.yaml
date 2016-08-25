@@ -5,20 +5,33 @@ deployment:
 
 network:
   minion_interface_name: eno1
+  external_ips: []
   dns:
-    ip: 10.3.0.1
-    domain: cluster.local
+    ip: 10.3.0.10
+    kubernetes_domain: cluster.local
+    infra_domain:
   ingress:
     enabled: true
     host: "%s.openstack.cluster"
     port: 30080
-  external_ips: []
+
+ceph:
+  enabled: true
+  monitors: []
+  cinder_user: "cinder"
+  cinder_pool: "volumes"
+  cinder_keyring: ""
+  glance_user: "glance"
+  glance_pool: "images"
+  glance_keyring: ""
+  nova_pool: "vms"
+  rgw_user: rgw
+  rgw_keyring: ""
+  secret_uuid: secret
+  secret_uuid: bbc5b4d5-6fca-407d-807d-06a4f4a7bccb
 
 rados_gateway:
   enabled: true
-  secret_uuid: secret
-  ceph_admin_keyring: keyring
-  ceph_monitors: []
 
 neutron:
   metadata_secret: password

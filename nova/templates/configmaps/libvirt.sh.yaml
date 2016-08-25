@@ -29,8 +29,7 @@ data:
         chmod 755 /var/log/kolla/libvirt
     fi
 
-    {%- if rados_gateway.enabled %}
-    ceph auth get client.{{ rados_gateway.cinder_user }} -o /etc/ceph/ceph.client.{{ rados_gateway.cinder_user }}.keyring
+    {%- if ceph.enabled %}
     bash /tmp/virsh-set-secret.sh &
     {%- endif %}
 

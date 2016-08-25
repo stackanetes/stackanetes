@@ -24,17 +24,17 @@ spec:
           volumeMounts:
             - name: cephconf
               mountPath: /configmaps/ceph.conf
-            - name: cephclientadminkeyring
-              mountPath: /configmaps/ceph.client.admin.keyring
+            - name: cephclientrgwkeyring
+              mountPath: /configmaps/ceph.client.{{ ceph.rgw_user }}.keyring
             - name: startsh
               mountPath: /configmaps/start.sh
       volumes:
         - name: cephconf
           configMap:
             name: rados-gateway-cephconf
-        - name: cephclientadminkeyring
+        - name: cephclientrgwkeyring
           configMap:
-            name: rados-gateway-cephclientadminkeyring
+            name: rados-gateway-cephclientrgwkeyring
         - name: startsh
           configMap:
             name: rados-gateway-startsh

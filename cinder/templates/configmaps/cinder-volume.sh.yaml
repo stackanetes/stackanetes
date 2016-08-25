@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-data:
-  cinder-volume.sh: |-
-    #!/bin/bash
-    set -ex
-    
-    ceph auth get client.{{ rados_gateway.cinder_user }} -o /etc/ceph/ceph.client.{{ rados_gateway.cinder_user }}.keyring
-    cinder-volume

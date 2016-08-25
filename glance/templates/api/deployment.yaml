@@ -31,9 +31,9 @@ spec:
             - name: DEPENDENCY_JOBS
               value: "glance-init,glance-db-sync"
             - name: DEPENDENCY_SERVICE
-              value: "mariadb,rabbitmq,keystone-api{% if rados_gateway.enabled %},rados-gateway{% endif %}"
+              value: "mariadb,rabbitmq,keystone-api"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/glance/glance-api.conf,/etc/glance/glance-swift-store.conf,/tmp/start.sh"
+              value: "/etc/glance/glance-api.conf,/tmp/start.sh,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.glance_user }}.keyring"
           ports:
             - containerPort: {{ network.port.api }}
           readinessProbe:
@@ -42,21 +42,26 @@ spec:
           volumeMounts:
             - name: glanceapiconf
               mountPath: /configmaps/glance-api.conf
-            - name: glanceswitchstoreconf
-              mountPath: /configmaps/glance-swift-store.conf
             - name: startsh
               mountPath: /configmaps/start.sh
             - name: etcglance
               mountPath: /etc/glance
+            - name: cephconf
+              mountPath: /configmaps/ceph.conf
+            - name: cephclientglancekeyring
+              mountPath: /configmaps/ceph.client.{{ ceph.glance_user }}.keyring
       volumes:
         - name: glanceapiconf
           configMap:
             name: glance-glanceapiconf
-        - name: glanceswitchstoreconf
-          configMap:
-            name: glance-glanceswitchstoreconf
         - name: startsh
           configMap:
             name: glance-startsh
+        - name: cephconf
+          configMap:
+            name: glance-cephconf
+        - name: cephclientglancekeyring
+          configMap:
+            name: glance-cephglanceglancekeyring
         - name: etcglance
           emptyDir: {}

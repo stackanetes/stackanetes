@@ -74,17 +74,13 @@ kpm.package({
       admin_password: "password",
     },
 
-    rados_gateway: {
-      enabled: true,
-      ceph_admin_keyring: "",
-      ceph_monitors: [],
-      secret_uuid: "",
+    ceph: {
+      monitors: [],
 
       cinder_user: "cinder",
       cinder_pool: "volumes",
-      cinder_backup_pool: "backups",
-      nova_pool: "vms",
-      glance_pool: "images",
+      cinder_keyring: "",
+      secret_uuid: "",
     },
 
     glance: {
@@ -100,9 +96,9 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/ceph.client.admin.keyring.yaml",
-      template: (importstr "templates/configmaps/ceph.client.admin.keyring.yaml"),
-      name: "cinder-cephclientadminkeyring",
+      file: "configmaps/ceph.client.cinder.keyring.yaml",
+      template: (importstr "templates/configmaps/ceph.client.cinder.keyring.yaml"),
+      name: "cinder-cephclientcinderkeyring",
       type: "configmap",
     },
 
@@ -131,13 +127,6 @@ kpm.package({
       file: "configmaps/db-sync.sh.yaml",
       template: (importstr "templates/configmaps/db-sync.sh.yaml"),
       name: "cinder-dbsyncsh",
-      type: "configmap",
-    },
-
-    {
-      file: "configmaps/cinder-volume.sh.yaml",
-      template: (importstr "templates/configmaps/cinder-volume.sh.yaml"),
-      name: "cinder-cindervolumesh",
       type: "configmap",
     },
 

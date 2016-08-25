@@ -35,7 +35,7 @@ spec:
             - name: DEPENDENCY_JOBS
               value: "cinder-db-sync"
             - name: DEPENDENCY_SERVICE
-              value: "mariadb,rabbitmq,keystone-api,rados-gateway"
+              value: "mariadb,rabbitmq,keystone-api"
             - name: DEPENDENCY_CONFIG
               value: "/etc/cinder/cinder.conf"
           volumeMounts:

@@ -5,8 +5,4 @@ data:
     #!/bin/bash
     set -ex
 
-    {%- if rados_gateway.enabled %}
-    ceph auth get client.{{ rados_gateway.cinder_user }} -o /etc/ceph/ceph.client.{{ rados_gateway.cinder_user }}.keyring
-    {% endif %}
-
     exec nova-compute --config-file /etc/nova/nova.conf

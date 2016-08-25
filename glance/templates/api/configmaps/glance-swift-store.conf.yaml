@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-data:
-  glance-swift-store.conf: |-
-    [ref1]
-    auth_address = {{ rados_gateway.swift_auth }}
-    key = {{ rados_gateway.ceph_admin_keyring }}
-    user = {{ rados_gateway.swift_user }}

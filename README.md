@@ -38,28 +38,32 @@ For Stackanetes to run, there is a single requirement:
 
 To deploy Stackanetes, a container runtime is needed (e.g. rkt).
 
+To enable Cinder and live-migration, a working Ceph cluster is also required.
+
 ### High-availability & Networking
 
 Thanks to Kubernetes' [deployments](http://kubernetes.io/docs/user-guide/deployments/), common OpenStack APIs can be made highly-available using a single parameter, called `replicas`.
 
 Internal traffic (i.e. inside the Kubernetes cluster) is load-balanced natively using Kubernetes' [services](http://kubernetes.io/docs/user-guide/services/). When Ingress is enabled, external traffic (i.e. from outside of the Kubernetes cluster) to OpenStack is routed from any of the Kubernetes' node to an Traefik instance, which then selects the appropriate service and forward the requests accordingly. By leveraging Kubernetes' services and health checks, high-availability of the OpenStack endpoints is achieved transparently: a simple round-robin DNS that resolves to few Kubernetes' nodes is sufficient.
 
-If Ceph is enabled, data availability for Cinder and Glance is assured by the storage backend itself.
+Data availability for Cinder and Glance depends on the storage backend being used.
 
 ## Getting started
 
-### Customize
+### Prepare the environment
 
-    TODO
+#### Kubernetes
 
-### Deploy
+To setup a Kubernetes cluster, the [CoreOS guides](https://coreos.com/kubernetes/docs/latest/) could be used.
 
-First of all, at least two nodes must be labelled for Stackanetes' usage:
+Two nodes must be labelled for Stackanetes' usage:
 
     kubectl label node minion1 openstack-control-plane=enabled
     kubectl label node minion2 openstack-compute-node=enabled
 
-If Ingress is enabled (default), the DNS environment should be configured to resolve the following names (modulo a custom Ingress host that may have been configured) to the nodes that have been labeled:
+#### DNS
+
+If Ingress is enabled, the DNS environment should be configured to resolve the following names (modulo a custom Ingress host that may have been configured) to at least some Kubernetes' nodes:
 
     identity.openstack.cluster
     horizon.openstack.cluster
@@ -69,7 +73,23 @@ If Ingress is enabled (default), the DNS environment should be configured to res
     compute.openstack.cluster
     novnc.compute.openstack.cluster
 
-Then,
+#### Ceph
+
+If Ceph is enabled, few users and pools must be created.
+The user and pool names can be customized. Note down the keyrings, they will be used d
+
+    ceph osd pool create volumes 128
+    ceph osd pool create images 128
+    ceph osd pool create vms 128
+    ceph auth get-or-create client.cinder mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=vms, allow rx pool=images'
+    ceph auth get-or-create client.glance mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=images'
+    ceph auth get-or-create client.rgw osd 'allow rwx' mon 'allow rw'
+
+### Customize
+
+    TODO
+
+### Deploy
 
     TODO
 

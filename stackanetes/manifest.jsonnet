@@ -26,16 +26,18 @@ kpm.package({
     { name: "stackanetes/mariadb" },
     { name: "stackanetes/rabbitmq" },
     { name: "stackanetes/memcached" },
-    if $.variables.rados_gateway.enabled == true then
-      { name: "stackanetes/rados-gateway" },
 
     // OpenStack services.
     { name: "stackanetes/keystone" },
     { name: "stackanetes/glance" },
-    if $.variables.rados_gateway.enabled == true then
+    if $.variables.ceph.enabled == true then
       { name: "stackanetes/cinder" },
     { name: "stackanetes/nova" },
     { name: "stackanetes/neutron" },
     { name: "stackanetes/horizon" },
+
+    // Other services.
+    if $.variables.rados_gateway.enabled == true then
+      { name: "stackanetes/rados-gateway" },
   ]]
 }, params)

@@ -103,14 +103,17 @@ data:
     [libvirt]
     connection_uri = "qemu+tcp://{{ network.ip_address }}/system"
 
-    {% if rados_gateway.enabled %}
+    {% if ceph.enabled %}
     images_type = rbd
-    images_rbd_pool = {{ rados_gateway.nova_pool }}
+    images_rbd_pool = {{ ceph.nova_pool }}
     images_rbd_ceph_conf = /etc/ceph/ceph.conf
-    rbd_user = {{ rados_gateway.cinder_user }}
-    rbd_secret_uuid = {{ rados_gateway.secret_uuid }}
+    rbd_user = {{ ceph.cinder_user }}
+    rbd_secret_uuid = {{ ceph.secret_uuid }}
     disk_cachemodes="network=writeback"
     hw_disk_discard = unmap
+    inject_password = false
+    inject_key = false
+    inject_partition = -2
     {% endif %}
 
     [upgrade_levels]

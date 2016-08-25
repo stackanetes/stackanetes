@@ -5,23 +5,23 @@ data:
     #!/bin/bash
     set -ex
 
+    RGW_NAME=$(hostname -s)
+
     # Copy configuration files.
+    mkdir -p /var/lib/ceph/radosgw/${RGW_NAME}
+    cp /configmaps/ceph.client.{{ ceph.rgw_user }}.keyring/ceph.client.{{ ceph.rgw_user }}.keyring /var/lib/ceph/radosgw/${RGW_NAME}/keyring
     cp /configmaps/ceph.conf/ceph.conf /etc/ceph/
-    cp /configmaps/ceph.client.admin.keyring/ceph.client.admin.keyring /etc/ceph/
 
     # Create initial user.
-    radosgw-admin user info --uid={{ rados_gateway.swift_user_uid }}
+    radosgw-admin user info --uid={{ rados_gateway.user_uid }}
     if [ $? -gt 0 ]; then
-            radosgw-admin user create --uid={{ rados_gateway.swift_user_uid }} --display-name="{{ rados_gateway.swift_user_display_name }}"
-            radosgw-admin subuser create --uid={{ rados_gateway.swift_user_uid }} --subuser={{ rados_gateway.swift_user }} --access=full
-            radosgw-admin key create --subuser={{ rados_gateway.swift_user }} --key-type=swift --secret={{ rados_gateway.ceph_admin_keyring }}
-            radosgw-admin user modify --uid={{ rados_gateway.swift_user_uid }} --temp-url-key=glance_temp_url_key
+            radosgw-admin user create --uid={{ rados_gateway.user_uid }} --display-name="{{ rados_gateway.user_display_name }}"
+            radosgw-admin subuser create --uid={{ rados_gateway.user_uid }} --subuser={{ rados_gateway.swift_user }} --access=full
+            radosgw-admin key create --subuser={{ rados_gateway.subuser }} --key-type=swift --secret={{ rados_gateway.subuser_secret }}
+            radosgw-admin user modify --uid={{ rados_gateway.user_uid }} --temp-url-key={{ rados_gateway.user_temp_url_key }}
     fi
 
-    # Export bootstrap-rgw keyring.
-    ceph auth get client.bootstrap-rgw -o /var/lib/ceph/bootstrap-rgw/ceph.keyring || exit 1
-
-    # Configure and start Ceph entrypoint.
-    export CEPH_DAEMON="rgw"
-    export RGW_CIVETWEB_PORT="{{ network.port }}"
-    /entrypoint.sh
+    # Start.
+    RGW_CIVETWEB_PORT="{{ network.port }}"
+    CEPH_OPTS=""
+    /usr/bin/radosgw -d ${CEPH_OPTS} -n client.{{ ceph.rgw_user }} -k /var/lib/ceph/radosgw/${RGW_NAME}/keyring --rgw-socket-path="" --rgw-frontends="civetweb port=${RGW_CIVETWEB_PORT}"

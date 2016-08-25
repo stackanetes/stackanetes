@@ -27,13 +27,6 @@ data:
 
     auth_strategy = keystone
 
-    backup_driver = cinder.backup.drivers.ceph
-    backup_ceph_conf = /etc/ceph/ceph.conf
-    backup_ceph_user = {{ rados_gateway.cinder_user }}
-    backup_ceph_chunk_size = 134217728
-    backup_ceph_pool = {{ rados_gateway.cinder_backup_pool }}
-    backup_ceph_stripe_unit = 0
-    backup_ceph_stripe_count = 0
     restore_discard_excess_bytes = true
 
     [database]
@@ -62,12 +55,12 @@ data:
 
     [rbd-1]
     volume_driver = cinder.volume.drivers.rbd.RBDDriver
-    rbd_pool = {{ rados_gateway.cinder_pool }}
+    rbd_pool = {{ ceph.cinder_pool }}
     rbd_ceph_conf = /etc/ceph/ceph.conf
     rbd_flatten_volume_from_snapshot = false
     rbd_max_clone_depth = 5
     rbd_store_chunk_size = 4
     rados_connect_timeout = -1
-    rbd_user = {{ rados_gateway.cinder_user }}
-    rbd_secret_uuid = {{ rados_gateway.secret_uuid }}
+    rbd_user = {{ ceph.cinder_user }}
+    rbd_secret_uuid = {{ ceph.secret_uuid }}
     report_discard_supported = True
