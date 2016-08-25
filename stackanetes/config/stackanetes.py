@@ -27,6 +27,7 @@ stackanetes_opts = [
     cfg.StrOpt('memory', default='4092Mi'),
     cfg.StrOpt('minion_interface_name', default='eno1'),
     cfg.StrOpt('namespace', default='stackanetes'),
+    cfg.StrOpt('domain_name'),
     cfg.StrOpt('dns_ip', default='10.2.0.10'),
     cfg.StrOpt('cluster_name', default='cluster.local'),
     cfg.StrOpt('external_ip', default='10.10.10.10'),
