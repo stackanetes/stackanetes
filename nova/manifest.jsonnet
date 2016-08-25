@@ -117,7 +117,7 @@ kpm.package({
     },
 
     neutron: {
-      api_url: "http://neutron-api:9696",
+      api_url: "http://neutron-server:9696",
       metadata_secret: "password",
     },
 
@@ -154,6 +154,13 @@ kpm.package({
       file: "configmaps/nova.conf.yaml",
       template: (importstr "templates/configmaps/nova.conf.yaml"),
       name: "nova-novaconf",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/nova.sh.yaml",
+      template: (importstr "templates/configmaps/nova.sh.yaml"),
+      name: "nova-novash",
       type: "configmap",
     },
 

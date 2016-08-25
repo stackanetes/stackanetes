@@ -13,7 +13,7 @@ spec:
       securityContext:
         runAsUser: 0
       containers:
-        - name: nova-conductor
+        - name: nova-scheduler
           image: {{ deployment.image.scheduler }}
           imagePullPolicy: Always
           # TODO(DTadrzak): it must be removed in future

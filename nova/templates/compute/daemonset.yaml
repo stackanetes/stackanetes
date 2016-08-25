@@ -31,7 +31,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: COMMAND
-              value: "exec nova-compute --config-file /etc/nova/nova.conf"
+              value: "bash /tmp/nova.sh"
             - name: DEPENDENCY_JOBS
               value: "nova-init,nova-post"
             - name: DEPENDENCY_SERVICE
@@ -47,6 +47,8 @@ spec:
           volumeMounts:
             - name: novaconf
               mountPath: /configmaps/nova.conf
+            - name: novash
+              mountPath: /configmaps/nova.sh
             - name: resolvconf
               mountPath: /configmaps/resolv.conf
             - name: cephconf
@@ -122,6 +124,9 @@ spec:
         - name: novaconf
           configMap:
             name: nova-novaconf
+        - name: novash
+          configMap:
+            name: nova-novash
         - name: resolvconf
           configMap:
             name: nova-resolvconf

@@ -62,6 +62,6 @@ spec:
             name: glance-cephconf
         - name: cephclientglancekeyring
           configMap:
-            name: glance-cephglanceglancekeyring
+            name: glance-cephclientglancekeyring
         - name: etcglance
           emptyDir: {}

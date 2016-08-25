@@ -4,3 +4,4 @@ data:
   ceph.client.{{ ceph.cinder_user }}.keyring: |+
     [client.{{ ceph.cinder_user }}]
         key = {{ ceph.cinder_keyring }}
+    

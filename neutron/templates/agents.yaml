@@ -8,7 +8,7 @@ spec:
         app: neutron-agents
     spec:
       nodeSelector:
-        {{ deployment.node_label }}: enabled
+        openstack-compute-node: enabled
       securityContext:
         runAsUser: 0
       dnsPolicy: ClusterFirst

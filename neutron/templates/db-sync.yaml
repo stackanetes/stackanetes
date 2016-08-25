@@ -26,20 +26,18 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: COMMAND
-              value: "bash /tmp/db-sync.sh"
+              value: "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini upgrade head"
             - name: DEPENDENCY_JOBS
               value: "neutron-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/tmp/db-sync.sh"
+              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini"
           volumeMounts:
             - name: neutronconf
               mountPath: /configmaps/neutron.conf
             - name: ml2confini
               mountPath: /configmaps/ml2-conf.ini
-            - name: dbsyncsh
-              mountPath: /configmaps/db-sync.sh
       volumes:
         - name: neutronconf
           configMap:
@@ -47,6 +45,3 @@ spec:
         - name: ml2confini
           configMap:
             name: neutron-ml2confini
-        - name: dbsyncsh
-          configMap:
-            name: neutron-dbsyncsh

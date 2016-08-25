@@ -4,3 +4,4 @@ data:
   ceph.client.{{ ceph.glance_user }}.keyring: |+
     [client.{{ ceph.glance_user }}]
         key = {{ ceph.glance_keyring }}
+    
