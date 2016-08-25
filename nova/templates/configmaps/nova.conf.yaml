@@ -31,7 +31,7 @@ data:
     compute_driver = libvirt.LibvirtDriver
 
     # Though my_ip is not used directly, lots of other variables use $my_ip
-    my_ip = {{ network.ip_adress }}
+    my_ip = {{ network.ip_address }}
 
     [vnc]
     novncproxy_host = {{ network.ip_address }}
@@ -39,7 +39,7 @@ data:
     vncserver_listen = 0.0.0.0
     vncserver_proxyclient_address = {{ network.ip_address }}
     vnc_enabled = True
-    {% if network.ingress.enaled %}
+    {% if network.ingress.enabled %}
     novncproxy_base_url = http://{{ network.ingress.named_host.novncproxy }}:{{ network.ingress.port }}/vnc_auto.html
     {% elif network.external_ips|length > 0 %}
     novncproxy_base_url = http://{{ network.external_ips[0] }}:{{ network.port.novncproxy }}/vnc_auto.html

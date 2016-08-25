@@ -108,6 +108,13 @@ kpm.package({
   resources: [
     // Config maps.
     {
+      file: "configmaps/db-sync.sh.yaml",
+      template: (importstr "templates/configmaps/db-sync.sh.yaml"),
+      name: "neutron-dbsyncsh",
+      type: "configmap",
+    },
+
+    {
       file: "configmaps/dhcp-agent.ini.yaml",
       template: (importstr "templates/configmaps/dhcp-agent.ini.yaml"),
       name: "neutron-dhcpagentini",

@@ -35,6 +35,8 @@ spec:
               value: "nova-consoleauth --config-file /etc/nova/nova.conf"
             - name: DEPENDENCY_SERVICE
               value: "nova-api"
+            - name: DEPENDENCY_JOBS
+              value: "nova-db-sync"
             - name: DEPENDENCY_CONFIG
               value: "/etc/nova/nova.conf"
           volumeMounts:

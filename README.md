@@ -22,7 +22,7 @@ In addition to these, a few other applications are deployed:
 - RADOS Gateway
 - Traefik
 
-Services are divided and scheduled into two groups, except from few services that run everywhere (e.g. Open vSwitch agents, Traefik):
+Services are divided and scheduled into two groups, except from few services that run everywhere (e.g. Open vSwitch agents):
 - The control plane, which runs all the OpenStack APIs and every other supporting applications,
 - The compute plane, which is dedicated to run Nova's virtual machines.
 
@@ -42,7 +42,7 @@ To deploy Stackanetes, a container runtime is needed (e.g. rkt).
 
 Thanks to Kubernetes' [deployments](http://kubernetes.io/docs/user-guide/deployments/), common OpenStack APIs can be made highly-available using a single parameter, called `replicas`.
 
-Internal traffic (i.e. inside the Kubernetes cluster) is load-balanced natively using Kubernetes' [services](http://kubernetes.io/docs/user-guide/services/). When Ingress is enabled, external access (i.e. from outside of the Kubernetes cluster), can be done and guaranteed using a simple Round-Robin DNS pointing to every nodes exposing Traefik (i.e. every nodes labeled to deploy Stackanetes). Traefik will then forward requests through the Kubernetes load-balancing mechanism, which has awareness of each service health.
+Internal traffic (i.e. inside the Kubernetes cluster) is load-balanced natively using Kubernetes' [services](http://kubernetes.io/docs/user-guide/services/). When Ingress is enabled, external traffic (i.e. from outside of the Kubernetes cluster) to OpenStack is routed from any of the Kubernetes' node to an Traefik instance, which then selects the appropriate service and forward the requests accordingly. By leveraging Kubernetes' services and health checks, high-availability of the OpenStack endpoints is achieved transparently: a simple round-robin DNS that resolves to few Kubernetes' nodes is sufficient.
 
 If Ceph is enabled, data availability for Cinder and Glance is assured by the storage backend itself.
 

@@ -103,7 +103,9 @@ kpm.package({
     rados_gateway: {
       enabled: true,
       ceph_admin_keyring: "",
+      ceph_monitors: [],
       secret_uuid: "",
+
       cinder_user: "cinder",
       nova_pool: "vms",
     },

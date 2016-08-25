@@ -9,10 +9,6 @@ data:
     cp /configmaps/ceph.conf/ceph.conf /etc/ceph/
     cp /configmaps/ceph.client.admin.keyring/ceph.client.admin.keyring /etc/ceph/
 
-    # TODO(Quentin-M): Hack for missing newlines
-    echo "" >> /etc/ceph/ceph.conf
-    echo "" >> /etc/ceph/ceph.client.admin.keyring
-
     # Create initial user.
     radosgw-admin user info --uid={{ rados_gateway.swift_user_uid }}
     if [ $? -gt 0 ]; then

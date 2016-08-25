@@ -4,10 +4,6 @@ data:
   cinder-volume.sh: |-
     #!/bin/bash
     set -ex
-
-    # TODO(Quentin-M): Hack for missing newlines
-    echo "" >> /etc/ceph/ceph.conf
-    echo "" >> /etc/ceph/ceph.client.admin.keyring
-
+    
     ceph auth get client.{{ rados_gateway.cinder_user }} -o /etc/ceph/ceph.client.{{ rados_gateway.cinder_user }}.keyring
     cinder-volume
