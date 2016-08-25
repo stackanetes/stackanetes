@@ -31,7 +31,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: COMMAND
-              value: "bash /tmp/nova.sh"
+              value: "exec nova-compute --config-file /etc/nova/nova.conf"
             - name: DEPENDENCY_JOBS
               value: "nova-init,nova-post"
             - name: DEPENDENCY_SERVICE
@@ -47,8 +47,6 @@ spec:
           volumeMounts:
             - name: novaconf
               mountPath: /configmaps/nova.conf
-            - name: novash
-              mountPath: /configmaps/nova.sh
             - name: resolvconf
               mountPath: /configmaps/resolv.conf
             - name: cephconf
@@ -93,7 +91,7 @@ spec:
             - name: DEPENDENCY_DEPLOYMENT
               value: "neutron-agents"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/libvirt/libvirtd.conf,/tmp/libvirt.sh,/etc/resolv.conf,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring,/tmp/virsh-set-secret.sh"
+              value: "/etc/libvirt/libvirtd.conf,/tmp/libvirt.sh,/etc/resolv.conf,/etc/hosts,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring,/tmp/virsh-set-secret.sh"
           volumeMounts:
             - name: libvirtdconf
               mountPath: /configmaps/libvirtd.conf
@@ -107,24 +105,23 @@ spec:
               mountPath: /configmaps/ceph.client.{{ ceph.cinder_user }}.keyring
             - name: virshsetsecretsh
               mountPath: /configmaps/virsh-set-secret.sh
-            - mountPath: /lib/modules
-              name: libmodules
+            - name: libmodules
+              mountPath: /lib/modules
               readOnly: true
-            - mountPath: /var/lib/nova
-              name: varlibnova
-            - mountPath: /var/lib/libvirt
-              name: varliblibvirt
-            - mountPath: /run
-              name: run
-            - mountPath: /sys/fs/cgroup
-              name: cgroup
+            - name: varlibnova
+              mountPath: /var/lib/nova
+            - name: varliblibvirt
+              mountPath: /var/lib/libvirt
+            - name: run
+              mountPath: /run
+            - name: cgroup
+              mountPath: /sys/fs/cgroup
+            - name: hosts
+              mountPath: /configmaps/hosts
       volumes:
         - name: novaconf
           configMap:
             name: nova-novaconf
-        - name: novash
-          configMap:
-            name: nova-novash
         - name: resolvconf
           configMap:
             name: nova-resolvconf
@@ -158,3 +155,6 @@ spec:
         - name: cgroup
           hostPath:
             path: /sys/fs/cgroup
+        - name: hosts
+          configMap:
+            name: nova-hosts

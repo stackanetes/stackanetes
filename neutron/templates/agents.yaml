@@ -37,7 +37,7 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "neutron-server,rabbitmq,nova-api"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/dhcp-agent.ini,/etc/neutron/dnsmasq.conf,/etc/resolv.conf"
+              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/dhcp-agent.ini,/etc/neutron/dnsmasq.conf,/etc/resolv.conf,/etc/hosts"
           ports:
           volumeMounts:
             - name: neutronconf
@@ -50,11 +50,13 @@ spec:
               mountPath: /configmaps/dnsmasq.conf
             - name: resolvconf
               mountPath: /configmaps/resolv.conf
+            - name: hosts
+              mountPath: /configmaps/hosts
             - name: libmodules
               mountPath: /lib/modules
               readOnly: true
-            - name: run
-              mountPath: /run
+            - name: runopenvswitch
+              mountPath: /run/openvswitch
             - name: usrsbinip
               mountPath: /usr/sbin/ip
             - name: socket
@@ -95,8 +97,8 @@ spec:
             - name: libmodules
               mountPath: /lib/modules
               readOnly: true
-            - name: run
-              mountPath: /run
+            - name: runopenvswitch
+              mountPath: /run/openvswitch
             - name: usrsbinip
               mountPath: /usr/sbin/ip
             - name: socket
@@ -117,15 +119,18 @@ spec:
         - name: resolvconf
           configMap:
             name: neutron-resolvconf
+        - name: hosts
+          configMap:
+            name: neutron-hosts
         - name: l3agentini
           configMap:
             name: neutron-l3agentini
         - name: libmodules
           hostPath:
             path: /lib/modules
-        - name: run
+        - name: runopenvswitch
           hostPath:
-            path: /run
+            path: /run/openvswitch
         - name: usrsbinip
           hostPath:
             path: /usr/bin/ip

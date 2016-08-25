@@ -2,6 +2,6 @@ apiVersion: v1
 kind: ConfigMap
 data:
   resolv.conf: |-
-    search {{ namespace }}.svc.{{ network.dns.domain }} svc.{{ network.dns.domain }} {{ network.dns.domain }}
+    search {{ namespace }}.svc.{{ network.dns.kubernetes_domain }} svc.{{ network.dns.kubernetes_domain }} {{ network.dns.kubernetes_domain }} {{ network.dns.infra_domain }}
     nameserver {{ network.dns.ip }}
     options ndots:5

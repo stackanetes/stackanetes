@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-data:
-  nova.sh: |-
-    #!/bin/bash
-    set -ex
-
-    exec nova-compute --config-file /etc/nova/nova.conf

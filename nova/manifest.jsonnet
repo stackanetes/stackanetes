@@ -39,11 +39,13 @@ kpm.package({
 
     network: {
       ip_address: "{{ .IP }}",
+      hostname: "{{ .HOSTNAME }}",
       external_ips: [],
 
       dns:  {
         ip: "10.3.0.10",
-        domain: "cluster.local",
+        kubernetes_domain: "cluster.local",
+        infra_domain: "",
       },
 
       port: {
@@ -156,16 +158,16 @@ kpm.package({
     },
 
     {
-      file: "configmaps/nova.sh.yaml",
-      template: (importstr "templates/configmaps/nova.sh.yaml"),
-      name: "nova-novash",
+      file: "configmaps/resolv.conf.yaml",
+      template: (importstr "templates/configmaps/resolv.conf.yaml"),
+      name: "nova-resolvconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/resolv.conf.yaml",
-      template: (importstr "templates/configmaps/resolv.conf.yaml"),
-      name: "nova-resolvconf",
+      file: "configmaps/hosts.yaml",
+      template: (importstr "templates/configmaps/hosts.yaml"),
+      name: "nova-hosts",
       type: "configmap",
     },
 

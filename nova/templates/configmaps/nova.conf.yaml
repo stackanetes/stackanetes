@@ -5,7 +5,12 @@ data:
     [DEFAULT]
     debug = {{ misc.debug }}
     vif_plugging_is_fatal = False
-    vif_plugging_timeout = 1
+    vif_plugging_timeout = 10
+    default_ephemeral_format = ext3
+    scheduler_host_subset_size = 30
+    ram_allocation_ratio=1.0
+    disk_allocation_ratio=1.0
+    cpu_allocation_ratio=8.0
 
     api_paste_config = /etc/nova/api-paste.ini
     state_path = /var/lib/nova
@@ -23,6 +28,7 @@ data:
     use_neutron = True
     security_group_api = neutron
     network_api_class = nova.network.neutronv2.api.API
+    # TODO(DTadrzak): FIX ME
     firewall_driver = nova.virt.firewall.NoopFirewallDriver
     linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
 
@@ -102,9 +108,9 @@ data:
 
     [libvirt]
     connection_uri = "qemu+tcp://{{ network.ip_address }}/system"
+    images_type = qcow2
 
     {% if ceph.enabled %}
-    images_type = rbd
     images_rbd_pool = {{ ceph.nova_pool }}
     images_rbd_ceph_conf = /etc/ceph/ceph.conf
     rbd_user = {{ ceph.cinder_user }}
