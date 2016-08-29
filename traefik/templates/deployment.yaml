@@ -14,10 +14,8 @@ spec:
       containers:
       - image: {{ deployment.image.traefik }}
         name: traefik
+        command: ["./traefik", "--web", "--kubernetes"]
         ports:
           - containerPort: 80
           - containerPort: 443
           - containerPort: 8080
-        args:
-        - --web
-        - --kubernetes
