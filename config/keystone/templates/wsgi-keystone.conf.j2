@@ -2,7 +2,7 @@ Listen {{ get_ip_address }}:{{ keystone_public_port }}
 Listen {{ get_ip_address }}:{{ keystone_admin_port }}
 
 <VirtualHost *:{{ keystone_public_port }}>
-    WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+    WSGIDaemonProcess keystone-public processes=16 threads=5 user=keystone group=keystone display-name=%{GROUP}
     WSGIProcessGroup keystone-public
     WSGIScriptAlias / /var/www/cgi-bin/keystone/main
     WSGIApplicationGroup %{GLOBAL}
@@ -15,7 +15,7 @@ Listen {{ get_ip_address }}:{{ keystone_admin_port }}
 </VirtualHost>
 
 <VirtualHost *:{{ keystone_admin_port }}>
-    WSGIDaemonProcess keystone-admin processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+    WSGIDaemonProcess keystone-admin processes=8 threads=5 user=keystone group=keystone display-name=%{GROUP}
     WSGIProcessGroup keystone-admin
     WSGIScriptAlias / /var/www/cgi-bin/keystone/admin
     WSGIApplicationGroup %{GLOBAL}

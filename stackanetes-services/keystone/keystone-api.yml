@@ -22,6 +22,12 @@ files:
   container_path: /etc/apache2/conf-enabled
   templates:
   - keystone/templates/wsgi-keystone.conf.j2
+- file_name: mpm-event.conf
+  dest_file_name: mpm_event.conf
+  configmap_name: mpm-event
+  container_path: /etc/apache2/mods-available
+  templates:
+  - keystone/templates/mpm_event.conf
 - file_name: apache-wrapper.sh
   configmap_name: apache-wrapper
   container_path: /tmp
