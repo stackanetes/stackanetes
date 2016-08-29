@@ -30,9 +30,6 @@ ceph:
   secret_uuid: secret
   secret_uuid: bbc5b4d5-6fca-407d-807d-06a4f4a7bccb
 
-rados_gateway:
-  enabled: true
-
 neutron:
   metadata_secret: password
 

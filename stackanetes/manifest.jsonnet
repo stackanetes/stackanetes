@@ -35,9 +35,5 @@ kpm.package({
     { name: "stackanetes/nova" },
     { name: "stackanetes/neutron" },
     { name: "stackanetes/horizon" },
-
-    // Other services.
-    if $.variables.rados_gateway.enabled == true then
-      { name: "stackanetes/rados-gateway" },
   ]]
 }, params)

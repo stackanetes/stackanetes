@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-data:
-  ceph.client.{{ ceph.rgw_user }}.keyring: |+
-    [client.{{ ceph.rgw_user }}]
-        key = {{ ceph.rgw_keyring }}
-    
