@@ -14,6 +14,7 @@ Stackanetes sets up the following OpenStack components:
 - Keystone
 - Neutron + Open vSwitch
 - Nova
+- Searchlight + Elasticsearch
 
 In addition to these, a few other applications are deployed:
 - MariaDB
@@ -72,6 +73,7 @@ If Ingress is enabled, the DNS environment should be configured to resolve the f
     volume.openstack.cluster
     compute.openstack.cluster
     novnc.compute.openstack.cluster
+    search.openstack.cluster
 
 #### Ceph
 
@@ -108,7 +110,7 @@ The file [env_openstack.sh](env_openstack.sh) contains the default environment v
 ## Limitations
 
 Some features haven't been implemented yet in Stackanetes:
-- MariaDB, Memcached, RabbitMQ are not deployed in a highly-available manner,
+- MariaDB, Memcached, RabbitMQ, Elasticsearch are not deployed in a highly-available manner,
 - Some OpenStack features are missing (see components list above),
 - Compute services can't be ran using the rkt container runtime,
 - SSL/TLS is not terminated.

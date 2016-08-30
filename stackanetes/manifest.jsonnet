@@ -18,14 +18,14 @@ kpm.package({
   variables: kpmstd.yamlLoads(importstr "parameters.yaml"),
 
   deploy: [{ variables: $.variables} + dependency for dependency in [
-    // Utility services.
-    if $.variables.network.ingress.enabled == true then
-      { name: "stackanetes/traefik" },
-
     // Data plane.
     { name: "stackanetes/mariadb" },
     { name: "stackanetes/rabbitmq" },
     { name: "stackanetes/memcached" },
+    {
+      name: "stackanetes/elasticsearch",
+      variables: std.mergePatch($.variables, { deployment: { app_label: "searchlight-elasticsearch" } }),
+    },
 
     // OpenStack services.
     { name: "stackanetes/keystone" },
@@ -35,5 +35,13 @@ kpm.package({
     { name: "stackanetes/nova" },
     { name: "stackanetes/neutron" },
     { name: "stackanetes/horizon" },
+    {
+      name: "stackanetes/searchlight",
+      variables: std.mergePatch($.variables, { elasticsearch: { address: "searchlight-elasticsearch" } }),
+    },
+
+    // Utility services.
+    if $.variables.network.ingress.enabled == true then
+      { name: "stackanetes/traefik" },
   ]]
 }, params)
