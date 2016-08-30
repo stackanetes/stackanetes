@@ -107,6 +107,13 @@ kpm.package({
       type: "configmap",
     },
 
+    {
+      file: "configmaps/mpm_event.conf.yaml",
+      template: (importstr "templates/configmaps/mpm_event.conf.yaml"),
+      name: "keystone-mpmeventconf",
+      type: "configmap",
+    },
+
     // Init.
     {
       file: "init.yaml",

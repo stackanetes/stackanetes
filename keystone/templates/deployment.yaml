@@ -33,7 +33,7 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "mariadb,rabbitmq"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/keystone/keystone.conf,/etc/apache2/conf-enabled/wsgi-keystone.conf,/tmp/start.sh"
+              value: "/etc/keystone/keystone.conf,/etc/apache2/conf-enabled/wsgi-keystone.conf,/etc/apache2/mods-available/mpm_event.conf,/tmp/start.sh"
           ports:
             - containerPort: {{ network.port.public }}
             - containerPort: {{ network.port.admin }}
@@ -45,6 +45,8 @@ spec:
               mountPath: /configmaps/keystone.conf
             - name: wsgikeystone
               mountPath: /configmaps/wsgi-keystone.conf
+            - name: mpmeventconf
+              mountPath: /configmaps/mpm_event.conf
             - name: startsh
               mountPath: /configmaps/start.sh
       volumes:
@@ -54,6 +56,13 @@ spec:
         - name: wsgikeystone
           configMap:
             name: keystone-wsgikeystone
+        - name: mpmeventconf
+          configMap:
+            name: keystone-mpmeventconf
+            # https://github.com/kubernetes/kubernetes/issues/23722
+            items:
+            - key: mpm-event.conf
+              path: mpm_event.conf
         - name: startsh
           configMap:
             name: keystone-startsh

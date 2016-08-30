@@ -6,7 +6,7 @@ data:
     Listen {{ network.ip_address }}:{{ network.port.admin }}
 
     <VirtualHost *:{{ network.port.public }}>
-        WSGIDaemonProcess keystone-public processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+        WSGIDaemonProcess keystone-public processes=16 threads=6 user=keystone group=keystone display-name=%{GROUP}
         WSGIProcessGroup keystone-public
         WSGIScriptAlias / /var/www/cgi-bin/keystone/main
         WSGIApplicationGroup %{GLOBAL}
@@ -19,7 +19,7 @@ data:
     </VirtualHost>
 
     <VirtualHost *:{{ network.port.admin }}>
-        WSGIDaemonProcess keystone-admin processes=5 threads=1 user=keystone group=keystone display-name=%{GROUP}
+        WSGIDaemonProcess keystone-admin processes=16 threads=5 user=keystone group=keystone display-name=%{GROUP}
         WSGIProcessGroup keystone-admin
         WSGIScriptAlias / /var/www/cgi-bin/keystone/admin
         WSGIApplicationGroup %{GLOBAL}
