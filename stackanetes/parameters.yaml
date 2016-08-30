@@ -55,3 +55,8 @@ keystone:
 misc:
   workers: 8
   debug: false
+
+# Single dependency's parameters can also be overriden:
+# stackanetes/neutron:
+#   misc:
+#     debug: true

@@ -15,33 +15,53 @@ kpm.package({
     license: "Apache 2.0",
   },
 
-  variables: kpmstd.yamlLoads(importstr "parameters.yaml"),
+  // Dependencies' variables result from the ordered merge of:
+  // - parameters.yaml (root key)
+  // - parameters.yaml (under a key having the same name as the dependency)
+  // - variables defined in their deploy's definition
+  // The first having the lowest priority and the last the higher.
+  parameters: kpmstd.yamlLoads(importstr "parameters.yaml"),
+  set_dependency_variables(dependency):: (
+    local dep_specific_parameters = if std.objectHas($.parameters, dependency.name) == true then
+                                      $.parameters[dependency.name]
+                                    else
+                                      { };
 
-  deploy: [{ variables: $.variables} + dependency for dependency in [
+    local dep_deploy_variables = if std.objectHas(dependency, "variables") then
+                                   dependency["variables"]
+                                 else
+                                   { };
+
+    dependency {
+      variables: std.mergePatch($.parameters, std.mergePatch(dep_specific_parameters, dep_deploy_variables)),
+    }
+  ),
+
+  deploy: [ self.set_dependency_variables(dependency) for dependency in [
     // Data plane.
     { name: "stackanetes/mariadb" },
     { name: "stackanetes/rabbitmq" },
     { name: "stackanetes/memcached" },
     {
       name: "stackanetes/elasticsearch",
-      variables: std.mergePatch($.variables, { deployment: { app_label: "searchlight-elasticsearch" } }),
+      variables: { deployment: { app_label: "searchlight-elasticsearch" } },
     },
 
     // OpenStack services.
     { name: "stackanetes/keystone" },
     { name: "stackanetes/glance" },
-    if $.variables.ceph.enabled == true then
+    if $.parameters.ceph.enabled == true then
       { name: "stackanetes/cinder" },
     { name: "stackanetes/nova" },
     { name: "stackanetes/neutron" },
     { name: "stackanetes/horizon" },
     {
       name: "stackanetes/searchlight",
-      variables: std.mergePatch($.variables, { elasticsearch: { address: "searchlight-elasticsearch" } }),
+      variables: { elasticsearch: { address: "searchlight-elasticsearch" } },
     },
 
     // Utility services.
-    if $.variables.network.ingress.enabled == true then
+    if $.parameters.network.ingress.enabled == true then
       { name: "stackanetes/traefik" },
   ]]
 }, params)
