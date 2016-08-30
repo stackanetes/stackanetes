@@ -36,7 +36,6 @@ kpm.package({
 
     network: {
       ip_address: "{{ .IP }}",
-      hostname: "{{ .HOSTNAME }}",
       minion_interface_name: "eno1",
 
       dns:  {
@@ -190,13 +189,6 @@ kpm.package({
       file: "configmaps/resolv.conf.yaml",
       template: (importstr "templates/configmaps/resolv.conf.yaml"),
       name: "neutron-resolvconf",
-      type: "configmap",
-    },
-
-    {
-      file: "configmaps/hosts.yaml",
-      template: (importstr "templates/configmaps/hosts.yaml"),
-      name: "neutron-hosts",
       type: "configmap",
     },
 

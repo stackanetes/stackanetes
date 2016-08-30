@@ -37,7 +37,7 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "neutron-server,rabbitmq,nova-api"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/dhcp-agent.ini,/etc/neutron/dnsmasq.conf,/etc/resolv.conf,/etc/hosts"
+              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/dhcp-agent.ini,/etc/neutron/dnsmasq.conf,/etc/resolv.conf"
           ports:
           volumeMounts:
             - name: neutronconf
@@ -50,8 +50,6 @@ spec:
               mountPath: /configmaps/dnsmasq.conf
             - name: resolvconf
               mountPath: /configmaps/resolv.conf
-            - name: hosts
-              mountPath: /configmaps/hosts
             - name: libmodules
               mountPath: /lib/modules
               readOnly: true
@@ -119,9 +117,6 @@ spec:
         - name: resolvconf
           configMap:
             name: neutron-resolvconf
-        - name: hosts
-          configMap:
-            name: neutron-hosts
         - name: l3agentini
           configMap:
             name: neutron-l3agentini

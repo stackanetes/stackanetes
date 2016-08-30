@@ -39,7 +39,6 @@ kpm.package({
 
     network: {
       ip_address: "{{ .IP }}",
-      hostname: "{{ .HOSTNAME }}",
       external_ips: [],
 
       dns:  {
@@ -168,13 +167,6 @@ kpm.package({
       file: "configmaps/resolv.conf.yaml",
       template: (importstr "templates/configmaps/resolv.conf.yaml"),
       name: "nova-resolvconf",
-      type: "configmap",
-    },
-
-    {
-      file: "configmaps/hosts.yaml",
-      template: (importstr "templates/configmaps/hosts.yaml"),
-      name: "nova-hosts",
       type: "configmap",
     },
 
