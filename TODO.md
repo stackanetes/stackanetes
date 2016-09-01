@@ -1,7 +1,0 @@
-- protect resources
-- add Ingress feature flag
-- Re-implement Ingress work
-  - Public endpoints
-    - Expose external_host/external_port
-- kpm-powered sharding for rabbitmq/mariadb/memcached
-- Fix .HOSTNAME issue with rkt
