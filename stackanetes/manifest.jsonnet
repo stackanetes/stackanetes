@@ -44,7 +44,7 @@ kpm.package({
     { name: "stackanetes/memcached" },
     {
       name: "stackanetes/elasticsearch",
-      variables: { deployment: { app_label: "searchlight-elasticsearch" } },
+      variables: { deployment: { app_label: "searchlight-es" } },
     },
 
     // OpenStack services.
@@ -57,7 +57,7 @@ kpm.package({
     { name: "stackanetes/horizon" },
     {
       name: "stackanetes/searchlight",
-      variables: { elasticsearch: { address: "searchlight-elasticsearch" } },
+      variables: { elasticsearch: { address: "searchlight-es" } },
     },
 
     // Utility services.
