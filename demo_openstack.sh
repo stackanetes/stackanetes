@@ -53,7 +53,7 @@ openstack server create demo-coreos \
   --key-name demo-key
 
 # Allocate and attach a floating IP to the instance.
-openstack ip floating add $(openstack ip floating create ext-net -c floating_ip_address -f value) $INSTANCE_NAME
+openstack ip floating add $(openstack ip floating create ext-net -c floating_ip_address -f value) demo-coreos
 
 # Create a volume and attach it to the instance.
 openstack volume create demo-volume --size 10
