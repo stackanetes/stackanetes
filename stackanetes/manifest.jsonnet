@@ -20,10 +20,10 @@ kpm.package({
   // - parameters.yaml (under a key having the same name as the dependency)
   // - variables defined in their deploy's definition
   // The first having the lowest priority and the last the higher.
-  parameters: kpmstd.yamlLoads(importstr "parameters.yaml"),
+  variables: kpmstd.yamlLoads(importstr "parameters.yaml"),
   set_dependency_variables(dependency):: (
-    local dep_specific_parameters = if std.objectHas($.parameters, dependency.name) == true then
-                                      $.parameters[dependency.name]
+    local dep_specific_parameters = if std.objectHas($.variables, dependency.name) == true then
+                                      $.variables[dependency.name]
                                     else
                                       { };
 
@@ -33,7 +33,7 @@ kpm.package({
                                    { };
 
     dependency {
-      variables: std.mergePatch($.parameters, std.mergePatch(dep_specific_parameters, dep_deploy_variables)),
+      variables: std.mergePatch($.variables, std.mergePatch(dep_specific_parameters, dep_deploy_variables)),
     }
   ),
 
@@ -50,7 +50,7 @@ kpm.package({
     // OpenStack services.
     { name: "stackanetes/keystone" },
     { name: "stackanetes/glance" },
-    if $.parameters.ceph.enabled == true then
+    if $.variables.ceph.enabled == true then
       { name: "stackanetes/cinder" },
     { name: "stackanetes/nova" },
     { name: "stackanetes/neutron" },
@@ -61,7 +61,7 @@ kpm.package({
     },
 
     // Utility services.
-    if $.parameters.network.ingress.enabled == true then
+    if $.variables.network.ingress.enabled == true then
       { name: "stackanetes/traefik" },
   ]]
 }, params)
