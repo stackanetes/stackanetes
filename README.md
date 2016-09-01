@@ -87,13 +87,36 @@ The user and pool names can be customized. Note down the keyrings, they will be 
     ceph auth get-or-create client.glance mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=images'
     ceph auth get-or-create client.rgw osd 'allow rwx' mon 'allow rw'
 
-### Customize
+### kpm
 
-    TODO
+[kpm](https://github/coreos/kpm) is the package manager and command-line tool to deploy stackanetes
+#### Install kpm
+##### From Pypi
 
-### Deploy
+kpm is a python2 package and available on pypi
+```
+$ sudo pip install kpm --pre
+````
+##### From git
+```
+git clone https://github.com/coreos/kpm.git kpm
+cd kpm
+sudo make install
+```
+#### Customize and configure stackanetes
+Get the default configuration:
+```
+kpm pull stackanetes/stackanetes -H https://beta.kpm.sh --dest ./stackanetes
+cd stackanetes/stackanetes_stackanetes_0.1.1
+```
 
-    TODO
+Values to modify are in `parameters.yaml`
+
+#### Deploy
+To deploy stackanetes:
+```
+kpm deploy stackanetes/stackanetes --variables parameters.yaml --namespace openstack -H https://beta.kpm.sh
+```
 
 ### Access
 
@@ -105,7 +128,12 @@ The file [env_openstack.sh](env_openstack.sh) contains the default environment v
 
 ### Update
 
-    TODO
+The `deploy` command is idempotent and performs only required actions. 
+This command is used to upgrade stackanetes resources, update/modifiy a custom parameters:
+
+```
+kpm deploy stackanetes/stackanetes --variables parameters.yaml --namespace openstack -H https://beta.kpm.sh
+```
 
 ## Limitations
 
