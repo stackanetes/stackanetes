@@ -17,7 +17,6 @@ kpm.package({
   variables: {
     deployment: {
       node_label: "openstack-control-plane",
-      replicas: 1,
 
       image: {
         base: "quay.io/stackanetes/stackanetes-%s:barcelona",

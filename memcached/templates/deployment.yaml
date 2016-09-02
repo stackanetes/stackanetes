@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 spec:
-  replicas: {{ deployment.replicas }}
+  replicas: 1
   template:
     metadata:
       labels:
