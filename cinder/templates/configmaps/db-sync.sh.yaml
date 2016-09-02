@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  db-sync.sh: |-
+  db-sync.sh: |+
     #!/bin/bash
     set -ex
     cinder-manage db sync

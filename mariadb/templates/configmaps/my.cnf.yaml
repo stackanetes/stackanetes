@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  my.cnf: |-
+  my.cnf: |+
     [mysqld]
     bind-address={{ network.ip_address }}
     port={{ network.port.mariadb }}

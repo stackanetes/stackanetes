@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  searchlight.conf: |-
+  searchlight.conf: |+
     [DEFAULT]
     debug = {{ misc.debug }}
     log_file = searchlight.log

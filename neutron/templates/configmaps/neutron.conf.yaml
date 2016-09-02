@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  neutron.conf: |-
+  neutron.conf: |+
     [DEFAULT]
     debug = {{ misc.debug }}
     use_syslog = False

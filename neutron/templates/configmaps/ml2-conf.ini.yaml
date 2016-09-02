@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  ml2-conf.ini: |-
+  ml2-conf.ini: |+
     [ml2]
     # Changing type_drivers after bootstrap can lead to database inconsistencies
     type_drivers = flat,vlan,vxlan

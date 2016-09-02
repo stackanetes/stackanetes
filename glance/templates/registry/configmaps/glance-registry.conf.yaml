@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  glance-registry.conf: |-
+  glance-registry.conf: |+
     [DEFAULT]
     debug = {{ misc.debug }}
     use_syslog = False

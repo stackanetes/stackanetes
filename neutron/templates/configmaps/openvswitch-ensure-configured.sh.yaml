@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  openvswitch-ensure-configured.sh: |-
+  openvswitch-ensure-configured.sh: |+
     #!/bin/bash
     set -x
 

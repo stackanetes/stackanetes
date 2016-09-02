@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  openvswitch-db-server.sh: |-
+  openvswitch-db-server.sh: |+
     #!/bin/bash
     set -ex
 

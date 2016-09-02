@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  rabbitmq.config: |-
+  rabbitmq.config: |+
     [
       {kernel, [
         {inet_dist_use_interface, { {{ network.ip_address_erlang }} }},

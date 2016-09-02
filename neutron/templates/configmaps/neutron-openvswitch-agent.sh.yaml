@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  neutron-openvswitch-agent.sh: |-
+  neutron-openvswitch-agent.sh: |+
     #!/bin/bash
     set -x
 

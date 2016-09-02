@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  wsgi-keystone.conf: |-
+  wsgi-keystone.conf: |+
     Listen {{ network.ip_address }}:{{ network.port.public }}
     Listen {{ network.ip_address }}:{{ network.port.admin }}
 

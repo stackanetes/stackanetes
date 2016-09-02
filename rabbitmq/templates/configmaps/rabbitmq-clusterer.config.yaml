@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  rabbitmq-clusterer.config: |-
+  rabbitmq-clusterer.config: |+
     [{version, 1},
      {nodes, [" {{ network.ip_address }}" ]},
      {gospel,

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  000-default.conf: |-
+  000-default.conf: |+
     Listen 0.0.0.0:{{ network.port}}
 
     <VirtualHost *:{{ network.port}}>

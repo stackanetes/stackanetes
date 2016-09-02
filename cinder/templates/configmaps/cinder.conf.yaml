@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  cinder.conf: |-
+  cinder.conf: |+
     [DEFAULT]
     debug = {{ misc.debug }}
     use_syslog = False

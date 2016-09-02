@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  nova.conf: |-
+  nova.conf: |+
     [DEFAULT]
     debug = {{ misc.debug }}
     vif_plugging_is_fatal = False

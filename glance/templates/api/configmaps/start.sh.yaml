@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  start.sh: |-
+  start.sh: |+
     #!/bin/bash
     set -ex
 

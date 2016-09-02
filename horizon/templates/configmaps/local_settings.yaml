@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  local-settings: |-
+  local-settings: |+
     import os
 
     from django.utils.translation import ugettext_lazy as _

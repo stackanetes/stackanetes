@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 data:
-  api-paste.ini: |-
+  api-paste.ini: |+
     # Use this pipeline for no auth - DEFAULT
     [pipeline:searchlight]
     pipeline = cors versionnegotiation unauthenticated-context rootapp
