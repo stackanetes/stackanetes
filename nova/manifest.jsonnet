@@ -42,9 +42,9 @@ kpm.package({
       external_ips: [],
 
       dns:  {
-        ip: "10.3.0.10",
+        servers: ["10.3.0.10"],
         kubernetes_domain: "cluster.local",
-        infra_domain: "",
+        other_domains: "",
       },
 
       port: {

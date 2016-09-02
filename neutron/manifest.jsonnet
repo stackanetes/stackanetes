@@ -39,9 +39,9 @@ kpm.package({
       minion_interface_name: "eno1",
 
       dns:  {
-        ip: "10.3.0.10",
+        servers: ["10.3.0.10"],
         kubernetes_domain: "cluster.local",
-        infra_domain: "",
+        other_domains: "",
       },
 
       port: {
