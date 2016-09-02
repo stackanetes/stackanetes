@@ -1,24 +1,47 @@
 deployment:
+  # Number of replicas of HA services to deploy.
   replicas: 1
   image:
+    # Base path for container images.
+    # '%s' is replaced by the application name.
     base: "quay.io/stackanetes/stackanetes-%s:barcelona"
 
 network:
+  # Network interface name on the Kubernetes nodes.
   minion_interface_name: eno1
+  # List of IPs of Kubernetes nodes that may be used
+  # to expose externally certain services when Ingress
+  # is disabled (i.e. Horizon, nova-novncproxy).
   external_ips: []
   dns:
-    servers:
-      - 10.3.0.10
+    # List of DNS servers to use for services that use
+    # the host network (i.e. Neutron, OpenvSwitch, nova-compute).
+    # This typically includes the Kubernetes cluster DNS and a
+    # DNS server that is able to resolve Kubernetes nodes.
+    servers: []
+    # Kubernetes domain name.
     kubernetes_domain: cluster.local
-    other_domains: 
+    # Any other domains to be included for DNS resolution.
+    other_domains:
   ingress:
+    # Whether or not external access to OpenStack APIs
+    # should be possible using simple domains.
+    # Modifying this after the initial deployment
+    # requires to manually override the Keystone endpoints.
     enabled: true
+    # Base path and port for external access.
+    # '%s' is replaced by the service name.
+    # Modifying this after the initial deployment
+    # requires to manually override the Keystone endpoints.
     host: "%s.openstack.cluster"
     port: 30080
 
 ceph:
-  enabled: true
+  # Whether or not Ceph should be used.
+  enabled: false
+  # List of monitors to use.
   monitors: []
+  # Users, keyrings and pools to use.
   cinder_user: "cinder"
   cinder_pool: "volumes"
   cinder_keyring: ""
@@ -28,7 +51,8 @@ ceph:
   nova_pool: "vms"
   rgw_user: rgw
   rgw_keyring: ""
-  secret_uuid: secret
+  # Random uuid used for Nova / Cinder communication.
+  # Should not be modified after the initial deployment.
   secret_uuid: bbc5b4d5-6fca-407d-807d-06a4f4a7bccb
 
 neutron:
@@ -57,7 +81,8 @@ misc:
   workers: 8
   debug: false
 
-# Single dependency's parameters can also be overriden:
+# It is possible to override parameters for specific
+# depencendies too.
 # stackanetes/neutron:
 #   misc:
 #     debug: true
