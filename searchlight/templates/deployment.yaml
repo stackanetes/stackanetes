@@ -35,7 +35,7 @@ spec:
             - name: DEPENDENCY_JOBS
               value: "searchlight-init"
             - name: DEPENDENCY_SERVICE
-              value: "rabbitmq,keystone-api,elasticsearch"
+              value: "rabbitmq,keystone-api,{{ elasticsearch.address }}"
             - name: DEPENDENCY_CONFIG
               value: "/etc/searchlight/searchlight.conf,/etc/searchlight/api-paste.ini,/etc/searchlight/policy.json"
           ports:
