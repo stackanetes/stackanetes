@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-set -e
-{{ ansible_task_cmd }} -m kolla_keystone_service -a "service_name=neutron service_type=network description='Openstack Networking' endpoint_region={{ openstack_region_name }} url='{{ neutron_admin_endpoint }}' interface=admin region_name={{ openstack_region_name }} auth='{{ openstack_neutron_auth }}'" -e "{'openstack_neutron_auth':{{ openstack_neutron_auth }}}"
-{{ ansible_task_cmd }} -m kolla_keystone_service -a "service_name=neutron service_type=network description='Openstack Networking' endpoint_region={{ openstack_region_name }} url='{{ neutron_internal_endpoint }}' interface=internal region_name={{ openstack_region_name }} auth='{{ openstack_neutron_auth }}'" -e "{'openstack_neutron_auth':{{ openstack_neutron_auth }}}"
-{{ ansible_task_cmd }} -m kolla_keystone_service -a "service_name=neutron service_type=network description='Openstack Networking' endpoint_region={{ openstack_region_name }} url='{{ neutron_public_endpoint }}' interface=public region_name={{ openstack_region_name }} auth='{{ openstack_neutron_auth }}'" -e "{'openstack_neutron_auth':{{ openstack_neutron_auth }}}"
-{{ ansible_task_cmd }} -m kolla_keystone_user -a "project=service user=neutron password={{ neutron_keystone_password }} role=admin region_name={{ openstack_region_name }} auth='{{ openstack_neutron_auth }}'" -e "{'openstack_neutron_auth':{{ openstack_neutron_auth }}}"
-  

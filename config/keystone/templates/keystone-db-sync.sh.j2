@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-set -e
-keystone-manage db_sync
-kolla_keystone_bootstrap {{ openstack_username }} {{ openstack_password }} {{ openstack_project_name }} admin {{ keystone_admin_endpoint }} {{ keystone_internal_endpoint }} {{ keystone_public_endpoint }} {{ openstack_region_name }}

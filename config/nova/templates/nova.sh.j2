@@ -1,8 +1,0 @@
-#!/bin/bash
-set -e
-{%- if ceph_enabled %}
-ceph auth get client.cinder -o /etc/ceph/ceph.client.cinder.keyring
-
-{% endif %}
-
-exec nova-compute --config-file /etc/nova/nova.conf
