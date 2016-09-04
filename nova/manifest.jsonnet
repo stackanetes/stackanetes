@@ -40,7 +40,7 @@ kpm.package({
     network: {
       ip_address: "{{ .IP }}",
       external_ips: [],
-
+      minion_interface_name: "eno1",
       dns:  {
         servers: ["10.3.0.10"],
         kubernetes_domain: "cluster.local",

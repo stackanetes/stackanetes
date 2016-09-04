@@ -21,7 +21,7 @@ spec:
             privileged: true
           env:
             - name: INTERFACE_NAME
-              value: eno1
+              value: {{ network.minion_interface_name }}
             - name: POD_NAME
               valueFrom:
                 fieldRef:
@@ -73,7 +73,7 @@ spec:
             privileged: true
           env:
             - name: INTERFACE_NAME
-              value: eno1
+              value: {{ network.minion_interface_name }}
             - name: POD_NAME
               valueFrom:
                 fieldRef:
