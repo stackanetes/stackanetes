@@ -4,6 +4,7 @@ data:
   nova.conf: |+
     [DEFAULT]
     debug = {{ misc.debug }}
+    # TODO(DTadrzak): FIX ME
     vif_plugging_is_fatal = False
     vif_plugging_timeout = 10
     default_ephemeral_format = ext3
