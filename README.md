@@ -31,7 +31,7 @@ Services are divided and scheduled into two groups, with the exception of the Op
 
 ### Gotta go fast
 
-Leaving aside the configuration of the [requirements], Stackanetes can fully deploy OpenStack from scratch in ~5-8min. But that's not the only strength of Stackanetes, it's true power resides on its ability to help managing OpenStack's lifecycle. 
+Leaving aside the configuration of the [requirements], Stackanetes can fully deploy OpenStack from scratch in ~5-8min. But that's not the only strength of Stackanetes, it's true power resides in its ability to help managing OpenStack's lifecycle. 
 
 [requirements]: #requirements
 
