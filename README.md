@@ -31,7 +31,7 @@ Services are divided and scheduled into two groups, with the exception of the Op
 
 ### Gotta go fast
 
-Leaving aside the configuration of the [requirements], Stackanetes can fully deploy OpenStack from scratch in ~5-8min. But that's not the only strength of Stackanetes, it's true power resides in its ability to help managing OpenStack's lifecycle. 
+Leaving aside the configuration of the [requirements], Stackanetes can fully deploy OpenStack from scratch in ~5-8min. But that's not the only strength of Stackanetes, its true power resides in its ability to help managing OpenStack's lifecycle.
 
 [requirements]: #requirements
 
@@ -43,8 +43,7 @@ Stackanetes requires Kubernetes 1.3+ with:
   - [Overlay network] & [DNS add-on],
   - Kubelet running with `--allow-privileged=true`,
 
-While Glance may operate with local storage, a Ceph cluster is needed for Cinder.
-Nova's live-migration feature also requires Ceph and DNS resolution of the Kubernetes nodes' hostnames.
+While Glance may operate with local storage, a Ceph cluster is needed for Cinder. Nova's live-migration feature requires DNS resolution of the Kubernetes nodes' hostnames.
 
 The [rkt] engine can be used in place of the default runtime for the control plane with Kubernetes 1.4+ and rkt 1.14+. Running the compute plane with it is [not yet] supported due to the lack of `--pid=host`, which is [used] by libvirt to decouple the ownership and lifecycle of the virtual machines from the Nova pods.
 
@@ -100,7 +99,7 @@ If external access is wanted, the Ingress feature should be enabled in Stackanet
 
 #### Ceph
 
-If data high availability, Nova's live migration or Cinder is desired, Ceph must be used. Deploying Ceph can be achieved easily [using bare containers] or even by  [using kubernetes].
+If data high availability, Nova's live migration or Cinder is desired, Ceph must be used. Deploying Ceph can be achieved easily [using bare containers] or even by [using kubernetes].
 
 Few users and pools have to be created. The user and pool names can be customized. Note down the keyrings, they will be used in the [configuration].
 
