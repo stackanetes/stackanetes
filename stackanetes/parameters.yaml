@@ -18,7 +18,8 @@ network:
     # the host network (i.e. Neutron, OpenvSwitch, nova-compute).
     # This typically includes the Kubernetes cluster DNS and a
     # DNS server that is able to resolve Kubernetes nodes.
-    servers: []
+    servers:
+      - 10.3.0.10
     # Kubernetes domain name.
     kubernetes_domain: cluster.local
     # Any other domains to be included for DNS resolution.
