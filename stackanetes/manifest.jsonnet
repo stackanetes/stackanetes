@@ -37,7 +37,7 @@ kpm.package({
     }
   ),
 
-  deploy: [ self.set_dependency_variables(dependency) for dependency in [
+  deploy: [ self.set_dependency_variables(dependency) for dependency in kpmstd.compact([
     // Data plane.
     { name: "stackanetes/mariadb" },
     { name: "stackanetes/rabbitmq" },
@@ -63,5 +63,5 @@ kpm.package({
     // Utility services.
     if $.variables.network.ingress.enabled == true then
       { name: "stackanetes/traefik" },
-  ]]
+  ])]
 }, params)
