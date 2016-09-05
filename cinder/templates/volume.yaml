@@ -8,7 +8,7 @@ spec:
         app: cinder-volume
     spec:
       nodeSelector:
-        {{ deployment.node_label}}: enabled
+        {{ deployment.control_node_label}}: enabled
       # TODO(DTadrzak): it must be removed in future
       securityContext:
         runAsUser: 0

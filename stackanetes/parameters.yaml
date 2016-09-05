@@ -1,6 +1,9 @@
 deployment:
   # Number of replicas of HA services to deploy.
   replicas: 1
+  # Labels of the nodes on which services are deployed.
+  control_node_label: "openstack-control-plane"
+  compute_node_label: "openstack-compute-node"
   image:
     # Base path for container images.
     # '%s' is replaced by the application name.

@@ -11,7 +11,7 @@ spec:
       securityContext:
         runAsUser: 0
       nodeSelector:
-        {{ deployment.node_label }}: enabled
+        {{ deployment.control_node_label }}: enabled
       containers:
         - name: glance-api
           image: {{ deployment.image.api }}

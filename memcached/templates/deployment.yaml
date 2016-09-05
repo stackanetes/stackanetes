@@ -8,7 +8,7 @@ spec:
         app: memcached
     spec:
       nodeSelector:
-        {{ deployment.node_label }}: enabled
+        {{ deployment.control_node_label }}: enabled
       containers:
         - name: memcached
           image: {{ deployment.image.memcached }}

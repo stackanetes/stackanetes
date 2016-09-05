@@ -8,7 +8,7 @@ spec:
         app: {{ deployment.app_label }}
     spec:
       nodeSelector:
-        {{ deployment.node_label }}: enabled
+        {{ deployment.control_node_label }}: enabled
       containers:
       - image: {{ deployment.image.elasticsearch }}
         name: {{ deployment.app_label }}

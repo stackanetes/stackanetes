@@ -16,7 +16,7 @@ kpm.package({
 
   variables: {
     deployment: {
-      node_label: "openstack-control-plane",
+      control_node_label: "openstack-control-plane",
       image: {
         base: "quay.io/stackanetes/stackanetes-%s:barcelona",
         mariadb: $.variables.deployment.image.base % "mariadb",

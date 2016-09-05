@@ -16,7 +16,7 @@ kpm.package({
 
   variables: {
     deployment: {
-      node_label: "openstack-control-plane",
+      control_node_label: "openstack-control-plane",
       compute_node_label: "openstack-compute-node",
 
       replicas: 1,

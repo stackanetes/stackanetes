@@ -8,7 +8,7 @@ spec:
         app: neutron-agents
     spec:
       nodeSelector:
-        {{ deployment.node_label }}: enabled
+        {{ deployment.control_node_label }}: enabled
       securityContext:
         runAsUser: 0
       dnsPolicy: ClusterFirst
