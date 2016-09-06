@@ -227,7 +227,7 @@ kpm.package({
       type: "job",
     },
 
-    // Daemons.
+    // Deployments.
     {
       file: "api/deployment.yaml",
       template: (importstr "templates/api/deployment.yaml"),
@@ -263,6 +263,7 @@ kpm.package({
       type: "deployment",
     },
 
+    // Daemonsets.
     {
       file: "compute/daemonset.yaml",
       template: (importstr "templates/compute/daemonset.yaml"),

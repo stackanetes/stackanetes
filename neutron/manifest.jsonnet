@@ -214,7 +214,7 @@ kpm.package({
       type: "job",
     },
 
-    // Daemons.
+    // Deployments.
     {
       file: "server/deployment.yaml",
       template: (importstr "templates/server/deployment.yaml"),
@@ -229,6 +229,7 @@ kpm.package({
       type: "deployment",
     },
 
+    // Daemonsets.
     {
       file: "openvswitch.yaml",
       template: (importstr "templates/openvswitch.yaml"),

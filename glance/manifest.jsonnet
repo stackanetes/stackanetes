@@ -167,7 +167,7 @@ kpm.package({
       type: "job",
     },
 
-    // Daemons.
+    // Deployments.
     {
       file: "api/deployment.yaml",
       template: (importstr "templates/api/deployment.yaml"),

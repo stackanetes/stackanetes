@@ -64,7 +64,7 @@ kpm.package({
       type: "configmap",
     },
 
-    // Daemons.
+    // Deployments.
     {
       file: "deployment.yaml",
       template: (importstr "templates/deployment.yaml"),

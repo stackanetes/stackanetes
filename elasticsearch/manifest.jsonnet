@@ -32,7 +32,7 @@ kpm.package({
   },
 
   resources: [
-    // Daemons.
+    // Deployments.
     {
       file: "deployment.yaml",
       template: (importstr "templates/deployment.yaml"),
