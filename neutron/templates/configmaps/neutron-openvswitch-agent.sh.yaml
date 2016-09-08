@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  neutron-openvswitch-agent.sh: |+
+    #!/bin/bash
+    set -x
+
+    ovs-vsctl add-br br-ex
+    exec sudo -E -u neutron neutron-openvswitch-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini

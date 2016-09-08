@@ -1,0 +1,37 @@
+sudo: false
+language: python
+cache: pip
+env:
+  matrix:
+    - >-
+      PACKAGE_DIR=stackanetes
+    - >-
+      PACKAGE_DIR=mariadb
+    - >-
+      PACKAGE_DIR=elasticsearch
+    - >-
+      PACKAGE_DIR=glance
+    - >-
+      PACKAGE_DIR=horizon
+    - >-
+      PACKAGE_DIR=keystone
+    - >-
+      PACKAGE_DIR=mariadb
+    - >-
+      PACKAGE_DIR=memcached
+    - >-
+      PACKAGE_DIR=neutron
+    - >-
+      PACKAGE_DIR=nova
+    - >-
+      PACKAGE_DIR=rabbitmq
+    - >-
+      PACKAGE_DIR=searchlight
+    - >-
+      PACKAGE_DIR=traefik
+
+install:
+  - pip install kpm --pre
+
+script:
+  - cd $PACKAGE_DIR && kpm jsonnet manifest.jsonnet

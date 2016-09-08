@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: {{ deployment.replicas }}
+  template:
+    metadata:
+      labels:
+        app: cinder-scheduler
+    spec:
+      nodeSelector:
+        {{ deployment.control_node_label}}: enabled
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: cinder-scheduler
+          image: {{ deployment.image.scheduler }}
+          imagePullPolicy: Always
+          # TODO(DTadrzak): it must be removed in future
+          securityContext:
+            privileged: true
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "cinder-scheduler"
+            - name: DEPENDENCY_JOBS
+              value: "cinder-db-sync"
+            - name: DEPENDENCY_SERVICE
+              value: "mariadb,rabbitmq,keystone-api"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/cinder/cinder.conf"
+          volumeMounts:
+            - name: cinderconf
+              mountPath: /configmaps/cinder.conf
+      volumes:
+        - name: cinderconf
+          configMap:
+            name: cinder-cinderconf

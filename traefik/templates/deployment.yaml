@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: traefik
+spec:
+  replicas: {{ deployment.replicas }}
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: {{ deployment.image.traefik }}
+        name: traefik
+        command: ["./traefik", "--web", "--kubernetes"]
+        ports:
+          - containerPort: 80
+          - containerPort: 443
+          - containerPort: 8080

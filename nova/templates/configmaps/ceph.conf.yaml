@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  ceph.conf: |+
+    [global]
+    rgw_thread_pool_size = 1024
+    rgw_num_rados_handles = 100
+    [mon]
+    {%- for mon in ceph.monitors %}
+        [mon.{{mon}}]
+          host = {{mon}}
+          mon_addr = {{mon}}
+    {%- endfor %}
+    [client]
+      rbd_cache_enabled = true
+      rbd_cache_writethrough_until_flush = true
+    

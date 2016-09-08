@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  resolv.conf: |+
+    search {{ namespace }}.svc.{{ network.dns.kubernetes_domain }} svc.{{ network.dns.kubernetes_domain }} {{ network.dns.kubernetes_domain }} {{ network.dns.other_domains }}
+    {% for server in network.dns.servers -%}
+    nameserver {{ server }}
+    {% endfor -%}
+    options ndots:5

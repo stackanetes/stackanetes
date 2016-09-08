@@ -1,0 +1,152 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+spec:
+  template:
+    metadata:
+      labels:
+        app: neutron-openvswitch
+    spec:
+      securityContext:
+        runAsUser: 0
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      containers:
+        - name: neutron-openvswitch-agent
+          image: {{ deployment.image.neutron_openvswitch_agent }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          env:
+            - name: INTERFACE_NAME
+              value: {{ network.minion_interface_name }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/neutron-openvswitch-agent.sh"
+            - name: DEPENDENCY_JOBS
+              value: "neutron-post,nova-post"
+            - name: DEPENDENCY_SERVICE
+              value: "keystone-api,glance-api,nova-api,neutron-server"
+            - name: DEPENDENCY_CONTAINER
+              value: "openvswitch-db-server,openvswitch-vswitchd"
+            - name: DEPENDENCY_CONFIG
+              value: "/tmp/neutron-openvswitch-agent.sh,/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/resolv.conf"
+          volumeMounts:
+            - name: neutronopenvswitchagentsh
+              mountPath: /configmaps/neutron-openvswitch-agent.sh
+            - name: neutronconf
+              mountPath: /configmaps/neutron.conf
+            - name: ml2confini
+              mountPath: /configmaps/ml2-conf.ini
+            - name: resolvconf
+              mountPath: /configmaps/resolv.conf
+            - name: libmodules
+              mountPath: /lib/modules
+              readOnly: true
+            - name: run
+              mountPath: /run
+        - name: openvswitch-db-server
+          image: {{ deployment.image.openvswitch_db_server }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          env:
+            - name: INTERFACE_NAME
+              value: {{ network.minion_interface_name }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/openvswitch-db-server.sh"
+            - name: DEPENDENCY_JOBS
+              value: "neutron-init,nova-post"
+            - name: DEPENDENCY_SERVICE
+              value: "neutron-server,rabbitmq,nova-api"
+            - name: DEPENDENCY_CONFIG
+              value: "/tmp/openvswitch-db-server.sh,/etc/resolv.conf"
+          volumeMounts:
+            - name: openvswitchdbserversh
+              mountPath: /configmaps/openvswitch-db-server.sh
+            - name: resolvconf
+              mountPath: /configmaps/resolv.conf
+            - name: varlibopenvswitch
+              mountPath: /var/lib/openvswitch/
+            - name: run
+              mountPath: /run
+        - name: openvswitch-vswitchd
+          image: {{ deployment.image.openvswitch_vswitchd }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          env:
+            - name: INTERFACE_NAME
+              value: {{ network.minion_interface_name }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/openvswitch-vswitchd.sh"
+            - name: DEPENDENCY_JOBS
+              value: "nova-init,neutron-init,nova-post"
+            - name: DEPENDENCY_SERVICE
+              value: "neutron-server,rabbitmq,nova-api"
+            - name: DEPENDENCY_CONFIG
+              value: "/tmp/openvswitch-vswitchd.sh,/tmp/openvswitch-ensure-configured.sh,/etc/resolv.conf"
+          volumeMounts:
+            - name: openvswitchvswitchdsh
+              mountPath: /configmaps/openvswitch-vswitchd.sh
+            - name: openvswitchensureconfiguredsh
+              mountPath: /configmaps/openvswitch-ensure-configured.sh
+            - name: resolvconf
+              mountPath: /configmaps/resolv.conf
+            - name: libmodules
+              mountPath: /lib/modules
+              readOnly: true
+            - name: run
+              mountPath: /run
+      volumes:
+        - name: openvswitchdbserversh
+          configMap:
+            name: neutron-openvswitchdbserversh
+        - name: openvswitchvswitchdsh
+          configMap:
+            name: neutron-openvswitchvswitchdsh
+        - name: openvswitchensureconfiguredsh
+          configMap:
+            name: neutron-openvswitchensureconfiguredsh
+        - name: varlibopenvswitch
+          emptyDir: {}
+        - name: neutronopenvswitchagentsh
+          configMap:
+            name: neutron-neutronopenvswitchagentsh
+        - name: neutronconf
+          configMap:
+            name: neutron-neutronconf
+        - name: ml2confini
+          configMap:
+            name: neutron-ml2confini
+        - name: resolvconf
+          configMap:
+            name: neutron-resolvconf
+        - name: libmodules
+          hostPath:
+            path: /lib/modules
+        - name: run
+          hostPath:
+            path: /run

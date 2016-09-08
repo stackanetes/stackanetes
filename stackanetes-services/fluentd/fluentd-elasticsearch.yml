@@ -1,8 +1,0 @@
-type: custom/fluentd-elasticsearch
-name: fluentd-elasticsearch
-centralized_logging_required: true
-external_ip_enabled: true
-namespace: kube-system
-ports:
-- port: 5601
-session_affinity: true

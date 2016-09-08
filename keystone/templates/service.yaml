@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+spec:
+  ports:
+  - name: keystone-api-public
+    port: {{ network.port.public }}
+  - name: keystone-api-admin
+    port: {{ network.port.admin }}
+  selector:
+    app: keystone-api

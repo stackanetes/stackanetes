@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  db-sync.sh: |+
+    #!/bin/bash
+    set -ex
+
+    keystone-manage db_sync
+    {% if network.ingress.enabled -%}
+      kolla_keystone_bootstrap {{ keystone.admin_user }} {{ keystone.admin_password }} {{ keystone.admin_project_name }} admin http://keystone-api:{{ network.port.admin }}/v3 http://keystone-api:{{ network.port.public }}/v3 http://{{ network.ingress.named_host }}:{{ network.ingress.port }}/v3 {{ keystone.admin_region_name }}
+    {%- else -%}
+      kolla_keystone_bootstrap {{ keystone.admin_user }} {{ keystone.admin_password }} {{ keystone.admin_project_name }} admin http://keystone-api:{{ network.port.admin }}/v3 http://keystone-api:{{ network.port.public }}/v3 http://keystone-api:{{ network.port.public }}/v3 {{ keystone.admin_region_name }}
+    {%- endif -%}

@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: {{ deployment.replicas }}
+  template:
+    metadata:
+      labels:
+        app: glance-registry
+    spec:
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      nodeSelector:
+        {{ deployment.control_node_label }}: enabled
+      containers:
+        - name: glance-registry
+          image: {{ deployment.image.registry }}
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "glance-registry"
+            - name: DEPENDENCY_JOBS
+              value: "glance-init,glance-db-sync"
+            - name: DEPENDENCY_SERVICE
+              value: "mariadb,rabbitmq,keystone-api,glance-api"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/glance/glance-registry.conf"
+          ports:
+            - containerPort: {{ network.port.registry }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ network.port.registry }}
+          volumeMounts:
+            - name: glanceregistryconf
+              mountPath: /configmaps/glance-registry.conf
+      volumes:
+        - name: glanceregistryconf
+          configMap:
+            name: glance-glanceregistryconf

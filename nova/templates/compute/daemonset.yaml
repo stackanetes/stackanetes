@@ -1,0 +1,160 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+spec:
+  template:
+    metadata:
+      labels:
+        app: compute-node
+    spec:
+      nodeSelector:
+        {{ deployment.compute_node_label }}: enabled
+      securityContext:
+        runAsUser: 0
+      hostNetwork: true
+      hostPID: true
+      dnsPolicy: ClusterFirst
+      containers:
+        - name: nova-compute
+          image: {{ deployment.image.compute }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          env:
+            - name: INTERFACE_NAME
+              value: {{ network.minion_interface_name }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/nova.sh"
+            - name: DEPENDENCY_JOBS
+              value: "nova-init,nova-post"
+            - name: DEPENDENCY_SERVICE
+              value: "keystone-api,glance-api,nova-api"
+            - name: DEPENDENCY_DAEMONSET
+              value: "neutron-openvswitch"
+            - name: DEPENDENCY_DEPLOYMENT
+              value: "neutron-agents"
+            - name: DEPENDENCY_CONTAINER
+              value: "nova-libvirt"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/nova/nova.conf,/tmp/nova.sh,/etc/resolv.conf,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring"
+          volumeMounts:
+            - name: novaconf
+              mountPath: /configmaps/nova.conf
+            - name: novash
+              mountPath: /configmaps/nova.sh
+            - name: resolvconf
+              mountPath: /configmaps/resolv.conf
+            - name: cephconf
+              mountPath: /configmaps/ceph.conf
+            - name: cephclientcinderkeyring
+              mountPath: /configmaps/ceph.client.{{ ceph.cinder_user }}.keyring
+            - mountPath: /lib/modules
+              name: libmodules
+              readOnly: true
+            - mountPath: /var/lib/nova
+              name: varlibnova
+            - mountPath: /var/lib/libvirt
+              name: varliblibvirt
+            - mountPath: /run
+              name: run
+            - mountPath: /sys/fs/cgroup
+              name: cgroup
+        - name: nova-libvirt
+          image: {{ deployment.image.libvirt }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          env:
+            - name: INTERFACE_NAME
+              value: {{ network.minion_interface_name }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/libvirt.sh"
+            - name: DEPENDENCY_JOBS
+              value: "nova-init,nova-post"
+            - name: DEPENDENCY_SERVICE
+              value: "keystone-api,glance-api,nova-api"
+            - name: DEPENDENCY_DAEMONSET
+              value: "neutron-openvswitch"
+            - name: DEPENDENCY_DEPLOYMENT
+              value: "neutron-agents"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/libvirt/libvirtd.conf,/tmp/libvirt.sh,/etc/resolv.conf,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring,/tmp/virsh-set-secret.sh"
+          volumeMounts:
+            - name: libvirtdconf
+              mountPath: /configmaps/libvirtd.conf
+            - name: libvirtsh
+              mountPath: /configmaps/libvirt.sh
+            - name: resolvconf
+              mountPath: /configmaps/resolv.conf
+            - name: cephconf
+              mountPath: /configmaps/ceph.conf
+            - name: cephclientcinderkeyring
+              mountPath: /configmaps/ceph.client.{{ ceph.cinder_user }}.keyring
+            - name: virshsetsecretsh
+              mountPath: /configmaps/virsh-set-secret.sh
+            - name: libmodules
+              mountPath: /lib/modules
+              readOnly: true
+            - name: varlibnova
+              mountPath: /var/lib/nova
+            - name: varliblibvirt
+              mountPath: /var/lib/libvirt
+            - name: run
+              mountPath: /run
+            - name: cgroup
+              mountPath: /sys/fs/cgroup
+      volumes:
+        - name: novaconf
+          configMap:
+            name: nova-novaconf
+        - name: novash
+          configMap:
+            name: nova-novash
+        - name: resolvconf
+          configMap:
+            name: nova-resolvconf
+        - name: cephconf
+          configMap:
+            name: nova-cephconf
+        - name: cephclientcinderkeyring
+          configMap:
+            name: nova-cephclientcinderkeyring
+        - name: libvirtdconf
+          configMap:
+            name: nova-libvirtdconf
+        - name: libvirtsh
+          configMap:
+            name: nova-libvirtsh
+        - name: virshsetsecretsh
+          configMap:
+            name: nova-virshsetsecretsh
+        - name: libmodules
+          hostPath:
+            path: /lib/modules
+        - name: varlibnova
+          hostPath:
+            path: /var/lib/nova
+        - name: varliblibvirt
+          hostPath:
+            path: /var/lib/libvirt
+        - name: run
+          hostPath:
+            path: /run
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup

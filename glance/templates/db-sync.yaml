@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: glance-db-sync
+          image: {{ deployment.image.db_sync }}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/db-sync.sh"
+            - name: DEPENDENCY_JOBS
+              value: "glance-init"
+            - name: DEPENDENCY_SERVICE
+              value: "mariadb"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/glance/glance-api.conf,/tmp/db-sync.sh"
+          volumeMounts:
+            - name: glanceapiconf
+              mountPath: /configmaps/glance-api.conf
+            - name: dbsyncsh
+              mountPath: /configmaps/db-sync.sh
+      volumes:
+        - name: glanceapiconf
+          configMap:
+            name: glance-glanceapiconf
+        - name: dbsyncsh
+          configMap:
+            name: glance-dbsyncsh

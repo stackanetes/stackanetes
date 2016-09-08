@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+spec:
+  {% if not network.ingress.enabled %}
+  externalIPs: {{ network.external_ips }}
+  {% endif %}
+  ports:
+    - port: {{ network.port.novncproxy }}
+  selector:
+    app: nova-novncproxy

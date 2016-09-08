@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ deployment.app_label }}
+    spec:
+      nodeSelector:
+        {{ deployment.control_node_label }}: enabled
+      containers:
+      - image: {{ deployment.image.elasticsearch }}
+        name: {{ deployment.app_label }}
+        # Elasticsearch tries to tweak seccomp and thus get SIGKILL'd by rkt
+        # if --insecure-options=seccomp isn't provided.
+        securityContext:
+          privileged: true
+        ports:
+          - containerPort: {{ network.port.api }}
+          - containerPort: {{ network.port.cluster }}
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+      - name: data
+        emptyDir: {}

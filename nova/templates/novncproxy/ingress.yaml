@@ -1,0 +1,10 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+spec:
+  rules:
+  - host: {{ network.ingress.named_host.novncproxy }}
+    http:
+      paths:
+      -  backend:
+          serviceName: nova-novncproxy
+          servicePort: {{ network.port.novncproxy }}

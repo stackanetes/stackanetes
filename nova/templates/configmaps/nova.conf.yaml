@@ -1,0 +1,130 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  nova.conf: |+
+    [DEFAULT]
+    debug = {{ misc.debug }}
+    # TODO(DTadrzak): FIX ME
+    vif_plugging_is_fatal = False
+    vif_plugging_timeout = 10
+    default_ephemeral_format = ext3
+    scheduler_host_subset_size = 30
+    ram_allocation_ratio=1.0
+    disk_allocation_ratio=1.0
+    cpu_allocation_ratio=8.0
+
+    api_paste_config = /etc/nova/api-paste.ini
+    state_path = /var/lib/nova
+
+    osapi_compute_listen = {{ network.ip_address }}
+    osapi_compute_listen_port = {{ network.port.api }}
+    osapi_compute_workers = {{ misc.workers }}
+
+    workers = {{ misc.workers }}
+
+    enabled_apis = osapi_compute
+
+    notification_driver = noop
+
+    use_neutron = True
+    security_group_api = neutron
+    network_api_class = nova.network.neutronv2.api.API
+    # TODO(DTadrzak): FIX ME
+    firewall_driver = nova.virt.firewall.NoopFirewallDriver
+    linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
+
+    allow_resize_to_same_host = true
+
+    compute_driver = libvirt.LibvirtDriver
+
+    # Though my_ip is not used directly, lots of other variables use $my_ip
+    my_ip = {{ network.ip_address }}
+
+    [vnc]
+    novncproxy_host = {{ network.ip_address }}
+    novncproxy_port = {{ network.port.novncproxy }}
+    vncserver_listen = 0.0.0.0
+    vncserver_proxyclient_address = {{ network.ip_address }}
+    vnc_enabled = True
+    {% if network.ingress.enabled %}
+    novncproxy_base_url = http://{{ network.ingress.named_host.novncproxy }}:{{ network.ingress.port }}/vnc_auto.html
+    {% elif network.external_ips|length > 0 %}
+    novncproxy_base_url = http://{{ network.external_ips[0] }}:{{ network.port.novncproxy }}/vnc_auto.html
+    {% else %}
+    novncproxy_base_url = http://{{ network.ip_address }}:{{ network.port.novncproxy }}/vnc_auto.html
+    {% endif %}
+
+    [oslo_messaging_rabbit]
+    rabbit_userid = {{ rabbitmq.admin_user }}
+    rabbit_password = {{ rabbitmq.admin_password }}
+    rabbit_ha_queues = true
+    rabbit_hosts = {{ rabbitmq.address }}
+
+    [oslo_concurrency]
+    lock_path = /var/lib/nova/tmp
+
+    [conductor]
+    workers = {{ misc.workers }}
+
+    [glance]
+    api_servers = {{ glance.api_url }}
+    num_retries = 3
+
+    [cinder]
+    catalog_info = volume:cinder:internalURL
+
+    [neutron]
+    url = {{ neutron.api_url }}
+    auth_strategy = keystone
+    metadata_proxy_shared_secret = {{ neutron.metadata_secret }}
+    service_metadata_proxy = true
+
+    auth_url = {{ keystone.auth_url }}
+    auth_plugin = password
+    project_domain_name = default
+    user_domain_id = default
+    project_name = service
+    username = {{ keystone.neutron_user }}
+    password = {{ keystone.neutron_password }}
+
+    [database]
+    connection = mysql+pymysql://{{ database.nova_user }}:{{ database.nova_password }}@{{ database.address }}/{{ database.nova_database_name }}
+    max_pool_size = {{ misc.workers }}
+    max_overflow  = {{ misc.workers }}
+
+    [api_database]
+    connection = mysql+pymysql://{{ database.nova_user }}:{{ database.nova_password }}@{{ database.address }}/{{ database.nova_api_database_name }}
+    max_pool_size = {{ misc.workers }}
+    max_overflow  = {{ misc.workers }}
+
+    [keystone_authtoken]
+    auth_uri = {{ keystone.auth_uri }}
+    auth_url = {{ keystone.auth_url }}
+    auth_plugin = password
+    project_domain_id = default
+    user_domain_id = default
+    project_name = service
+    username = {{ keystone.nova_user }}
+    password = {{ keystone.nova_password }}
+
+    [libvirt]
+    connection_uri = "qemu+tcp://{{ network.ip_address }}/system"
+    images_type = qcow2
+
+    {% if ceph.enabled %}
+    images_rbd_pool = {{ ceph.nova_pool }}
+    images_rbd_ceph_conf = /etc/ceph/ceph.conf
+    rbd_user = {{ ceph.cinder_user }}
+    rbd_secret_uuid = {{ ceph.secret_uuid }}
+    disk_cachemodes="network=writeback"
+    hw_disk_discard = unmap
+    inject_password = false
+    inject_key = false
+    inject_partition = -2
+    {% endif %}
+
+    [upgrade_levels]
+    compute = auto
+
+    [serial_console]
+    enabled = False

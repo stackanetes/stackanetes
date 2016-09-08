@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  api-paste.ini: |+
+    # Use this pipeline for no auth - DEFAULT
+    [pipeline:searchlight]
+    pipeline = cors versionnegotiation unauthenticated-context rootapp
+
+    [pipeline:searchlight-keystone]
+    pipeline = cors versionnegotiation authtoken context rootapp
+
+    [composite:rootapp]
+    paste.composite_factory = searchlight.api:root_app_factory
+    /: apiversions
+    /v1: apiv1app
+
+    [app:apiversions]
+    paste.app_factory = searchlight.api.versions:create_resource
+
+    [app:apiv1app]
+    paste.app_factory = searchlight.api.v1.router:API.factory
+
+    [filter:versionnegotiation]
+    paste.filter_factory = searchlight.api.middleware.version_negotiation:VersionNegotiationFilter.factory
+
+    [filter:unauthenticated-context]
+    paste.filter_factory = searchlight.api.middleware.context:UnauthenticatedContextMiddleware.factory
+
+    [filter:authtoken]
+    paste.filter_factory = keystonemiddleware.auth_token:filter_factory
+    delay_auth_decision = true
+
+    [filter:context]
+    paste.filter_factory = searchlight.api.middleware.context:ContextMiddleware.factory
+
+    [filter:cors]
+    paste.filter_factory = oslo_middleware.cors:filter_factory
+    oslo_config_project = searchlight
