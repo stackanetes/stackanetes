@@ -90,109 +90,109 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/init.sh.yaml",
-      template: (importstr "templates/configmaps/init.sh.yaml"),
+      file: "configmaps/init.sh.yaml.j2",
+      template: (importstr "templates/configmaps/init.sh.yaml.j2"),
       name: "glance-initsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/db-sync.sh.yaml",
-      template: (importstr "templates/configmaps/db-sync.sh.yaml"),
+      file: "configmaps/db-sync.sh.yaml.j2",
+      template: (importstr "templates/configmaps/db-sync.sh.yaml.j2"),
       name: "glance-dbsyncsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/post.sh.yaml",
-      template: (importstr "templates/configmaps/post.sh.yaml"),
+      file: "configmaps/post.sh.yaml.j2",
+      template: (importstr "templates/configmaps/post.sh.yaml.j2"),
       name: "glance-postsh",
       type: "configmap",
     },
 
     {
-      file: "api/configmaps/ceph.client.glance.keyring.yaml",
-      template: (importstr "templates/api/configmaps/ceph.client.glance.keyring.yaml"),
+      file: "api/configmaps/ceph.client.glance.keyring.yaml.j2",
+      template: (importstr "templates/api/configmaps/ceph.client.glance.keyring.yaml.j2"),
       name: "glance-cephclientglancekeyring",
       type: "configmap",
     },
 
     {
-      file: "api/configmaps/ceph.conf.yaml",
-      template: (importstr "templates/api/configmaps/ceph.conf.yaml"),
+      file: "api/configmaps/ceph.conf.yaml.j2",
+      template: (importstr "templates/api/configmaps/ceph.conf.yaml.j2"),
       name: "glance-cephconf",
       type: "configmap",
     },
 
     {
-      file: "api/configmaps/glance-api.conf.yaml",
-      template: (importstr "templates/api/configmaps/glance-api.conf.yaml"),
+      file: "api/configmaps/glance-api.conf.yaml.j2",
+      template: (importstr "templates/api/configmaps/glance-api.conf.yaml.j2"),
       name: "glance-glanceapiconf",
       type: "configmap",
     },
 
     {
-      file: "api/configmaps/start.sh.yaml",
-      template: (importstr "templates/api/configmaps/start.sh.yaml"),
+      file: "api/configmaps/start.sh.yaml.j2",
+      template: (importstr "templates/api/configmaps/start.sh.yaml.j2"),
       name: "glance-startsh",
       type: "configmap",
     },
 
     {
-      file: "registry/configmaps/glance-registry.conf.yaml",
-      template: (importstr "templates/registry/configmaps/glance-registry.conf.yaml"),
+      file: "registry/configmaps/glance-registry.conf.yaml.j2",
+      template: (importstr "templates/registry/configmaps/glance-registry.conf.yaml.j2"),
       name: "glance-glanceregistryconf",
       type: "configmap",
     },
 
     // Init.
     {
-      file: "init.yaml",
-      template: (importstr "templates/init.yaml"),
+      file: "init.yaml.j2",
+      template: (importstr "templates/init.yaml.j2"),
       name: "glance-init",
       type: "job",
     },
 
     {
-      file: "db-sync.yaml",
-      template: (importstr "templates/db-sync.yaml"),
+      file: "db-sync.yaml.j2",
+      template: (importstr "templates/db-sync.yaml.j2"),
       name: "glance-db-sync",
       type: "job",
     },
 
     {
-      file: "post.yaml",
-      template: (importstr "templates/post.yaml"),
+      file: "post.yaml.j2",
+      template: (importstr "templates/post.yaml.j2"),
       name: "glance-post",
       type: "job",
     },
 
     // Deployments.
     {
-      file: "api/deployment.yaml",
-      template: (importstr "templates/api/deployment.yaml"),
+      file: "api/deployment.yaml.j2",
+      template: (importstr "templates/api/deployment.yaml.j2"),
       name: "glance-api",
       type: "deployment",
     },
 
     {
-      file: "registry/deployment.yaml",
-      template: (importstr "templates/registry/deployment.yaml"),
+      file: "registry/deployment.yaml.j2",
+      template: (importstr "templates/registry/deployment.yaml.j2"),
       name: "glance-registry",
       type: "deployment",
     },
 
     // Services.
     {
-      file: "api/service.yaml",
-      template: (importstr "templates/api/service.yaml"),
+      file: "api/service.yaml.j2",
+      template: (importstr "templates/api/service.yaml.j2"),
       name: "glance-api",
       type: "service",
     },
 
     {
-      file: "registry/service.yaml",
-      template: (importstr "templates/registry/service.yaml"),
+      file: "registry/service.yaml.j2",
+      template: (importstr "templates/registry/service.yaml.j2"),
       name: "glance-registry",
       type: "service",
     },
@@ -200,8 +200,8 @@ kpm.package({
     // Ingresses.
     if $.variables.network.ingress.enabled == true then
       {
-        file: "api/ingress.yaml",
-        template: (importstr "templates/api/ingress.yaml"),
+        file: "api/ingress.yaml.j2",
+        template: (importstr "templates/api/ingress.yaml.j2"),
         name: "glance-api",
         type: "ingress",
       },

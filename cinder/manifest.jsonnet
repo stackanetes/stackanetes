@@ -96,81 +96,81 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/ceph.client.cinder.keyring.yaml",
-      template: (importstr "templates/configmaps/ceph.client.cinder.keyring.yaml"),
+      file: "configmaps/ceph.client.cinder.keyring.yaml.j2",
+      template: (importstr "templates/configmaps/ceph.client.cinder.keyring.yaml.j2"),
       name: "cinder-cephclientcinderkeyring",
       type: "configmap",
     },
 
     {
-      file: "configmaps/ceph.conf.yaml",
-      template: (importstr "templates/configmaps/ceph.conf.yaml"),
+      file: "configmaps/ceph.conf.yaml.j2",
+      template: (importstr "templates/configmaps/ceph.conf.yaml.j2"),
       name: "cinder-cephconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/cinder.conf.yaml",
-      template: (importstr "templates/configmaps/cinder.conf.yaml"),
+      file: "configmaps/cinder.conf.yaml.j2",
+      template: (importstr "templates/configmaps/cinder.conf.yaml.j2"),
       name: "cinder-cinderconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/init.sh.yaml",
-      template: (importstr "templates/configmaps/init.sh.yaml"),
+      file: "configmaps/init.sh.yaml.j2",
+      template: (importstr "templates/configmaps/init.sh.yaml.j2"),
       name: "cinder-initsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/db-sync.sh.yaml",
-      template: (importstr "templates/configmaps/db-sync.sh.yaml"),
+      file: "configmaps/db-sync.sh.yaml.j2",
+      template: (importstr "templates/configmaps/db-sync.sh.yaml.j2"),
       name: "cinder-dbsyncsh",
       type: "configmap",
     },
 
     // Init.
     {
-      file: "init.yaml",
-      template: (importstr "templates/init.yaml"),
+      file: "init.yaml.j2",
+      template: (importstr "templates/init.yaml.j2"),
       name: "cinder-init",
       type: "job",
     },
 
     {
-      file: "db-sync.yaml",
-      template: (importstr "templates/db-sync.yaml"),
+      file: "db-sync.yaml.j2",
+      template: (importstr "templates/db-sync.yaml.j2"),
       name: "cinder-db-sync",
       type: "job",
     },
 
     // Deployments.
     {
-      file: "api.yaml",
-      template: (importstr "templates/api.yaml"),
+      file: "api.yaml.j2",
+      template: (importstr "templates/api.yaml.j2"),
       name: "cinder-api",
       type: "deployment",
     },
 
     {
-      file: "scheduler.yaml",
-      template: (importstr "templates/scheduler.yaml"),
+      file: "scheduler.yaml.j2",
+      template: (importstr "templates/scheduler.yaml.j2"),
       name: "cinder-scheduler",
       type: "deployment",
     },
 
     {
-      file: "volume.yaml",
-      template: (importstr "templates/volume.yaml"),
+      file: "volume.yaml.j2",
+      template: (importstr "templates/volume.yaml.j2"),
       name: "cinder-volume",
       type: "deployment",
     },
 
     // Services.
     {
-      file: "service.yaml",
-      template: (importstr "templates/service.yaml"),
+      file: "service.yaml.j2",
+      template: (importstr "templates/service.yaml.j2"),
       name: "cinder-api",
       type: "service",
     },
@@ -178,8 +178,8 @@ kpm.package({
     // Ingresses.
     if $.variables.network.ingress.enabled == true then
       {
-        file: "ingress.yaml",
-        template: (importstr "templates/ingress.yaml"),
+        file: "ingress.yaml.j2",
+        template: (importstr "templates/ingress.yaml.j2"),
         name: "cinder-api",
         type: "ingress",
       },

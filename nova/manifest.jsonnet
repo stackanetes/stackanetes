@@ -129,159 +129,159 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/init.sh.yaml",
-      template: (importstr "templates/configmaps/init.sh.yaml"),
+      file: "configmaps/init.sh.yaml.j2",
+      template: (importstr "templates/configmaps/init.sh.yaml.j2"),
       name: "nova-initsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/db-sync.sh.yaml",
-      template: (importstr "templates/configmaps/db-sync.sh.yaml"),
+      file: "configmaps/db-sync.sh.yaml.j2",
+      template: (importstr "templates/configmaps/db-sync.sh.yaml.j2"),
       name: "nova-dbsyncsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/post.sh.yaml",
-      template: (importstr "templates/configmaps/post.sh.yaml"),
+      file: "configmaps/post.sh.yaml.j2",
+      template: (importstr "templates/configmaps/post.sh.yaml.j2"),
       name: "nova-postsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/nova.conf.yaml",
-      template: (importstr "templates/configmaps/nova.conf.yaml"),
+      file: "configmaps/nova.conf.yaml.j2",
+      template: (importstr "templates/configmaps/nova.conf.yaml.j2"),
       name: "nova-novaconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/nova.sh.yaml",
-      template: (importstr "templates/configmaps/nova.sh.yaml"),
+      file: "configmaps/nova.sh.yaml.j2",
+      template: (importstr "templates/configmaps/nova.sh.yaml.j2"),
       name: "nova-novash",
       type: "configmap",
     },
 
     {
-      file: "configmaps/resolv.conf.yaml",
-      template: (importstr "templates/configmaps/resolv.conf.yaml"),
+      file: "configmaps/resolv.conf.yaml.j2",
+      template: (importstr "templates/configmaps/resolv.conf.yaml.j2"),
       name: "nova-resolvconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/libvirtd.conf.yaml",
-      template: (importstr "templates/configmaps/libvirtd.conf.yaml"),
+      file: "configmaps/libvirtd.conf.yaml.j2",
+      template: (importstr "templates/configmaps/libvirtd.conf.yaml.j2"),
       name: "nova-libvirtdconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/ceph.client.cinder.keyring.yaml",
-      template: (importstr "templates/configmaps/ceph.client.cinder.keyring.yaml"),
+      file: "configmaps/ceph.client.cinder.keyring.yaml.j2",
+      template: (importstr "templates/configmaps/ceph.client.cinder.keyring.yaml.j2"),
       name: "nova-cephclientcinderkeyring",
       type: "configmap",
     },
 
     {
-      file: "configmaps/ceph.conf.yaml",
-      template: (importstr "templates/configmaps/ceph.conf.yaml"),
+      file: "configmaps/ceph.conf.yaml.j2",
+      template: (importstr "templates/configmaps/ceph.conf.yaml.j2"),
       name: "nova-cephconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/libvirt.sh.yaml",
-      template: (importstr "templates/configmaps/libvirt.sh.yaml"),
+      file: "configmaps/libvirt.sh.yaml.j2",
+      template: (importstr "templates/configmaps/libvirt.sh.yaml.j2"),
       name: "nova-libvirtsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/virsh-set-secret.sh.yaml",
-      template: (importstr "templates/configmaps/virsh-set-secret.sh.yaml"),
+      file: "configmaps/virsh-set-secret.sh.yaml.j2",
+      template: (importstr "templates/configmaps/virsh-set-secret.sh.yaml.j2"),
       name: "nova-virshsetsecretsh",
       type: "configmap",
     },
 
     // Init.
     {
-      file: "jobs/init.yaml",
-      template: (importstr "templates/jobs/init.yaml"),
+      file: "jobs/init.yaml.j2",
+      template: (importstr "templates/jobs/init.yaml.j2"),
       name: "nova-init",
       type: "job",
     },
 
     {
-      file: "jobs/db-sync.yaml",
-      template: (importstr "templates/jobs/db-sync.yaml"),
+      file: "jobs/db-sync.yaml.j2",
+      template: (importstr "templates/jobs/db-sync.yaml.j2"),
       name: "nova-db-sync",
       type: "job",
     },
 
     {
-      file: "jobs/post.yaml",
-      template: (importstr "templates/jobs/post.yaml"),
+      file: "jobs/post.yaml.j2",
+      template: (importstr "templates/jobs/post.yaml.j2"),
       name: "nova-post",
       type: "job",
     },
 
     // Deployments.
     {
-      file: "api/deployment.yaml",
-      template: (importstr "templates/api/deployment.yaml"),
+      file: "api/deployment.yaml.j2",
+      template: (importstr "templates/api/deployment.yaml.j2"),
       name: "nova-api",
       type: "deployment",
     },
 
     {
-      file: "auxiliary/conductor.yaml",
-      template: (importstr "templates/auxiliary/conductor.yaml"),
+      file: "auxiliary/conductor.yaml.j2",
+      template: (importstr "templates/auxiliary/conductor.yaml.j2"),
       name: "nova-conductor",
       type: "deployment",
     },
 
     {
-      file: "auxiliary/scheduler.yaml",
-      template: (importstr "templates/auxiliary/scheduler.yaml"),
+      file: "auxiliary/scheduler.yaml.j2",
+      template: (importstr "templates/auxiliary/scheduler.yaml.j2"),
       name: "nova-scheduler",
       type: "deployment",
     },
 
     {
-      file: "auxiliary/consoleauth.yaml",
-      template: (importstr "templates/auxiliary/consoleauth.yaml"),
+      file: "auxiliary/consoleauth.yaml.j2",
+      template: (importstr "templates/auxiliary/consoleauth.yaml.j2"),
       name: "nova-consoleauth",
       type: "deployment",
     },
 
     {
-      file: "novncproxy/deployment.yaml",
-      template: (importstr "templates/novncproxy/deployment.yaml"),
+      file: "novncproxy/deployment.yaml.j2",
+      template: (importstr "templates/novncproxy/deployment.yaml.j2"),
       name: "nova-novncproxy",
       type: "deployment",
     },
 
     // Daemonsets.
     {
-      file: "compute/daemonset.yaml",
-      template: (importstr "templates/compute/daemonset.yaml"),
+      file: "compute/daemonset.yaml.j2",
+      template: (importstr "templates/compute/daemonset.yaml.j2"),
       name: "nova-compute",
       type: "daemonset",
     },
 
     // Services.
     {
-      file: "api/service.yaml",
-      template: (importstr "templates/api/service.yaml"),
+      file: "api/service.yaml.j2",
+      template: (importstr "templates/api/service.yaml.j2"),
       name: "nova-api",
       type: "service",
     },
 
     {
-      file: "novncproxy/service.yaml",
-      template: (importstr "templates/novncproxy/service.yaml"),
+      file: "novncproxy/service.yaml.j2",
+      template: (importstr "templates/novncproxy/service.yaml.j2"),
       name: "nova-novncproxy",
       type: "service",
     },
@@ -289,16 +289,16 @@ kpm.package({
     // Ingresses.
     if $.variables.network.ingress.enabled == true then
       {
-        file: "api/ingress.yaml",
-        template: (importstr "templates/api/ingress.yaml"),
+        file: "api/ingress.yaml.j2",
+        template: (importstr "templates/api/ingress.yaml.j2"),
         name: "nova-api",
         type: "ingress",
       },
 
     if $.variables.network.ingress.enabled == true then
       {
-        file: "novncproxy/ingress.yaml",
-        template: (importstr "templates/novncproxy/ingress.yaml"),
+        file: "novncproxy/ingress.yaml.j2",
+        template: (importstr "templates/novncproxy/ingress.yaml.j2"),
         name: "nova-novncproxy",
         type: "ingress",
       },

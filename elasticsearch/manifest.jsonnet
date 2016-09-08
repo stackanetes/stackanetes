@@ -34,16 +34,16 @@ kpm.package({
   resources: [
     // Deployments.
     {
-      file: "deployment.yaml",
-      template: (importstr "templates/deployment.yaml"),
+      file: "deployment.yaml.j2",
+      template: (importstr "templates/deployment.yaml.j2"),
       name: $.variables.deployment.app_label,
       type: "deployment",
     },
 
     // Services.
     {
-      file: "service.yaml",
-      template: (importstr "templates/service.yaml"),
+      file: "service.yaml.j2",
+      template: (importstr "templates/service.yaml.j2"),
       name: $.variables.deployment.app_label,
       type: "service",
     },
