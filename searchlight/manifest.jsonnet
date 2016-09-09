@@ -74,53 +74,53 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/api-paste.ini.yaml",
-      template: (importstr "templates/configmaps/api-paste.ini.yaml"),
+      file: "configmaps/api-paste.ini.yaml.j2",
+      template: (importstr "templates/configmaps/api-paste.ini.yaml.j2"),
       name: "searchlight-apipasteini",
       type: "configmap",
     },
 
     {
-      file: "configmaps/init.sh.yaml",
-      template: (importstr "templates/configmaps/init.sh.yaml"),
+      file: "configmaps/init.sh.yaml.j2",
+      template: (importstr "templates/configmaps/init.sh.yaml.j2"),
       name: "searchlight-initsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/policy.json.yaml",
-      template: (importstr "templates/configmaps/policy.json.yaml"),
+      file: "configmaps/policy.json.yaml.j2",
+      template: (importstr "templates/configmaps/policy.json.yaml.j2"),
       name: "searchlight-policyjson",
       type: "configmap",
     },
 
     {
-      file: "configmaps/searchlight.conf.yaml",
-      template: (importstr "templates/configmaps/searchlight.conf.yaml"),
+      file: "configmaps/searchlight.conf.yaml.j2",
+      template: (importstr "templates/configmaps/searchlight.conf.yaml.j2"),
       name: "searchlight-searchlightconf",
       type: "configmap",
     },
 
     // Init.
     {
-      file: "init.yaml",
-      template: (importstr "templates/init.yaml"),
+      file: "init.yaml.j2",
+      template: (importstr "templates/init.yaml.j2"),
       name: "searchlight-init",
       type: "job",
     },
 
     // Deployments.
     {
-      file: "deployment.yaml",
-      template: (importstr "templates/deployment.yaml"),
+      file: "deployment.yaml.j2",
+      template: (importstr "templates/deployment.yaml.j2"),
       name: "searchlight-api",
       type: "deployment",
     },
 
     // Services.
     {
-      file: "service.yaml",
-      template: (importstr "templates/service.yaml"),
+      file: "service.yaml.j2",
+      template: (importstr "templates/service.yaml.j2"),
       name: "searchlight-api",
       type: "service",
     },
@@ -128,8 +128,8 @@ kpm.package({
     // Ingresses.
     if $.variables.network.ingress.enabled == true then
       {
-        file: "ingress.yaml",
-        template: (importstr "templates/ingress.yaml"),
+        file: "ingress.yaml.j2",
+        template: (importstr "templates/ingress.yaml.j2"),
         name: "searchlight-api",
         type: "ingress",
       },

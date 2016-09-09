@@ -47,45 +47,45 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/rabbitmq-clusterer.config.yaml",
-      template: (importstr "templates/configmaps/rabbitmq-clusterer.config.yaml"),
+      file: "configmaps/rabbitmq-clusterer.config.yaml.j2",
+      template: (importstr "templates/configmaps/rabbitmq-clusterer.config.yaml.j2"),
       name: "rabbitmq-rabbitmqclustererconfig",
       type: "configmap",
     },
 
     {
-      file: "configmaps/rabbitmq-env.conf.yaml",
-      template: (importstr "templates/configmaps/rabbitmq-env.conf.yaml"),
+      file: "configmaps/rabbitmq-env.conf.yaml.j2",
+      template: (importstr "templates/configmaps/rabbitmq-env.conf.yaml.j2"),
       name: "rabbitmq-rabbitmqenvconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/rabbitmq.config.yaml",
-      template: (importstr "templates/configmaps/rabbitmq.config.yaml"),
+      file: "configmaps/rabbitmq.config.yaml.j2",
+      template: (importstr "templates/configmaps/rabbitmq.config.yaml.j2"),
       name: "rabbitmq-rabbitmqconfig",
       type: "configmap",
     },
 
     {
-      file: "configmaps/start.sh.yaml",
-      template: (importstr "templates/configmaps/start.sh.yaml"),
+      file: "configmaps/start.sh.yaml.j2",
+      template: (importstr "templates/configmaps/start.sh.yaml.j2"),
       name: "rabbitmq-startsh",
       type: "configmap",
     },
 
     // Deployments.
     {
-      file: "deployment.yaml",
-      template: (importstr "templates/deployment.yaml"),
+      file: "deployment.yaml.j2",
+      template: (importstr "templates/deployment.yaml.j2"),
       name: "rabbitmq",
       type: "deployment",
     },
 
     // Services.
     {
-      file: "service.yaml",
-      template: (importstr "templates/service.yaml"),
+      file: "service.yaml.j2",
+      template: (importstr "templates/service.yaml.j2"),
       name: "rabbitmq",
       type: "service",
     },

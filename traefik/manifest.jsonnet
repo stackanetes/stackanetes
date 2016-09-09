@@ -35,23 +35,23 @@ kpm.package({
   resources: [
     // Deployments.
     {
-      file: "deployment.yaml",
-      template: (importstr "templates/deployment.yaml"),
+      file: "deployment.yaml.j2",
+      template: (importstr "templates/deployment.yaml.j2"),
       name: "traefik",
       type: "deployment",
     },
 
     // Services.
     {
-      file: "service.yaml",
-      template: (importstr "templates/service.yaml"),
+      file: "service.yaml.j2",
+      template: (importstr "templates/service.yaml.j2"),
       name: "traefik",
       type: "service",
     },
 
     {
-      file: "service-ui.yaml",
-      template: (importstr "templates/service-ui.yaml"),
+      file: "service-ui.yaml.j2",
+      template: (importstr "templates/service-ui.yaml.j2"),
       name: "traefik-ui",
       type: "service",
     },

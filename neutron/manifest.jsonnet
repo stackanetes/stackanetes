@@ -109,138 +109,138 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/dhcp-agent.ini.yaml",
-      template: (importstr "templates/configmaps/dhcp-agent.ini.yaml"),
+      file: "configmaps/dhcp-agent.ini.yaml.j2",
+      template: (importstr "templates/configmaps/dhcp-agent.ini.yaml.j2"),
       name: "neutron-dhcpagentini",
       type: "configmap",
     },
 
     {
-      file: "configmaps/dnsmasq.conf.yaml",
-      template: (importstr "templates/configmaps/dnsmasq.conf.yaml"),
+      file: "configmaps/dnsmasq.conf.yaml.j2",
+      template: (importstr "templates/configmaps/dnsmasq.conf.yaml.j2"),
       name: "neutron-dnsmasqconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/init.sh.yaml",
-      template: (importstr "templates/configmaps/init.sh.yaml"),
+      file: "configmaps/init.sh.yaml.j2",
+      template: (importstr "templates/configmaps/init.sh.yaml.j2"),
       name: "neutron-initsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/l3-agent.ini.yaml",
-      template: (importstr "templates/configmaps/l3-agent.ini.yaml"),
+      file: "configmaps/l3-agent.ini.yaml.j2",
+      template: (importstr "templates/configmaps/l3-agent.ini.yaml.j2"),
       name: "neutron-l3agentini",
       type: "configmap",
     },
 
     {
-      file: "configmaps/ml2-conf.ini.yaml",
-      template: (importstr "templates/configmaps/ml2-conf.ini.yaml"),
+      file: "configmaps/ml2-conf.ini.yaml.j2",
+      template: (importstr "templates/configmaps/ml2-conf.ini.yaml.j2"),
       name: "neutron-ml2confini",
       type: "configmap",
     },
 
     {
-      file: "configmaps/neutron-openvswitch-agent.sh.yaml",
-      template: (importstr "templates/configmaps/neutron-openvswitch-agent.sh.yaml"),
+      file: "configmaps/neutron-openvswitch-agent.sh.yaml.j2",
+      template: (importstr "templates/configmaps/neutron-openvswitch-agent.sh.yaml.j2"),
       name: "neutron-neutronopenvswitchagentsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/neutron.conf.yaml",
-      template: (importstr "templates/configmaps/neutron.conf.yaml"),
+      file: "configmaps/neutron.conf.yaml.j2",
+      template: (importstr "templates/configmaps/neutron.conf.yaml.j2"),
       name: "neutron-neutronconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/openvswitch-db-server.sh.yaml",
-      template: (importstr "templates/configmaps/openvswitch-db-server.sh.yaml"),
+      file: "configmaps/openvswitch-db-server.sh.yaml.j2",
+      template: (importstr "templates/configmaps/openvswitch-db-server.sh.yaml.j2"),
       name: "neutron-openvswitchdbserversh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/openvswitch-ensure-configured.sh.yaml",
-      template: (importstr "templates/configmaps/openvswitch-ensure-configured.sh.yaml"),
+      file: "configmaps/openvswitch-ensure-configured.sh.yaml.j2",
+      template: (importstr "templates/configmaps/openvswitch-ensure-configured.sh.yaml.j2"),
       name: "neutron-openvswitchensureconfiguredsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/openvswitch-vswitchd.sh.yaml",
-      template: (importstr "templates/configmaps/openvswitch-vswitchd.sh.yaml"),
+      file: "configmaps/openvswitch-vswitchd.sh.yaml.j2",
+      template: (importstr "templates/configmaps/openvswitch-vswitchd.sh.yaml.j2"),
       name: "neutron-openvswitchvswitchdsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/post.sh.yaml",
-      template: (importstr "templates/configmaps/post.sh.yaml"),
+      file: "configmaps/post.sh.yaml.j2",
+      template: (importstr "templates/configmaps/post.sh.yaml.j2"),
       name: "neutron-postsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/resolv.conf.yaml",
-      template: (importstr "templates/configmaps/resolv.conf.yaml"),
+      file: "configmaps/resolv.conf.yaml.j2",
+      template: (importstr "templates/configmaps/resolv.conf.yaml.j2"),
       name: "neutron-resolvconf",
       type: "configmap",
     },
 
     // Init.
     {
-      file: "init.yaml",
-      template: (importstr "templates/init.yaml"),
+      file: "init.yaml.j2",
+      template: (importstr "templates/init.yaml.j2"),
       name: "neutron-init",
       type: "job",
     },
 
     {
-      file: "db-sync.yaml",
-      template: (importstr "templates/db-sync.yaml"),
+      file: "db-sync.yaml.j2",
+      template: (importstr "templates/db-sync.yaml.j2"),
       name: "neutron-db-sync",
       type: "job",
     },
 
     {
-      file: "post.yaml",
-      template: (importstr "templates/post.yaml"),
+      file: "post.yaml.j2",
+      template: (importstr "templates/post.yaml.j2"),
       name: "neutron-post",
       type: "job",
     },
 
     // Deployments.
     {
-      file: "server/deployment.yaml",
-      template: (importstr "templates/server/deployment.yaml"),
+      file: "server/deployment.yaml.j2",
+      template: (importstr "templates/server/deployment.yaml.j2"),
       name: "neutron-server",
       type: "deployment",
     },
 
     {
-      file: "agents.yaml",
-      template: (importstr "templates/agents.yaml"),
+      file: "agents.yaml.j2",
+      template: (importstr "templates/agents.yaml.j2"),
       name: "neutron-agents",
       type: "deployment",
     },
 
     // Daemonsets.
     {
-      file: "openvswitch.yaml",
-      template: (importstr "templates/openvswitch.yaml"),
+      file: "openvswitch.yaml.j2",
+      template: (importstr "templates/openvswitch.yaml.j2"),
       name: "neutron-openvswitch",
       type: "deployment",
     },
 
     // Services.
     {
-      file: "server/service.yaml",
-      template: (importstr "templates/server/service.yaml"),
+      file: "server/service.yaml.j2",
+      template: (importstr "templates/server/service.yaml.j2"),
       name: "neutron-server",
       type: "service",
     },
@@ -248,8 +248,8 @@ kpm.package({
     // Ingresses.
     if $.variables.network.ingress.enabled == true then
       {
-        file: "server/ingress.yaml",
-        template: (importstr "templates/server/ingress.yaml"),
+        file: "server/ingress.yaml.j2",
+        template: (importstr "templates/server/ingress.yaml.j2"),
         name: "neutron-server",
         type: "ingress",
       },

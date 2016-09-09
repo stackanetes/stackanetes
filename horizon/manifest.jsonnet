@@ -54,38 +54,38 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/start.sh.yaml",
-      template: (importstr "templates/configmaps/start.sh.yaml"),
+      file: "configmaps/start.sh.yaml.j2",
+      template: (importstr "templates/configmaps/start.sh.yaml.j2"),
       name: "horizon-startsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/horizon.conf.yaml",
-      template: (importstr "templates/configmaps/horizon.conf.yaml"),
+      file: "configmaps/horizon.conf.yaml.j2",
+      template: (importstr "templates/configmaps/horizon.conf.yaml.j2"),
       name: "horizon-horizonconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/local_settings.yaml",
-      template: (importstr "templates/configmaps/local_settings.yaml"),
+      file: "configmaps/local_settings.yaml.j2",
+      template: (importstr "templates/configmaps/local_settings.yaml.j2"),
       name: "horizon-localsettings",
       type: "configmap",
     },
 
     // Deployments.
     {
-      file: "deployment.yaml",
-      template: (importstr "templates/deployment.yaml"),
+      file: "deployment.yaml.j2",
+      template: (importstr "templates/deployment.yaml.j2"),
       name: "horizon",
       type: "deployment",
     },
 
     // Services.
     {
-      file: "service.yaml",
-      template: (importstr "templates/service.yaml"),
+      file: "service.yaml.j2",
+      template: (importstr "templates/service.yaml.j2"),
       name: "horizon",
       type: "service",
     },
@@ -93,8 +93,8 @@ kpm.package({
     // Ingresses.
     if $.variables.network.ingress.enabled == true then
       {
-        file: "ingress.yaml",
-        template: (importstr "templates/ingress.yaml"),
+        file: "ingress.yaml.j2",
+        template: (importstr "templates/ingress.yaml.j2"),
         name: "horizon",
         type: "ingress",
       },

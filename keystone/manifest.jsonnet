@@ -73,74 +73,74 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/init.sh.yaml",
-      template: (importstr "templates/configmaps/init.sh.yaml"),
+      file: "configmaps/init.sh.yaml.j2",
+      template: (importstr "templates/configmaps/init.sh.yaml.j2"),
       name: "keystone-initsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/db-sync.sh.yaml",
-      template: (importstr "templates/configmaps/db-sync.sh.yaml"),
+      file: "configmaps/db-sync.sh.yaml.j2",
+      template: (importstr "templates/configmaps/db-sync.sh.yaml.j2"),
       name: "keystone-dbsyncsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/start.sh.yaml",
-      template: (importstr "templates/configmaps/start.sh.yaml"),
+      file: "configmaps/start.sh.yaml.j2",
+      template: (importstr "templates/configmaps/start.sh.yaml.j2"),
       name: "keystone-startsh",
       type: "configmap",
     },
 
     {
-      file: "configmaps/keystone.conf.yaml",
-      template: (importstr "templates/configmaps/keystone.conf.yaml"),
+      file: "configmaps/keystone.conf.yaml.j2",
+      template: (importstr "templates/configmaps/keystone.conf.yaml.j2"),
       name: "keystone-keystoneconf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/wsgi-keystone.conf.yaml",
-      template: (importstr "templates/configmaps/wsgi-keystone.conf.yaml"),
+      file: "configmaps/wsgi-keystone.conf.yaml.j2",
+      template: (importstr "templates/configmaps/wsgi-keystone.conf.yaml.j2"),
       name: "keystone-wsgikeystone",
       type: "configmap",
     },
 
     {
-      file: "configmaps/mpm_event.conf.yaml",
-      template: (importstr "templates/configmaps/mpm_event.conf.yaml"),
+      file: "configmaps/mpm_event.conf.yaml.j2",
+      template: (importstr "templates/configmaps/mpm_event.conf.yaml.j2"),
       name: "keystone-mpmeventconf",
       type: "configmap",
     },
 
     // Init.
     {
-      file: "init.yaml",
-      template: (importstr "templates/init.yaml"),
+      file: "init.yaml.j2",
+      template: (importstr "templates/init.yaml.j2"),
       name: "keystone-init",
       type: "job",
     },
 
     {
-      file: "db-sync.yaml",
-      template: (importstr "templates/db-sync.yaml"),
+      file: "db-sync.yaml.j2",
+      template: (importstr "templates/db-sync.yaml.j2"),
       name: "keystone-db-sync",
       type: "job",
     },
 
     // Deployments.
     {
-      file: "deployment.yaml",
-      template: (importstr "templates/deployment.yaml"),
+      file: "deployment.yaml.j2",
+      template: (importstr "templates/deployment.yaml.j2"),
       name: "keystone-api",
       type: "deployment",
     },
 
     // Services.
     {
-      file: "service.yaml",
-      template: (importstr "templates/service.yaml"),
+      file: "service.yaml.j2",
+      template: (importstr "templates/service.yaml.j2"),
       name: "keystone-api",
       type: "service",
     },
@@ -148,8 +148,8 @@ kpm.package({
     // Ingresses.
     if $.variables.network.ingress.enabled == true then
       {
-        file: "api/ingress.yaml",
-        template: (importstr "templates/ingress.yaml"),
+        file: "api/ingress.yaml.j2",
+        template: (importstr "templates/ingress.yaml.j2"),
         name: "keystone-api",
         type: "ingress",
       },

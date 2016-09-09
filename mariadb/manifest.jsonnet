@@ -51,31 +51,31 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/my.cnf.yaml",
-      template: (importstr "templates/configmaps/my.cnf.yaml"),
+      file: "configmaps/my.cnf.yaml.j2",
+      template: (importstr "templates/configmaps/my.cnf.yaml.j2"),
       name: "mariadb-mycnf",
       type: "configmap",
     },
 
     {
-      file: "configmaps/start.sh.yaml",
-      template: (importstr "templates/configmaps/start.sh.yaml"),
+      file: "configmaps/start.sh.yaml.j2",
+      template: (importstr "templates/configmaps/start.sh.yaml.j2"),
       name: "mariadb-startsh",
       type: "configmap",
     },
 
     // Deployments.
     {
-      file: "deployment.yaml",
-      template: (importstr "templates/deployment.yaml"),
+      file: "deployment.yaml.j2",
+      template: (importstr "templates/deployment.yaml.j2"),
       name: "mariadb",
       type: "deployment",
     },
 
     // Services.
     {
-      file: "service.yaml",
-      template: (importstr "templates/service.yaml"),
+      file: "service.yaml.j2",
+      template: (importstr "templates/service.yaml.j2"),
       name: "mariadb",
       type: "service",
     },
