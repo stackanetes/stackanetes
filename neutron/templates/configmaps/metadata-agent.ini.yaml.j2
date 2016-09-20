@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  metadata-agent.ini: |+
+    [DEFAULT]
+    nova_metadata_ip = nova-api
+    nova_metadata_port = {{ metadata.port }}
+    metadata_proxy_shared_secret = {{ metadata.secret }}

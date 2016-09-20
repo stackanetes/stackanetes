@@ -26,6 +26,7 @@ kpm.package({
         db_sync: $.variables.deployment.image.base % "neutron-server",
         server: $.variables.deployment.image.base % "neutron-server",
         dhcp: $.variables.deployment.image.base % "neutron-dhcp-agent",
+        metadata: $.variables.deployment.image.base % "neutron-metadata-agent",
         l3: $.variables.deployment.image.base % "neutron-l3-agent",
         neutron_openvswitch_agent: $.variables.deployment.image.base % "neutron-openvswitch-agent",
         openvswitch_db_server: $.variables.deployment.image.base % "openvswitch-db-server",
@@ -55,6 +56,11 @@ kpm.package({
 
         named_host: $.variables.network.ingress.host % "network",
       },
+    },
+
+    metadata: {
+      port: 8775,
+      secret: "password",
     },
 
     database: {
@@ -112,6 +118,13 @@ kpm.package({
       file: "configmaps/dhcp-agent.ini.yaml.j2",
       template: (importstr "templates/configmaps/dhcp-agent.ini.yaml.j2"),
       name: "neutron-dhcpagentini",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/metadata-agent.ini.yaml.j2",
+      template: (importstr "templates/configmaps/metadata-agent.ini.yaml.j2"),
+      name: "neutron-metadataagentini",
       type: "configmap",
     },
 
