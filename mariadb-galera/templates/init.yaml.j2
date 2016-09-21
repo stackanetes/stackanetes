@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: Job
+spec:
+  template:
+    metadata:
+      labels:
+        app: mariadb-galera
+    spec:
+      restartPolicy: OnFailure
+      # TODO(DTadrzak): it must be removed in future
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: mariadb-galera-init
+          image: {{ deployment.image.mariadb }}
+          imagePullPolicy: Always
+          # TODO(DTadrzak): it must be removed in future
+          securityContext:
+            privileged: true
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/mariadb-galera-seed.sh"
+            - name: ANSIBLE_LIBRARY
+              value: "/usr/share/ansible/"
+            - name: DEPENDENCY_CONFIG
+              value: "/tmp/mariadb-galera-seed.sh,/etc/mysql/my.cnf,/tmp/peer-finder.py"
+          volumeMounts:
+            - name: seedsh
+              mountPath: /configmaps/mariadb-galera-seed.sh
+            - name: peer-finder
+              mountPath: /configmaps/peer-finder.py
+            - name: mycnf
+              mountPath: /configmaps/my.cnf
+            - name: mysql
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: seedsh
+          configMap:
+            name: mariadb-galera-seedsh
+        - name: peer-finder
+          configMap:
+            name: mariadb-galera-peer-finder
+        - name: mycnf
+          configMap:
+            name: mariadb-galera-mycnf
+        - name: mysql
+          emptyDir: {}

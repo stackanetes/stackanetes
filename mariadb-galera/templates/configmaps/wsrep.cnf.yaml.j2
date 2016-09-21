@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  wsrep.cnf: |+
+    [mysqld]
+    wsrep_cluster_name = stackanetes
+    wsrep_provider = /usr/lib/galera/libgalera_smm.so
+    wsrep_provider_options = "gcache.size=512M"
+    wsrep_slave_threads = 12
+    wsrep_sst_auth = {{ database_user }}:{{ database_password }}
+    wsrep_sst_method = xtrabackup-v2
