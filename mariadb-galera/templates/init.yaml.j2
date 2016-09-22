@@ -6,14 +6,17 @@ spec:
       labels:
         app: mariadb-galera
     spec:
-      restartPolicy: OnFailure
+      restartPolicy: Never
       # TODO(DTadrzak): it must be removed in future
       securityContext:
         runAsUser: 0
+      terminationGracePeriodSeconds: 10000
       containers:
         - name: mariadb-galera-init
           image: {{ deployment.image.mariadb }}
-          imagePullPolicy: Always
+          # TODO(mateusz-blaszkowski): temporarily removed for faster debugging process
+          # imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           # TODO(DTadrzak): it must be removed in future
           securityContext:
             privileged: true
@@ -33,7 +36,7 @@ spec:
             - name: ANSIBLE_LIBRARY
               value: "/usr/share/ansible/"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/mariadb-galera-seed.sh,/etc/mysql/my.cnf,/tmp/peer-finder.py"
+              value: "/tmp/mariadb-galera-seed.sh,/etc/my.cnf,/tmp/peer-finder.py,/etc/my.cnf.d/pid.cnf"
           volumeMounts:
             - name: seedsh
               mountPath: /configmaps/mariadb-galera-seed.sh
@@ -41,6 +44,8 @@ spec:
               mountPath: /configmaps/peer-finder.py
             - name: mycnf
               mountPath: /configmaps/my.cnf
+            - name: pid
+              mountPath: /configmaps/pid.cnf
             - name: mysql
               mountPath: /var/lib/mysql
       volumes:
@@ -53,5 +58,8 @@ spec:
         - name: mycnf
           configMap:
             name: mariadb-galera-mycnf
+        - name: pid
+          configMap:
+            name: mariadb-galera-pid
         - name: mysql
           emptyDir: {}

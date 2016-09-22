@@ -14,8 +14,9 @@ data:
 
     function bootstrap_db {
         # Setup folders and permissions.
-        mkdir -p /etc/my.cnf.d
-        chown mysql: /etc/my.cnf.d
+        chmod -R 755 /etc/my.cnf.d
+        chown -R mysql: /etc/my.cnf.d
+        chown mysql: /etc/my.cnf
 
         chown mysql: /var/lib/mysql
 
@@ -26,12 +27,13 @@ data:
         su -s /bin/bash mysql - mysql -c 'mysql_install_db'
 
         # Start mariadb and wait for it to be ready.
-        su -s /bin/bash mysql -c "mysqld_safe --wsrep-new-cluster &"
-
-        # mysqld --defaults-file=/etc/my.cnf --console --wsrep-new-cluster \
-        #     --wsrep_cluster_address="gcomm://" \
-        #     --bind-address="127.0.0.1" --wsrep_node_address="127.0.0.1" \
-        #     --wsrep_provider_options="gcache.size=512M; gmcast.listen_addr=tcp://127.0.0.1:4567" &
+        su -s /bin/bash mysql -c "mysqld_safe --defaults-file=/etc/my.cnf \
+                                    --console \
+                                    --wsrep-new-cluster \
+                                    --wsrep_cluster_address='gcomm://' \
+                                    --bind-address='127.0.0.1' \
+                                    --wsrep_node_address='127.0.0.1' \
+                                    --wsrep_provider_options='gcache.size=512M; gmcast.listen_addr=tcp://127.0.0.1:4567' &"
 
         TIMEOUT=120
         while [[ ! -f /var/lib/mysql/mariadb.pid ]]; do
@@ -50,8 +52,10 @@ data:
 
         # Restart database.
         mysqladmin -uroot -p"{{ database.root_password }}" shutdown
-        su -s /bin/bash mysql -c "mysqld_safe --wsrep-new-cluster &"
-        # su -s /bin/bash mysql -c "mysqld --defaults-file=/etc/mysql/my.cnf --console --wsrep-new-cluster --wsrep_cluster_address="gcomm://" &"
+        su -s /bin/bash mysql -c "mysqld_safe --defaults-file=/etc/my.cnf \
+                                    --console \
+                                    --wsrep-new-cluster \
+                                    --wsrep_cluster_address='gcomm://' &"
     }
 
     function wait_for_cluster {

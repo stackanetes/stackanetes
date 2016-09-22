@@ -12,7 +12,7 @@ spec:
       securityContext:
         runAsUser: 0
       containers:
-        - name: mariadb
+        - name: mariadb-galera
           image: {{ deployment.image.mariadb }}
           # TODO(mateusz-blaszkowski): temporarily removed for faster debugging process
           # imagePullPolicy: Always
