@@ -37,6 +37,8 @@ spec:
               value: "/usr/share/ansible/"
             - name: DEPENDENCY_CONFIG
               value: "/tmp/mariadb-galera-seed.sh,/etc/my.cnf,/tmp/peer-finder.py,/etc/my.cnf.d/pid.cnf"
+          ports:
+            - containerPort: {{ network.port.mariadb }}
           volumeMounts:
             - name: seedsh
               mountPath: /configmaps/mariadb-galera-seed.sh

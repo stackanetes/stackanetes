@@ -147,7 +147,7 @@ kpm.package({
     {
       file: "daemonset.yaml.j2",
       template: (importstr "templates/daemonset.yaml.j2"),
-      name: "mariadb-galera",
+      name: "mariadb-galera-ds",
       type: "daemonset",
     },
 

@@ -1,10 +1,14 @@
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 spec:
+  selector:
+    matchLabels:
+      galera: enabled
   template:
     metadata:
       labels:
         app: mariadb-galera
+        galera: enabled
     spec:
       nodeSelector:
         {{ deployment.control_node_label }}: enabled
