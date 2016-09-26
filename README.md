@@ -43,7 +43,7 @@ Stackanetes requires Kubernetes 1.3+ with:
   - [Overlay network] & [DNS add-on],
   - Kubelet running with `--allow-privileged=true`,
 
-While Glance may operate with local storage, a Ceph cluster is needed for Cinder. Nova's live-migration feature requires DNS resolution of the Kubernetes nodes' hostnames.
+While Glance may operate with local storage, a Ceph cluster is needed for Cinder. Nova's live-migration feature requires proper DNS resolution of the Kubernetes nodes' hostnames.
 
 The [rkt] engine can be used in place of the default runtime with Kubernetes 1.4+ and rkt 1.14+. Note however that a known issue about mount propagation flags may prevent the Kubernetes' service account secret from being mounted properly on the Nova's libvirt pod, causing it to fail at startup.
 
@@ -107,7 +107,6 @@ Few users and pools have to be created. The user and pool names can be customize
     ceph osd pool create vms 128
     ceph auth get-or-create client.cinder mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=vms, allow rx pool=images'
     ceph auth get-or-create client.glance mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=images'
-    ceph auth get-or-create client.rgw osd 'allow rwx' mon 'allow rw'
 
 [using bare containers]: https://github.com/ceph/ceph-docker
 [using kubernetes]: https://github.com/ceph/ceph-docker/tree/master/examples/kubernetes
