@@ -52,6 +52,19 @@ data:
 
         # Restart database.
         mysqladmin -uroot -p"{{ database.root_password }}" shutdown
+
+        # Wait for the mariadb server to shut down
+        SHUTDOWN_TIMEOUT=60
+        while [[ -f /var/lib/mysql/mariadb.pid ]]; do
+            if [[ ${SHUTDOWN_TIMEOUT} -gt 0 ]]; then
+                let SHUTDOWN_TIMEOUT-=1
+                sleep 1
+            else
+                echo "MariaDB instance couldn't be properly shut down"
+                exit 1
+            fi
+        done
+
         su -s /bin/bash mysql -c "mysqld_safe --defaults-file=/etc/my.cnf \
                                     --console \
                                     --wsrep-new-cluster \

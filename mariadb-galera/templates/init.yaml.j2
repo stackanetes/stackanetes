@@ -36,7 +36,7 @@ spec:
             - name: ANSIBLE_LIBRARY
               value: "/usr/share/ansible/"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/mariadb-galera-seed.sh,/etc/my.cnf,/tmp/peer-finder.py,/etc/my.cnf.d/pid.cnf"
+              value: "/tmp/mariadb-galera-seed.sh,/tmp/peer-finder.py,/etc/my.cnf.d/charsets.cnf,/etc/my.cnf.d/engine.cnf,/etc/my.cnf.d/log.cnf,/etc/my.cnf,/etc/my.cnf.d/networking.cnf,/etc/my.cnf.d/pid.cnf,/etc/my.cnf.d/tuning.cnf,/etc/my.cnf.d/wsrep.cnf"
           ports:
             - containerPort: {{ network.port.mariadb }}
           volumeMounts:
@@ -44,10 +44,22 @@ spec:
               mountPath: /configmaps/mariadb-galera-seed.sh
             - name: peer-finder
               mountPath: /configmaps/peer-finder.py
+            - name: charsets
+              mountPath: /configmaps/charsets.cnf
+            - name: engine
+              mountPath: /configmaps/engine.cnf
+            - name: log
+              mountPath: /configmaps/log.cnf
             - name: mycnf
               mountPath: /configmaps/my.cnf
+            - name: networking
+              mountPath: /configmaps/networking.cnf
             - name: pid
               mountPath: /configmaps/pid.cnf
+            - name: tuning
+              mountPath: /configmaps/tuning.cnf
+            - name: wsrep
+              mountPath: /configmaps/wsrep.cnf
             - name: mysql
               mountPath: /var/lib/mysql
       volumes:
@@ -57,11 +69,29 @@ spec:
         - name: peer-finder
           configMap:
             name: mariadb-galera-peer-finder
+        - name: charsets
+          configMap:
+            name: mariadb-galera-charsets
+        - name: engine
+          configMap:
+            name: mariadb-galera-engine
+        - name: log
+          configMap:
+            name: mariadb-galera-log
         - name: mycnf
           configMap:
             name: mariadb-galera-mycnf
+        - name: networking
+          configMap:
+            name: mariadb-galera-networking
         - name: pid
           configMap:
             name: mariadb-galera-pid
+        - name: tuning
+          configMap:
+            name: mariadb-galera-tuning
+        - name: wsrep
+          configMap:
+            name: mariadb-galera-wsrep
         - name: mysql
           emptyDir: {}

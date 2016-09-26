@@ -50,10 +50,10 @@ spec:
               mountPath: /configmaps/charsets.cnf
             - name: engine
               mountPath: /configmaps/engine.cnf
-            - name: mycnf
-              mountPath: /configmaps/my.cnf
             - name: log
               mountPath: /configmaps/log.cnf
+            - name: mycnf
+              mountPath: /configmaps/my.cnf
             - name: networking
               mountPath: /configmaps/networking.cnf
             - name: pid
@@ -77,12 +77,12 @@ spec:
         - name: engine
           configMap:
             name: mariadb-galera-engine
-        - name: mycnf
-          configMap:
-            name: mariadb-galera-mycnf
         - name: log
           configMap:
             name: mariadb-galera-log
+        - name: mycnf
+          configMap:
+            name: mariadb-galera-mycnf
         - name: networking
           configMap:
             name: mariadb-galera-networking

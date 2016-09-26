@@ -50,14 +50,6 @@ kpm.package({
 
   resources: [
     // Config maps.
-    // TODO: remove my.cnf.yaml.j2
-    {
-      file: "configmaps/my.cnf.yaml.j2",
-      template: (importstr "templates/configmaps/my.cnf.yaml.j2"),
-      name: "mariadb-mycnf",
-      type: "configmap",
-    },
-
     {
       file: "configmaps/seed.sh.yaml.j2",
       template: (importstr "templates/configmaps/mariadb-galera-seed.sh.yaml.j2"),

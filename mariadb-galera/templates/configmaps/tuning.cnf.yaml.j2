@@ -7,6 +7,7 @@ data:
     max_allowed_packet = 256M
     open_files_limit = 10240
     max_connections = 8192
+    max-connect-errors = 1000000
 
     ## Generally, it is unwise to set the query cache to be larger than 64-128M
     ## as the costs associated with maintaining the cache outweigh the performance
