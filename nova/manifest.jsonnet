@@ -16,6 +16,7 @@ kpm.package({
 
   variables: {
     deployment: {
+      engine: "docker",
       control_node_label: "openstack-control-plane",
       compute_node_label: "openstack-compute-node",
 
@@ -265,9 +266,16 @@ kpm.package({
 
     // Daemonsets.
     {
-      file: "compute/daemonset.yaml.j2",
-      template: (importstr "templates/compute/daemonset.yaml.j2"),
+      file: "compute/compute.yaml.j2",
+      template: (importstr "templates/compute/compute.yaml.j2"),
       name: "nova-compute",
+      type: "daemonset",
+    },
+
+    {
+      file: "compute/libvirt.yaml.j2",
+      template: (importstr "templates/compute/libvirt.yaml.j2"),
+      name: "nova-libvirt",
       type: "daemonset",
     },
 
