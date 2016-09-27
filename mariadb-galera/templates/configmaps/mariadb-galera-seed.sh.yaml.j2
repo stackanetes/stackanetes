@@ -33,7 +33,7 @@ data:
                                     --wsrep_cluster_address='gcomm://' \
                                     --bind-address='127.0.0.1' \
                                     --wsrep_node_address='127.0.0.1' \
-                                    --wsrep_provider_options='gcache.size=512M; gmcast.listen_addr=tcp://127.0.0.1:4567' &"
+                                    --wsrep_provider_options='gcache.size=512M; gmcast.listen_addr=tcp://127.0.0.1:{{ network.port.wsrep }}' &"
 
         TIMEOUT=120
         while [[ ! -f /var/lib/mysql/mariadb.pid ]]; do
@@ -47,11 +47,11 @@ data:
 
         # Reset permissions.
         DB_ROOT_PASSWORD="{{ database.root_password }}" kolla_security_reset
-        mysql -u root --password="{{ database.root_password }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
-        mysql -u root --password="{{ database.root_password }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
+        mysql -u root --password="{{ database.root_password }}" --port="{{ network.port.mariadb }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
+        mysql -u root --password="{{ database.root_password }}" --port="{{ network.port.mariadb }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
 
         # Restart database.
-        mysqladmin -uroot -p"{{ database.root_password }}" shutdown
+        mysqladmin -uroot -p"{{ database.root_password }}" --port="{{ network.port.mariadb }}" shutdown
 
         # Wait for the mariadb server to shut down
         SHUTDOWN_TIMEOUT=60
@@ -85,13 +85,13 @@ data:
 
         # wait until we have at least two more members in a cluster.
         while true ; do
-            CLUSTER_SIZE=`mysql -uroot -p"{{ database.root_password }}" -e'show status' | grep wsrep_cluster_size | awk ' { if($2 ~ /[0-9]/){ print $2 } else { print 0 } } '`
+            CLUSTER_SIZE=`mysql -uroot -p"{{ database.root_password }}" --port="{{ network.port.mariadb }}" -e'show status' | grep wsrep_cluster_size | awk ' { if($2 ~ /[0-9]/){ print $2 } else { print 0 } } '`
             if [ "${CLUSTER_SIZE}" -lt ${MINIMUM_CLUSTER_SIZE} ] ; then
                 echo "Cluster seed not finished, waiting."
                 sleep ${SLEEP_TIMEOUT}
                 continue
             fi
-            CLUSTER_STATUS=`mysql -uroot -p"{{ database.root_password }}" -e'show status' | grep wsrep_local_state_comment | awk ' { print $2 } '`
+            CLUSTER_STATUS=`mysql -uroot -p"{{ database.root_password }}" --port="{{ network.port.mariadb }}" -e'show status' | grep wsrep_local_state_comment | awk ' { print $2 } '`
             if [ "${CLUSTER_STATUS}" != "Synced" ] ; then
                 echo "Cluster not synced, waiting."
                 sleep ${SLEEP_TIMEOUT}

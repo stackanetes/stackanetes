@@ -3,7 +3,8 @@ kind: ConfigMap
 data:
   networking.cnf: |+
     [mysqld]
-    bind_address = 0.0.0.0
+    bind_address=0.0.0.0
+    port={{ network.port.mariadb }}
 
     # When a client connects, the server will perform hostname resolution,
     # and when DNS is slow, establishing the connection will become slow as well.
@@ -13,4 +14,5 @@ data:
     skip_name_resolve
 
     [client]
-    protocol = tcp
+    protocol=tcp
+    port={{ network.port.mariadb }}
