@@ -10,3 +10,4 @@ data:
     wsrep_sst_auth=root:{{ database.root_password }}
     wsrep_sst_method=xtrabackup-v2
     wsrep_node_name={{ database.node_name }}
+    wsrep_node_address={{ network.ip_address }}:{{ network.port.wsrep }}
