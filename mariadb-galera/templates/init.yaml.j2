@@ -14,9 +14,7 @@ spec:
       containers:
         - name: mariadb-galera-init
           image: {{ deployment.image.mariadb }}
-          # TODO(mateusz-blaszkowski): temporarily removed for faster debugging process
-          # imagePullPolicy: Always
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           # TODO(DTadrzak): it must be removed in future
           securityContext:
             privileged: true
