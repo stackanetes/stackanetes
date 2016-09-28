@@ -61,7 +61,7 @@ spec:
             - name: wsrep
               mountPath: /configmaps/wsrep.cnf
             - name: mysql
-              mountPath: /var/lib/mysql
+              mountPath: /var/lib/mysql/openstack
       volumes:
         - name: startsh
           configMap:
@@ -94,4 +94,5 @@ spec:
           configMap:
             name: mariadb-wsrep
         - name: mysql
-          emptyDir: {}
+          hostPath:
+            path: /var/lib/mysql/openstack

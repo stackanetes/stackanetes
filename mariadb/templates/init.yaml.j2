@@ -58,8 +58,6 @@ spec:
               mountPath: /configmaps/tuning.cnf
             - name: wsrep
               mountPath: /configmaps/wsrep.cnf
-            # - name: mysql
-            #   mountPath: /var/lib/mysql
       volumes:
         - name: seedsh
           configMap:
@@ -91,5 +89,3 @@ spec:
         - name: wsrep
           configMap:
             name: mariadb-wsrep
-        # - name: mysql
-        #   emptyDir: {}
