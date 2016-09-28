@@ -1,24 +1,23 @@
-apiVersion: extensions/v1beta1
-kind: DaemonSet
+apiVersion: batch/v1
+kind: Job
 spec:
-  selector:
-    matchLabels:
-      galera: enabled
   template:
     metadata:
       labels:
-        app: mariadb-galera
-        galera: enabled
+        app: mariadb
     spec:
-      nodeSelector:
-        {{ deployment.control_node_label }}: enabled
-      # TODO(DTadrzak): it must be removed in the future
+      restartPolicy: Never
+      # TODO(DTadrzak): it must be removed in future
       securityContext:
         runAsUser: 0
+      terminationGracePeriodSeconds: 10000
       containers:
-        - name: mariadb-galera
+        - name: mariadb-init
           image: {{ deployment.image.mariadb }}
           imagePullPolicy: Always
+          # TODO(DTadrzak): it must be removed in future
+          securityContext:
+            privileged: true
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -31,17 +30,16 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: COMMAND
-              value: "bash /tmp/mariadb-galera-start.sh"
+              value: "bash /tmp/seed.sh"
+            - name: ANSIBLE_LIBRARY
+              value: "/usr/share/ansible/"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/mariadb-galera-start.sh,/tmp/peer-finder.py,/etc/my.cnf,/etc/my.cnf.d/charsets.cnf,/etc/my.cnf.d/engine.cnf,/etc/my.cnf.d/log.cnf,/etc/my.cnf.d/networking.cnf,/etc/my.cnf.d/pid.cnf,/etc/my.cnf.d/tuning.cnf,/etc/my.cnf.d/wsrep.cnf"
+              value: "/tmp/seed.sh,/tmp/peer-finder.py,/etc/my.cnf.d/charsets.cnf,/etc/my.cnf.d/engine.cnf,/etc/my.cnf.d/log.cnf,/etc/my.cnf,/etc/my.cnf.d/networking.cnf,/etc/my.cnf.d/pid.cnf,/etc/my.cnf.d/tuning.cnf,/etc/my.cnf.d/wsrep.cnf"
           ports:
             - containerPort: {{ network.port.mariadb }}
-          readinessProbe:
-            tcpSocket:
-              port: {{ network.port.mariadb }}
           volumeMounts:
-            - name: startsh
-              mountPath: /configmaps/mariadb-galera-start.sh
+            - name: seedsh
+              mountPath: /configmaps/seed.sh
             - name: peer-finder
               mountPath: /configmaps/peer-finder.py
             - name: charsets
@@ -60,38 +58,38 @@ spec:
               mountPath: /configmaps/tuning.cnf
             - name: wsrep
               mountPath: /configmaps/wsrep.cnf
-            - name: mysql
-              mountPath: /var/lib/mysql
+            # - name: mysql
+            #   mountPath: /var/lib/mysql
       volumes:
-        - name: startsh
+        - name: seedsh
           configMap:
-            name: mariadb-galera-startsh
+            name: seedsh
         - name: peer-finder
           configMap:
-            name: mariadb-galera-peer-finder
+            name: mariadb-peer-finder
         - name: charsets
           configMap:
-            name: mariadb-galera-charsets
+            name: mariadb-charsets
         - name: engine
           configMap:
-            name: mariadb-galera-engine
+            name: mariadb-engine
         - name: log
           configMap:
-            name: mariadb-galera-log
+            name: mariadb-log
         - name: mycnf
           configMap:
-            name: mariadb-galera-mycnf
+            name: mariadb-mycnf
         - name: networking
           configMap:
-            name: mariadb-galera-networking
+            name: mariadb-networking
         - name: pid
           configMap:
-            name: mariadb-galera-pid
+            name: mariadb-pid
         - name: tuning
           configMap:
-            name: mariadb-galera-tuning
+            name: mariadb-tuning
         - name: wsrep
           configMap:
-            name: mariadb-galera-wsrep
-        - name: mysql
-          emptyDir: {}
+            name: mariadb-wsrep
+        # - name: mysql
+        #   emptyDir: {}
