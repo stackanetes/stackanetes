@@ -53,14 +53,14 @@ kpm.package({
     {
       file: "configmaps/seed.sh.yaml.j2",
       template: (importstr "templates/configmaps/seed.sh.yaml.j2"),
-      name: "seedsh",
+      name: "mariadb-seedsh",
       type: "configmap",
     },
 
     {
       file: "configmaps/start.sh.yaml.j2",
       template: (importstr "templates/configmaps/start.sh.yaml.j2"),
-      name: "startsh",
+      name: "mariadb-startsh",
       type: "configmap",
     },
 
@@ -139,7 +139,7 @@ kpm.package({
     {
       file: "daemonset.yaml.j2",
       template: (importstr "templates/daemonset.yaml.j2"),
-      name: "mariadb-ds",
+      name: "mariadb",
       type: "daemonset",
     },
 
