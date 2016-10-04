@@ -27,6 +27,7 @@ kpm.package({
 
         init: $.variables.deployment.image.base % "kolla-toolbox",
         db_sync: $.variables.deployment.image.base % "nova-api",
+        drain: $.variables.deployment.image.base % "nova-drain",
         api: $.variables.deployment.image.base % "nova-api",
         conductor: $.variables.deployment.image.base % "nova-conductor",
         scheduler: $.variables.deployment.image.base % "nova-scheduler",
@@ -64,6 +65,10 @@ kpm.package({
           novncproxy: $.variables.network.ingress.host % "novnc.compute",
         }
       },
+    },
+
+    drain: {
+      timeout: 15,
     },
 
     database: {
@@ -133,6 +138,13 @@ kpm.package({
       file: "configmaps/init.sh.yaml.j2",
       template: (importstr "templates/configmaps/init.sh.yaml.j2"),
       name: "nova-initsh",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/drain-conf.yaml.j2",
+      template: (importstr "templates/configmaps/drain-conf.yaml.j2"),
+      name: "drain-conf",
       type: "configmap",
     },
 
