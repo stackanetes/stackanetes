@@ -236,9 +236,23 @@ kpm.package({
     },
 
     {
-      file: "agents.yaml.j2",
-      template: (importstr "templates/agents.yaml.j2"),
-      name: "neutron-agents",
+      file: "agents/dhcp-agent.yaml.j2",
+      template: (importstr "templates/agents/dhcp-agent.yaml.j2"),
+      name: "neutron-dhcp-agent",
+      type: "deployment",
+    },
+
+    {
+      file: "agents/l3-agent.yaml.j2",
+      template: (importstr "templates/agents/l3-agent.yaml.j2"),
+      name: "neutron-l3-agent",
+      type: "deployment",
+    },
+
+    {
+      file: "agents/metadata-agent.yaml.j2",
+      template: (importstr "templates/agents/metadata-agent.yaml.j2"),
+      name: "neutron-metadata-agent",
       type: "deployment",
     },
 
