@@ -39,6 +39,10 @@ kpm.package({
       ip_address: "{{ .IP }}",
       minion_interface_name: "eno1",
 
+      nova: {
+        ip: "nova-api"  ,
+      },
+
       dns:  {
         servers: ["10.3.0.10"],
         kubernetes_domain: "cluster.local",
@@ -47,6 +51,7 @@ kpm.package({
 
       port: {
         server: 9696,
+        metadata: 8775,
       },
 
       ingress: {
@@ -56,11 +61,6 @@ kpm.package({
 
         named_host: $.variables.network.ingress.host % "network",
       },
-    },
-
-    metadata: {
-      port: 8775,
-      secret: "password",
     },
 
     database: {
@@ -104,6 +104,7 @@ kpm.package({
 
     neutron: {
       bridge_name: "br-ex",
+      metadata_secret: "password"
     },
 
     misc: {
