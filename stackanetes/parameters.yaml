@@ -1,4 +1,6 @@
 deployment:
+  # Underlying container runtime to use.
+  engine: docker
   # Number of replicas of HA services to deploy.
   replicas: 1
   # Labels of the nodes on which services are deployed.
@@ -53,8 +55,6 @@ ceph:
   glance_pool: "images"
   glance_keyring: ""
   nova_pool: "vms"
-  rgw_user: rgw
-  rgw_keyring: ""
   # Random uuid used for Nova / Cinder communication.
   # Should not be modified after the initial deployment.
   secret_uuid: bbc5b4d5-6fca-407d-807d-06a4f4a7bccb

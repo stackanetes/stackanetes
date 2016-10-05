@@ -29,6 +29,11 @@ data:
         chmod 755 /var/log/kolla/libvirt
     fi
 
+    {%- if deployment.engine == "rkt" %}
+    mount -o remount,ro /sys/fs/selinux
+    mount -o remount,gid=5,mode=620,ptmxmode=666 -t devpts devpts /dev/pts
+    {%- endif %}
+    
     {%- if ceph.enabled %}
     bash /tmp/virsh-set-secret.sh &
     {%- endif %}

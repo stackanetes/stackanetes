@@ -1,0 +1,115 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+spec:
+  template:
+    metadata:
+      labels:
+        app: nova-libvirt
+      {% if deployment.engine == "rkt" -%}
+      annotations:
+        rkt.alpha.kubernetes.io/stage1-name-override: coreos.com/rkt/stage1-fly
+      {%- endif %}
+    spec:
+      nodeSelector:
+        {{ deployment.compute_node_label }}: enabled
+      securityContext:
+        runAsUser: 0
+      hostNetwork: true
+      {% if deployment.engine != "rkt" -%}
+      hostPID: true
+      {%- endif %}
+      dnsPolicy: ClusterFirst
+      containers:
+        - name: nova-libvirt
+          image: {{ deployment.image.libvirt }}
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          env:
+            - name: INTERFACE_NAME
+              value: {{ network.minion_interface_name }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/libvirt.sh"
+            - name: DEPENDENCY_JOBS
+              value: "nova-init,nova-post"
+            - name: DEPENDENCY_SERVICE
+              value: "keystone-api,glance-api,nova-api"
+            - name: DEPENDENCY_DAEMONSET
+              value: "neutron-openvswitch"
+            - name: DEPENDENCY_DEPLOYMENT
+              value: "neutron-agents"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/libvirt/libvirtd.conf,/tmp/libvirt.sh,/etc/resolv.conf,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring,/tmp/virsh-set-secret.sh"
+          volumeMounts:
+            - name: libvirtdconf
+              mountPath: /configmaps/libvirtd.conf
+            - name: libvirtsh
+              mountPath: /configmaps/libvirt.sh
+            - name: resolvconf
+              mountPath: /configmaps/resolv.conf
+            - name: cephconf
+              mountPath: /configmaps/ceph.conf
+            - name: cephclientcinderkeyring
+              mountPath: /configmaps/ceph.client.{{ ceph.cinder_user }}.keyring
+            - name: virshsetsecretsh
+              mountPath: /configmaps/virsh-set-secret.sh
+            - name: varlibnova
+              mountPath: /var/lib/nova
+            - name: varliblibvirt
+              mountPath: /var/lib/libvirt
+            - name: run
+              mountPath: /run
+            {% if deployment.engine != "rkt" -%}
+            - name: libmodules
+              mountPath: /lib/modules
+              readOnly: true
+            - name: cgroup
+              mountPath: /sys/fs/cgroup
+            {%- endif %}
+      volumes:
+        - name: novaconf
+          configMap:
+            name: nova-novaconf
+        - name: resolvconf
+          configMap:
+            name: nova-resolvconf
+        - name: cephconf
+          configMap:
+            name: nova-cephconf
+        - name: cephclientcinderkeyring
+          configMap:
+            name: nova-cephclientcinderkeyring
+        - name: libvirtdconf
+          configMap:
+            name: nova-libvirtdconf
+        - name: libvirtsh
+          configMap:
+            name: nova-libvirtsh
+        - name: virshsetsecretsh
+          configMap:
+            name: nova-virshsetsecretsh
+        - name: varlibnova
+          hostPath:
+            path: /var/lib/nova
+        - name: varliblibvirt
+          hostPath:
+            path: /var/lib/libvirt
+        - name: run
+          hostPath:
+            path: /run/
+        {% if deployment.engine != "rkt" -%}
+        - name: libmodules
+          hostPath:
+            path: /lib/modules
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+        {%- endif %}
