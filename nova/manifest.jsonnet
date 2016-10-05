@@ -67,8 +67,8 @@ kpm.package({
       },
     },
 
-    drain: {
-      timeout: 15,
+    nova: {
+      drain_timeout: 15,
     },
 
     database: {
@@ -90,7 +90,9 @@ kpm.package({
       admin_password: "password",
       admin_project_name: "admin",
       admin_region_name: "RegionOne",
-      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'default'}" % [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name],
+      domain_name: "default",
+      tenant_name: "admin",
+      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'%s'}" % [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name, $.variables.keystone.domain_name],
 
       neutron_user: "neutron",
       neutron_password: "password",
@@ -144,7 +146,7 @@ kpm.package({
     {
       file: "configmaps/drain-conf.yaml.j2",
       template: (importstr "templates/configmaps/drain-conf.yaml.j2"),
-      name: "drain-conf",
+      name: "nova-drainconf",
       type: "configmap",
     },
 

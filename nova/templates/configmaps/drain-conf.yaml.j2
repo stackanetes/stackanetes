@@ -5,5 +5,5 @@ data:
     IdentityEndpoint: {{ keystone.auth_uri }}/v3/
     Username: {{ keystone.admin_user }}
     Password: {{ keystone.admin_password }}
-    TenantName: {{ drain.tenant_name }}
-    DomainID: {{ drain.domain_id }}
+    TenantName: {{ keystone.tenant_name }}
+    DomainID: {{ keystone.domain_name }}
