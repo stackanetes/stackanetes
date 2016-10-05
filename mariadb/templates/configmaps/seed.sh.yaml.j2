@@ -7,8 +7,20 @@ data:
     set -ex
 
     SLEEP_TIMEOUT=5
-    # we need to count seed instance here.
-    MINIMUM_CLUSTER_SIZE=4
+
+    # With the DaemonSet implementation, there may be a difference
+    # in the number of replicas and actual number of nodes matching
+    # mariadb node selector label. Problem will be solved when
+    # the implementation will be switched to Deployment
+    # (using anti-affinity feature).
+
+    # We need to count seed instance here.
+    MINIMUM_CLUSTER_SIZE=$(( {{ deployment.replicas }} + 1 ))
+
+    if [ "$MINIMUM_CLUSTER_SIZE" -eq 3 ] ; then
+        echo "2-instance cluster is not a valid MariaDB configuration."
+        exit 1
+    fi
 
     trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
@@ -114,7 +126,6 @@ data:
         done
     }
 
-    # mysql_install_db
     bootstrap_db
     wait_for_cluster
     exit 0
