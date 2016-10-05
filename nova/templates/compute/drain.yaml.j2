@@ -34,7 +34,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: COMMAND
-              value: "/drainer -daemon --timeout {{ drain.timeout }} "
+              value: "/drainer -daemon -time-out {{ nova.drain_timeout }} "
             - name: DEPENDENCY_JOBS
               value: "nova-init,nova-post"
             - name: DEPENDENCY_SERVICE

@@ -293,6 +293,13 @@ kpm.package({
       type: "daemonset",
     },
 
+    {
+      file: "compute/drain.yaml.j2",
+      template: (importstr "templates/compute/drain.yaml.j2"),
+      name: "nova-drain",
+      type: "daemonset",
+    },
+
     // Services.
     {
       file: "api/service.yaml.j2",
