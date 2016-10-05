@@ -30,14 +30,14 @@ data:
         chown -R mysql: /etc/my.cnf.d
         chown mysql: /etc/my.cnf
 
-        mkdir -p /var/lib/mysql/openstack
-        chown mysql: /var/lib/mysql/openstack
+        mkdir -p /var/lib/mysql
+        chown mysql: /var/lib/mysql
 
         mkdir -p /var/log/kolla/mariadb
         chmod 755 /var/log/kolla/mariadb
 
         # Initialize system database.
-        su -s /bin/bash mysql - mysql -c 'mysql_install_db --datadir=/var/lib/mysql/openstack'
+        su -s /bin/bash mysql - mysql -c 'mysql_install_db --datadir=/var/lib/mysql'
 
         # Start mariadb and wait for it to be ready.
         su -s /bin/bash mysql -c "mysqld_safe --defaults-file=/etc/my.cnf \
@@ -49,7 +49,7 @@ data:
                                     --wsrep_provider_options='gcache.size=512M; gmcast.listen_addr=tcp://127.0.0.1:{{ network.port.wsrep }}' &"
 
         TIMEOUT=120
-        while [[ ! -f /var/lib/mysql/openstack/mariadb.pid ]]; do
+        while [[ ! -f /var/lib/mysql/mariadb.pid ]]; do
         if [[ ${TIMEOUT} -gt 0 ]]; then
             let TIMEOUT-=1
             sleep 1
@@ -68,7 +68,7 @@ data:
 
         # Wait for the mariadb server to shut down
         SHUTDOWN_TIMEOUT=60
-        while [[ -f /var/lib/mysql/openstack/mariadb.pid ]]; do
+        while [[ -f /var/lib/mysql/mariadb.pid ]]; do
             if [[ ${SHUTDOWN_TIMEOUT} -gt 0 ]]; then
                 let SHUTDOWN_TIMEOUT-=1
                 sleep 1
@@ -87,7 +87,7 @@ data:
     function wait_for_cluster {
         # Wait for the mariadb server to be "Ready" before starting the security reset with a max timeout
         TIMEOUT=120
-        while [[ ! -f /var/lib/mysql/openstack/mariadb.pid ]]; do
+        while [[ ! -f /var/lib/mysql/mariadb.pid ]]; do
             if [[ ${TIMEOUT} -gt 0 ]]; then
                 let TIMEOUT-=1
                 sleep 1

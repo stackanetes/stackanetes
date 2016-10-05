@@ -6,7 +6,7 @@ data:
     set -ex
     trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
-    chown mysql: /var/lib/mysql/openstack
+    chown mysql: /var/lib/mysql
 
     export WSREP_OPTIONS=`python /tmp/peer-finder.py mariadb`
     exec mysqld --defaults-file=/etc/my.cnf --console $WSREP_OPTIONS
