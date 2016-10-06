@@ -18,8 +18,6 @@ spec:
         - name: nova-drain
           image: {{ deployment.image.drain }}
           imagePullPolicy: Always
-          securityContext:
-            privileged: true
           env:
             - name: INTERFACE_NAME
               value: {{ network.minion_interface_name }}
