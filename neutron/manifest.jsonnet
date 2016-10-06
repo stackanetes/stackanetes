@@ -40,7 +40,7 @@ kpm.package({
       minion_interface_name: "eno1",
 
       nova: {
-        ip: "nova-api"  ,
+        address: "nova-api"  ,
       },
 
       dns:  {

@@ -3,7 +3,7 @@ kind: ConfigMap
 data:
   neutron.conf: |+
     [DEFAULT]
-    debug = True
+    debug = {{ misc.debug }}
     use_syslog = False
     use_stderr = True
 

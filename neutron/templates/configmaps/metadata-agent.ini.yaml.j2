@@ -19,7 +19,7 @@ data:
     endpoint_type = adminURL
 
     # Nova metadata service IP and port
-    nova_metadata_ip = {{ network.nova.ip }}
+    nova_metadata_ip = {{ network.nova.address }}
     nova_metadata_port = {{ network.port.metadata }}
     nova_metadata_protocol = http
 
