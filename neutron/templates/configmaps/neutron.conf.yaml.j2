@@ -7,6 +7,7 @@ data:
     use_syslog = False
     use_stderr = True
 
+    #TODO(DTadrzak): FIX ME
     vif_plugging_is_fatal = False
     nova_url = {{ nova.api_url}}/v2
     notify_nova_on_port_status_changes = True
@@ -26,7 +27,7 @@ data:
     core_plugin = ml2
     service_plugins = router
 
-    interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
+    interface_driver = openvswitch
 
     [nova]
     auth_url = {{ keystone.auth_url }}
