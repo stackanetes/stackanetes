@@ -15,9 +15,6 @@ data:
     wsrep_cluster_address=gcomm://
     wsrep_provider_options="gmcast.listen_addr=tcp://{{ network.ip_address }}:{{ network.port.wsrep }};ist.recv_addr={{ network.ip_address }}:{{ network.port.ist }}"
 
-    #wsrep_node_address={{ network.ip_address }}:{{ network.port.wsrep }}
-    #wsrep_sst_receive_address={{ network.ip_address }}:{{ network.port.sst }}
-
     wsrep_provider=/usr/lib/galera/libgalera_smm.so
     wsrep_cluster_name="{{ database.cluster_name }}"
     wsrep_node_name={{ database.node_name }}
