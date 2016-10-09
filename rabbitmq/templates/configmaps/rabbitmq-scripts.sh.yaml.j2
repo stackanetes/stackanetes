@@ -1,0 +1,191 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  rabbitmq-check-helpers.sh: |+
+    #!/usr/bin/env bash
+    MARKER_PATH=/tmp/rabbit-startup-marker
+    
+    # How many seconds we give a node before successfull liveness checks
+    # become mandatory.
+    FRESH_NODE_TIMEOUT={{ rabbitmq.node_startup_timeout }}
+    
+    LP=""
+    
+    set-log-prefix() {
+        LP="[${1:?}]"
+    }
+    
+    log-it() {
+        echo "$LP" "$@"
+    }
+    
+    prepend-log-prefix() {
+        awk -v lp="$LP" '{print lp " " $0}'
+    }
+    
+    marker-state() {
+        if [[ ! -f $MARKER_PATH ]]; then
+            echo "missing"
+            date +%s > /tmp/rabbit-startup-marker
+            return 0
+        fi
+        local marker_time
+        marker_time="$(cat $MARKER_PATH)"
+    
+        local end_of_fresh_time=$((FRESH_NODE_TIMEOUT + $marker_time))
+        local now
+        now=$(date +%s)
+        if [[ $now -le $end_of_fresh_time ]]; then
+            echo "fresh"
+            return 0
+        fi
+        echo "stale"
+        return 0
+    }
+    
+    ping-node() {
+        local result
+        result="$(rabbitmqctl eval 'ok.' 2>&1)"
+        if [[ "$result" == "ok" ]]; then
+            return 0
+        fi
+        log-it "ping-node error:"
+        echo "$result" | prepend-log-prefix
+        return 1
+    }
+    
+    is-node-booting() {
+        local result
+        result="$(rabbitmqctl eval 'is_pid(erlang:whereis(rabbit_boot)).')"
+    
+        case "$result" in
+            true)
+                return 0
+                ;;
+            false)
+                return 1
+                ;;
+            *)
+                log-it "is-node-booting error:"
+                echo "$result" | prepend-log-prefix
+                return 1
+                ;;
+        esac
+    }
+    
+    is-node-healthy() {
+        rabbitmqctl node_health_check | prepend-log-prefix
+    }
+    
+    is-node-properly-clustered() {
+        # XXX We need some new knob in autocluster, which will tell us our clustering state:
+        # We are properly clustered cluster, we are somehow split with it
+        # Any doubts (i.e. unknown state) should be treated as OK.
+        # - lock timeout -> OK
+        # - we are the discovery node -> OK
+        # - not in cluster with discovery node -> FAIL
+        # - partitioned with discovery node -> FAIL
+        # - OK
+        return 0
+    }
+
+  readiness.sh: |+
+    #!/usr/bin/env bash
+    set -eu
+    set -o pipefail
+    exec 1>/proc/1/fd/2 2>/proc/1/fd/2
+    
+    source $(readlink -f $(dirname $0))/rabbitmq-check-helpers.sh
+    set-log-prefix "readiness:$$"
+    log-it "Starting readiness probe at $(date +'%Y-%m-%d %H:%M:%S')"
+    
+    main() {
+        if ! ping-node; then
+            log-it "Node is not pingable"
+            return 1
+        fi
+        if ! is-node-healthy; then
+            log-it "Node is unhealthy"
+            return 1
+        fi
+        if ! is-node-properly-clustered; then
+            log-it "Node is inconsistent with the rest of the cluster"
+            return 1
+        fi
+        return 0
+    }
+    
+    if main; then
+        rc=0
+    else
+        rc=$?
+    fi
+    log-it "Ready to return $rc"
+    exit $rc
+
+  liveness.sh: |+
+    #!/usr/bin/env bash
+    set -eu
+    set -o pipefail
+    exec 1>/proc/1/fd/2 2>/proc/1/fd/2
+    
+    source $(readlink -f $(dirname $0))/rabbitmq-check-helpers.sh
+    set-log-prefix "liveness:$$"
+    log-it "Starting liveness probe at $(date +'%Y-%m-%d %H:%M:%S')"
+    
+    main() {
+        case $(marker-state) in
+            missing)
+                echo "$LP Startup marker missing, probably probe was executed too early"
+                return 0
+                ;;
+            fresh) # node has recently started - it can still be booting
+                if ! ping-node; then
+                    echo "$LP Fresh node, erlang VM hasn't started yet - giving it another chance"
+                    # Erlang VM hasn't started yet
+                    return 0
+                fi
+                if is-node-booting; then
+                    echo "$LP Node is still booting, giving it some time to finish"
+                    return 0
+                fi
+                if ! is-node-healthy; then
+                    echo "$LP Node is unhealthy"
+                    return 1
+                fi
+                if ! is-node-properly-clustered; then
+                    echo "$LP Found clustering inconsistency, giving up"
+                    return 1
+                fi
+                return 0
+                ;;
+            stale) # node has started long ago - it shoud be either ready or dead
+                if ! ping-node; then
+                    echo "$LP Long-running node stopped to respond"
+                    return 1
+                fi
+                if is-node-booting; then
+                    echo "$LP Node boot is taking too long"
+                    return 1
+                fi
+                if ! is-node-healthy; then
+                    echo "$LP Long-running node become unhealthy"
+                    return 1
+                fi
+                if ! is-node-properly-clustered; then
+                    echo "$LP Long-running node became inconsistent with the rest of the cluster"
+                    return 1
+                fi
+                return 0
+                ;;
+        esac
+    }
+    
+    if main; then
+        rc=0
+    else
+        rc=$?
+    fi
+    log-it "Ready to return $rc"
+    exit $rc
+

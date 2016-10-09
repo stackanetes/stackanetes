@@ -1,0 +1,103 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+spec:
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      nodeSelector:
+        {{ deployment.control_node_label }}: enabled
+      containers:
+        - name: rabbitmq
+          image: {{ deployment.image.rabbitmq }}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "/start-rabbit"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/rabbitmq/rabbitmq-env.conf,/etc/rabbitmq/rabbitmq.config,/etc/rabbitmq/enabled_plugins,/var/lib/rabbitmq/.erlang.cookie"
+            - name: DEPENDENCY_SERVICE
+              value: "etcd"
+            # This is needed to prevent rabbitmq-aws plugin connecting to metadata server.
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "fake"
+            # This is needed to prevent rabbitmq-aws plugin connecting to metadata server.
+            - name: AWS_ACCESS_KEY_ID
+              value: "fake"
+          ports:
+            - containerPort: {{ network.port.rabbitmq }}
+          readinessProbe:
+            timeoutSeconds: {{ rabbitmq.probe_timeout }}
+            exec:
+              command:
+              - bash
+              - -x
+              - /scripts/readiness.sh
+          livenessProbe:
+            initialDelaySeconds: {{ rabbitmq.node_startup_timeout }}
+            timeoutSeconds: {{ rabbitmq.probe_timeout }}
+            exec:
+              command:
+              - bash
+              - -x
+              - /scripts/readiness.sh
+          volumeMounts:
+            - name: rabbitmqenabledplugins
+              mountPath: /configmaps/enabled_plugins
+            - name: rabbitmqenvconf
+              mountPath: /configmaps/rabbitmq-env.conf
+            - name: rabbitmqscripts
+              mountPath: /scripts
+            - name: rabbitmqerlangcookie
+              mountPath: /configmaps/.erlang.cookie
+            - name: rabbitmqconfig
+              mountPath: /configmaps/rabbitmq.config
+            - name: rabbitmqdefinitions
+              mountPath: /etc/rabbitmq/definitions.json
+              subPath: rabbitmq-definitions.json
+            - name: rabbitmq-log
+              mountPath: /var/log/rabbitmq
+            - name: rabbitmq-data
+              mountPath: /var/lib/rabbitmq
+      volumes:
+        - name: rabbitmqenabledplugins
+          configMap:
+            name: rabbitmq-enabledplugins
+            items:
+            - key: enabledplugins
+              path: enabled_plugins
+        - name: rabbitmqenvconf
+          configMap:
+            name: rabbitmq-rabbitmqenvconf
+        - name: rabbitmqconfig
+          configMap:
+            name: rabbitmq-rabbitmqconfig
+        - name: rabbitmqdefinitions
+          configMap:
+            name: rabbitmq-rabbitmqdefinitions
+        - name: rabbitmqscripts
+          configMap:
+            name: rabbitmq-scripts
+        - name: rabbitmqerlangcookie
+          configMap:
+            name: rabbitmq-erlangcookie
+            items:
+            - key: erlang.cookie
+              path: .erlang.cookie
+        - name: rabbitmq-log
+          emptyDir: {}
+        # We don't want mnesia to be persitent accross reboots, as recovery after a complete
+        # cluster failure recovery requires reverse shutdown order.
+        - name: rabbitmq-data
+          {{ deployment.volumes.rabbitmq_data }}

@@ -1,0 +1,55 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: etcd
+  labels:
+    k8s-app: etcd
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: etcd
+        shard: "{{shard}}"
+    spec:
+      nodeSelector:
+        {{ control_node_label }}: enabled
+      containers:
+        - name: etcd
+          image: {{image}}
+          resources:
+            limits:
+              cpu: 100m
+          args:
+            - etcd
+            - --name
+            - {{name}}
+            - --advertise-client-urls
+            - "http://{{name}}.{{namespace}}.{{service}}:2379,https://{{name}}.{{namespace}}.{{service}}:4001"
+            - --listen-client-urls
+            - "http://0.0.0.0:2379,http://0.0.0.0:4001"
+            - --listen-peer-urls
+            - http://0.0.0.0:2380
+            - --initial-advertise-peer-urls
+            - http://{{name}}.{{namespace}}.{{service}}:2380
+            - --initial-cluster
+            - "{% for shard in shards %}etcd-{{shard.name}}=http://etcd-{{shard.name}}.{{namespace}}.{{service}}:2380{% if not loop.last %},{% endif %}{% endfor %}"
+            - --initial-cluster-token
+            - {{cluster_token}}
+            - --data-dir
+            - /var/etcd/data
+            - --initial-cluster-state
+            - {{cluster_state}}
+
+          ports:
+            - name: etcd-client
+              containerPort: 2379
+            - name: etcd-legacy
+              containerPort: 4001
+            - name: etcd-peer
+              containerPort: 2380
+          volumeMounts:
+            - name: varetcd
+              mountPath: /var/etcd
+
+      volumes: {{data_volumes}}

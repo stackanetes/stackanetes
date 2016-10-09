@@ -3,25 +3,34 @@ kind: ConfigMap
 data:
   rabbitmq.config: |+
     [
-      {kernel, [
-        {inet_dist_use_interface, { {{ network.ip_address_erlang }} }},
-        {inet_dist_listen_min, {{ network.port.cluster }} },
-        {inet_dist_listen_max, {{ network.port.cluster }} }
-      ]},
       {rabbit, [
-        {tcp_listeners, [
-          { "{{ network.ip_address }}", {{ network.port.rabbitmq }} }
-        ]},
-        {default_user, <<"{{ rabbitmq.admin_user }}">>},
-        {default_pass, <<"{{ rabbitmq.admin_password }}">>},
-        {cluster_partition_handling, autoheal}
-      ]},
-      {rabbitmq_management, [
-        {listener, [
-          {ip, "{{ network.ip_address }}"},
-          {port, {{ network.port.management }} }
-        ]}
-      ]},
-      {rabbitmq_clusterer, [{config, "/etc/rabbitmq/rabbitmq-clusterer.config"}]}
+         {dummy_param_without_comma, true}
+        ,{tcp_listeners, [
+           {"0.0.0.0", {{ network.port.rabbitmq }} }
+         ]}
+        ,{loopback_users, []}
+        ,{cluster_partition_handling, pause_minority}
+        ,{log_levels, [{autocluster, debug}, {connection, info}]}
+        ,{queue_master_locator, <<"random">>}
+      ]}
+     ,{rabbitmq_management, [
+         {dummy_param_without_comma, true}
+        ,{load_definitions, "/etc/rabbitmq/definitions.json"}
+        ,{listener, [{port, {{ network.port.management }} }]}
+        ,{http_log_dir, "/var/log/rabbitmq"}]
+     }
+     ,{autocluster, [
+         {dummy_param_without_comma, true}
+        ,{backend, etcd}
+        ,{autocluster_failure, stop}
+        ,{cleanup_interval, 60}
+        ,{cluster_cleanup, true}
+        ,{cleanup_warn_only, false}
+        ,{etcd_ttl, 15}
+        ,{etcd_scheme, http}
+        ,{etcd_host, "etcd"}
+        ,{etcd_port, 2379}
+      ]}
     ].
     % EOF
+
