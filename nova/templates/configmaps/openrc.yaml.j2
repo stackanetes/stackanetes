@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  openrc: |+
+    export OS_PROJECT_DOMAIN_ID={{ keystone.domain_name }}
+    export OS_USER_DOMAIN_ID={{ keystone.domain_name }}
+    export OS_PROJECT_NAME={{ keystone.admin_project_name }}
+    export OS_USERNAME={{ keystone.admin_user }}
+    export OS_PASSWORD={{ keystone.admin_password }}
+    export OS_TENANT_NAME={{ keystone.tenant_name }}
+    export OS_AUTH_URL="{{ keystone.auth_url }}/v3"
+    export OS_IDENTITY_API_VERSION=3

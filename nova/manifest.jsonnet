@@ -144,6 +144,13 @@ kpm.package({
     },
 
     {
+      file: "configmaps/openrc.yaml.j2",
+      template: (importstr "templates/configmaps/openrc.yaml.j2"),
+      name: "openrc",
+      type: "configmap",
+    },
+
+    {
       file: "configmaps/drain-conf.yaml.j2",
       template: (importstr "templates/configmaps/drain-conf.yaml.j2"),
       name: "nova-drainconf",
