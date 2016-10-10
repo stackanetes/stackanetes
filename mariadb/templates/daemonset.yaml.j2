@@ -33,15 +33,19 @@ spec:
             - name: COMMAND
               value: "bash /tmp/start.sh"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/start.sh,/tmp/peer-finder.py,/etc/my.cnf,/etc/my.cnf.d/charsets.cnf,/etc/my.cnf.d/engine.cnf,/etc/my.cnf.d/log.cnf,/etc/my.cnf.d/networking.cnf,/etc/my.cnf.d/pid.cnf,/etc/my.cnf.d/tuning.cnf,/etc/my.cnf.d/wsrep.cnf"
+              value: "/tmp/start.sh,/tmp/bootstrap-db.sh,/tmp/peer-finder.py,/etc/my.cnf.d/my.cnf,/etc/my.cnf.d/charsets.cnf,/etc/my.cnf.d/engine.cnf,/etc/my.cnf.d/log.cnf,/etc/my.cnf.d/networking.cnf,/etc/my.cnf.d/pid.cnf,/etc/my.cnf.d/tuning.cnf,/etc/my.cnf.d/wsrep.cnf"
           ports:
             - containerPort: {{ network.port.mariadb }}
           readinessProbe:
             tcpSocket:
               port: {{ network.port.mariadb }}
           volumeMounts:
+            - name: mycnfd
+              mountPath: /etc/my.cnf.d
             - name: startsh
               mountPath: /configmaps/start.sh
+            - name: bootstrapdb
+              mountPath: /configmaps/bootstrap-db.sh
             - name: peer-finder
               mountPath: /configmaps/peer-finder.py
             - name: charsets
@@ -63,9 +67,14 @@ spec:
             - name: mysql
               mountPath: /var/lib/mysql
       volumes:
+        - name: mycnfd
+          emptyDir: {}
         - name: startsh
           configMap:
             name: mariadb-startsh
+        - name: bootstrapdb
+          configMap:
+            name: bootstrap-db
         - name: peer-finder
           configMap:
             name: mariadb-peer-finder

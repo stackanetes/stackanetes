@@ -8,75 +8,8 @@ data:
 
     SLEEP_TIMEOUT=5
 
-    # With the DaemonSet implementation, there may be a difference
-    # in the number of replicas and actual number of nodes matching
-    # mariadb node selector label. Problem will be solved when
-    # the implementation will be switched to Deployment
-    # (using anti-affinity feature).
-
-    # We need to count seed instance here.
-    MINIMUM_CLUSTER_SIZE=$(( {{ deployment.replicas }} + 1 ))
-
-    if [ "$MINIMUM_CLUSTER_SIZE" -eq 3 ] ; then
-        echo "2-instance cluster is not a valid MariaDB configuration."
-        exit 1
-    fi
-
-    trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
-
-    function bootstrap_db {
-        # Initialize system database.
-        mysql_install_db --datadir=/var/lib/mysql
-
-        # Start mariadb and wait for it to be ready.
-        mysqld_safe --defaults-file=/var/lib/mysql/my.cnf \
-                    --console \
-                    --wsrep-new-cluster \
-                    --wsrep_cluster_address='gcomm://' \
-                    --bind-address='127.0.0.1' \
-                    --wsrep_node_address='127.0.0.1' \
-                    --wsrep_provider_options='gcache.size=512M; gmcast.listen_addr=tcp://127.0.0.1:{{ network.port.wsrep }}' &
-
-
-        TIMEOUT=120
-        while [[ ! -f /var/lib/mysql/mariadb.pid ]]; do
-        if [[ ${TIMEOUT} -gt 0 ]]; then
-            let TIMEOUT-=1
-            sleep 1
-        else
-            exit 1
-        fi
-        done
-
-        # Reset permissions.
-        # kolla_security_reset requires to be run from home directory
-        cd ~ ; DB_ROOT_PASSWORD="{{ database.root_password }}" kolla_security_reset
-
-        mysql -u root --password="{{ database.root_password }}" --port="{{ network.port.mariadb }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
-        mysql -u root --password="{{ database.root_password }}" --port="{{ network.port.mariadb }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
-
-        # Restart database.
-        mysqladmin -uroot -p"{{ database.root_password }}" --port="{{ network.port.mariadb }}" shutdown
-
-        # Wait for the mariadb server to shut down
-        SHUTDOWN_TIMEOUT=60
-        while [[ -f /var/lib/mysql/mariadb.pid ]]; do
-            if [[ ${SHUTDOWN_TIMEOUT} -gt 0 ]]; then
-                let SHUTDOWN_TIMEOUT-=1
-                sleep 1
-            else
-                echo "MariaDB instance couldn't be properly shut down"
-                exit 1
-            fi
-        done
-
-        mysqld_safe --defaults-file=/var/lib/mysql/my.cnf \
-                    --console \
-                    --wsrep-new-cluster \
-                    --wsrep_cluster_address='gcomm://' &
-    }
-
     function wait_for_cluster {
+
         # Wait for the mariadb server to be "Ready" before starting the security reset with a max timeout
         TIMEOUT=120
         while [[ ! -f /var/lib/mysql/mariadb.pid ]]; do
@@ -87,6 +20,9 @@ data:
                 exit 1
             fi
         done
+
+        # We need to count seed instance here.
+        MINIMUM_CLUSTER_SIZE=$(( {{ deployment.replicas }} + 1 ))
 
         # wait until we have at least two more members in a cluster.
         while true ; do
@@ -118,6 +54,26 @@ data:
         done
     }
 
-    bootstrap_db
+    # With the DaemonSet implementation, there may be a difference
+    # in the number of replicas and actual number of nodes matching
+    # mariadb node selector label. Problem will be solved when
+    # the implementation will be switched to Deployment
+    # (using anti-affinity feature).
+
+    REPLICAS=$(( {{ deployment.replicas }} ))
+
+    if [ "$REPLICAS" -eq 1 ] ; then
+        echo "Requested to build one-instance MariaDB cluster. There is no need to run seed. Exiting."
+        exit 0
+    elif [ "$REPLICAS" -eq 2 ] ; then
+        echo "2-instance cluster is not a valid MariaDB configuration."
+        exit 1
+    fi
+
+    bash /tmp/bootstrap-db.sh
+    mysqld_safe --defaults-file=/etc/my.cnf.d/my.cnf \
+                --console \
+                --wsrep-new-cluster \
+                --wsrep_cluster_address='gcomm://' &
     wait_for_cluster
     exit 0

@@ -58,6 +58,13 @@ kpm.package({
     },
 
     {
+      file: "configmaps/bootstrap-db.sh.yaml.j2",
+      template: (importstr "templates/configmaps/bootstrap-db.sh.yaml.j2"),
+      name: "bootstrap-db",
+      type: "configmap",
+    },
+
+    {
       file: "configmaps/start.sh.yaml.j2",
       template: (importstr "templates/configmaps/start.sh.yaml.j2"),
       name: "mariadb-startsh",
