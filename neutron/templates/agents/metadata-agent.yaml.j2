@@ -1,7 +1,6 @@
 apiVersion: extensions/v1beta1
-kind: Deployment
+kind: DaemonSet
 spec:
-  replicas: {{ deployment.replicas }}
   template:
     metadata:
       labels:
@@ -47,15 +46,11 @@ spec:
               mountPath: /configmaps/metadata-agent.ini
             - name: resolvconf
               mountPath: /configmaps/resolv.conf
-            - name: libmodules
-              mountPath: /lib/modules
               readOnly: true
             - name: runopenvswitch
               mountPath: /run/openvswitch
-            - name: usrsbinip
-              mountPath: /usr/sbin/ip
             - name: socket
-              mountPath: /var/lib/neutron/kolla/
+              mountPath: /var/lib/neutron/stackanetes
             {% if deployment.engine == "rkt" -%}
             - name: procsys
               mountPath: /proc/sys
@@ -73,18 +68,12 @@ spec:
         - name: resolvconf
           configMap:
             name: neutron-resolvconf
-        - name: libmodules
-          hostPath:
-            path: /lib/modules
         - name: runopenvswitch
           hostPath:
             path: /run/openvswitch
-        - name: usrsbinip
-          hostPath:
-            path: /usr/bin/ip
         - name: socket
           hostPath:
-            path: /var/lib/neutron/kolla/
+            path: /var/lib/neutron/stackanetes
         # TODO(Quentin-M): Remove me
         # https://github.com/coreos/rkt/issues/3245
         # https://github.com/coreos/rkt/issues/2694

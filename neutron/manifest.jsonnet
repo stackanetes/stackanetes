@@ -236,6 +236,14 @@ kpm.package({
       type: "deployment",
     },
 
+    // Daemonsets.
+    {
+      file: "openvswitch.yaml.j2",
+      template: (importstr "templates/openvswitch.yaml.j2"),
+      name: "neutron-openvswitch",
+      type: "deployment",
+    },
+
     {
       file: "agents/dhcp-agent.yaml.j2",
       template: (importstr "templates/agents/dhcp-agent.yaml.j2"),
@@ -254,14 +262,6 @@ kpm.package({
       file: "agents/metadata-agent.yaml.j2",
       template: (importstr "templates/agents/metadata-agent.yaml.j2"),
       name: "neutron-metadata-agent",
-      type: "deployment",
-    },
-
-    // Daemonsets.
-    {
-      file: "openvswitch.yaml.j2",
-      template: (importstr "templates/openvswitch.yaml.j2"),
-      name: "neutron-openvswitch",
       type: "deployment",
     },
 

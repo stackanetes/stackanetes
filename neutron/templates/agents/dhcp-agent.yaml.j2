@@ -1,7 +1,6 @@
 apiVersion: extensions/v1beta1
-kind: Deployment
+kind: DaemonSet
 spec:
-  replicas: {{ deployment.replicas }}
   template:
     metadata:
       labels:
@@ -38,7 +37,6 @@ spec:
               value: "neutron-server,rabbitmq,nova-api"
             - name: DEPENDENCY_CONFIG
               value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/dhcp-agent.ini,/etc/neutron/dnsmasq.conf,/etc/resolv.conf"
-          ports:
           volumeMounts:
             - name: neutronconf
               mountPath: /configmaps/neutron.conf
@@ -58,7 +56,7 @@ spec:
             - name: usrsbinip
               mountPath: /usr/sbin/ip
             - name: socket
-              mountPath: /var/lib/neutron/kolla/
+              mountPath: /var/lib/neutron/stackanetes/
             {% if deployment.engine == "rkt" -%}
             - name: procsys
               mountPath: /proc/sys
@@ -90,7 +88,7 @@ spec:
             path: /usr/bin/ip
         - name: socket
           hostPath:
-            path: /var/lib/neutron/kolla/
+            path: /var/lib/neutron/stackanetes/
         # TODO(Quentin-M): Remove me
         # https://github.com/coreos/rkt/issues/3245
         # https://github.com/coreos/rkt/issues/2694
