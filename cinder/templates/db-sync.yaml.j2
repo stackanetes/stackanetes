@@ -25,7 +25,7 @@ spec:
             - name: COMMAND
               value: "bash /tmp/db-sync.sh"
             - name: DEPENDENCY_JOBS
-              value: "cinder-init"
+              value: "cinder-init,mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb"
             - name: DEPENDENCY_CONFIG

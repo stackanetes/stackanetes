@@ -28,7 +28,7 @@ spec:
             - name: COMMAND
               value: "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini upgrade head"
             - name: DEPENDENCY_JOBS
-              value: "neutron-init"
+              value: "neutron-init,mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb"
             - name: DEPENDENCY_CONFIG

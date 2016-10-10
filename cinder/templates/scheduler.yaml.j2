@@ -33,7 +33,7 @@ spec:
             - name: COMMAND
               value: "cinder-scheduler"
             - name: DEPENDENCY_JOBS
-              value: "cinder-db-sync"
+              value: "cinder-db-sync,mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb,rabbitmq,keystone-api"
             - name: DEPENDENCY_CONFIG

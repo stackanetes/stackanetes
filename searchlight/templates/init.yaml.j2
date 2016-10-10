@@ -27,6 +27,8 @@ spec:
                   fieldPath: metadata.namespace
             - name: COMMAND
               value: "bash /tmp/init.sh"
+            - name: DEPENDENCY_JOBS
+              value: "mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb,keystone-api"
             - name: DEPENDENCY_CONFIG
