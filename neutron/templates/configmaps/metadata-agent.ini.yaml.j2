@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  metadata-agent.ini: |+
+    [DEFAULT]
+    debug = {{ misc.debug }}
+
+    # Neutron credentials for API access
+    auth_plugin = password
+    auth_url = {{ keystone.auth_url }}
+    auth_uri = {{ keystone.auth_uri }}
+    auth_region = {{ keystone.neutron_region_name }}
+    admin_tenant_name = service
+    project_domain_id = default
+    user_domain_id = default
+    project_name = service
+    username = {{ keystone.admin_user }}
+    password = {{ keystone.admin_password }}
+    endpoint_type = adminURL
+
+    # Nova metadata service IP and port
+    nova_metadata_ip = {{ network.nova.address }}
+    nova_metadata_port = {{ network.port.metadata }}
+    nova_metadata_protocol = http
+
+    # Metadata proxy shared secret
+    metadata_proxy_shared_secret = {{ neutron.metadata_secret }}
+
+    metadata_port = 9697
+
+    # Workers and backlog requests
+    metadata_workers = {{ misc.workers }}
+
+    # Caching
+    cache_url = memory://?default_ttl=5
