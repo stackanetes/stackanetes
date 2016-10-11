@@ -14,3 +14,6 @@ data:
     {%- endif %}
 
     ansible localhost -vvv -m kolla_keystone_user -a "project=service user={{ keystone.nova_user }} password={{ keystone.nova_password }} role=admin region_name={{ keystone.nova_region_name }} auth='{{ keystone.auth }}'" -e "{'openstack_nova_auth':{{ keystone.auth }}}"
+
+    source /tmp/openrc
+    openstack role create _member_ --or-show

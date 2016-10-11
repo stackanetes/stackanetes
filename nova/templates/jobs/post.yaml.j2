@@ -36,7 +36,13 @@ spec:
           volumeMounts:
             - name: postsh
               mountPath: /configmaps/post.sh
+            - name: openrc
+              mountPath: /tmp/openrc
+              subPath: openrc
       volumes:
         - name: postsh
           configMap:
             name: nova-postsh
+        - name: openrc
+          configMap:
+            name: nova-openrc
