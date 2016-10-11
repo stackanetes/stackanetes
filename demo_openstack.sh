@@ -1,21 +1,21 @@
 #!/bin/bash
 set +x
 
-cd /tmp
+# Load environment.
+. env_openstack.sh
 
 # Install command-line tools.
 pip install python-neutronclient python-openstackclient -U
 
-# Load environment.
-. env_openstack.sh
-
 # Import CoreOS / CirrOS images.
+cd /tmp
+
 wget http://download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
 wget https://stable.release.core-os.net/amd64-usr/current/coreos_production_openstack_image.img.bz2
 bunzip2 coreos_production_openstack_image.img.bz2
 
 openstack image create CoreOS --container-format bare --disk-format qcow2 --file /tmp/coreos_production_openstack_image.img --public
-openstack image create Cirros --container-format bare --disk-format qcow2 --file /tmp/cirros-0.3.3-x86_64-disk.img --public
+openstack image create CirrOS --container-format bare --disk-format qcow2 --file /tmp/cirros-0.3.3-x86_64-disk.img --public
 
 rm coreos_production_openstack_image.img
 rm cirros-0.3.3-x86_64-disk.img
@@ -35,8 +35,7 @@ openstack flavor create --public m1.xlarge --ram 16384 --disk 160 --vcpus 8
 openstack network create demo-net
 openstack subnet create demo-subnet --allocation-pool start=192.168.0.2,end=192.168.0.254 --network demo-net --subnet-range 192.168.0.0/24 --gateway 192.168.0.1 --dns-nameserver 8.8.8.8 --dns-nameserver 8.8.4.4
 openstack router create demo-router
-openstack port create demo-router-sub --network demo-net --fixed-ip ip-address=192.168.0.1
-openstack router add port demo-router $(openstack port show demo-router-sub -c id -f value)
+neutron router-interface-add demo-router $(openstack subnet show demo-subnet -c id -f value)
 neutron router-gateway-set demo-router ext-net
 
 #openstack security group rule create default --protocol icmp

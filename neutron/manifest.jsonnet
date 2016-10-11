@@ -26,6 +26,7 @@ kpm.package({
         db_sync: $.variables.deployment.image.base % "neutron-server",
         server: $.variables.deployment.image.base % "neutron-server",
         dhcp: $.variables.deployment.image.base % "neutron-dhcp-agent",
+        metadata: $.variables.deployment.image.base % "neutron-metadata-agent",
         l3: $.variables.deployment.image.base % "neutron-l3-agent",
         neutron_openvswitch_agent: $.variables.deployment.image.base % "neutron-openvswitch-agent",
         openvswitch_db_server: $.variables.deployment.image.base % "openvswitch-db-server",
@@ -38,6 +39,10 @@ kpm.package({
       ip_address: "{{ .IP }}",
       minion_interface_name: "eno1",
 
+      nova: {
+        address: "nova-api"  ,
+      },
+
       dns:  {
         servers: ["10.3.0.10"],
         kubernetes_domain: "cluster.local",
@@ -46,6 +51,7 @@ kpm.package({
 
       port: {
         server: 9696,
+        metadata: 8775,
       },
 
       ingress: {
@@ -98,6 +104,7 @@ kpm.package({
 
     neutron: {
       bridge_name: "br-ex",
+      metadata_secret: "password"
     },
 
     misc: {
@@ -112,6 +119,13 @@ kpm.package({
       file: "configmaps/dhcp-agent.ini.yaml.j2",
       template: (importstr "templates/configmaps/dhcp-agent.ini.yaml.j2"),
       name: "neutron-dhcpagentini",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/metadata-agent.ini.yaml.j2",
+      template: (importstr "templates/configmaps/metadata-agent.ini.yaml.j2"),
+      name: "neutron-metadataagentini",
       type: "configmap",
     },
 
@@ -222,18 +236,32 @@ kpm.package({
       type: "deployment",
     },
 
-    {
-      file: "agents.yaml.j2",
-      template: (importstr "templates/agents.yaml.j2"),
-      name: "neutron-agents",
-      type: "deployment",
-    },
-
     // Daemonsets.
     {
       file: "openvswitch.yaml.j2",
       template: (importstr "templates/openvswitch.yaml.j2"),
       name: "neutron-openvswitch",
+      type: "deployment",
+    },
+
+    {
+      file: "agents/dhcp-agent.yaml.j2",
+      template: (importstr "templates/agents/dhcp-agent.yaml.j2"),
+      name: "neutron-dhcp-agent",
+      type: "deployment",
+    },
+
+    {
+      file: "agents/l3-agent.yaml.j2",
+      template: (importstr "templates/agents/l3-agent.yaml.j2"),
+      name: "neutron-l3-agent",
+      type: "deployment",
+    },
+
+    {
+      file: "agents/metadata-agent.yaml.j2",
+      template: (importstr "templates/agents/metadata-agent.yaml.j2"),
+      name: "neutron-metadata-agent",
       type: "deployment",
     },
 

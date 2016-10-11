@@ -1,11 +1,10 @@
 apiVersion: extensions/v1beta1
-kind: Deployment
+kind: DaemonSet
 spec:
-  replicas: {{ deployment.replicas }}
   template:
     metadata:
       labels:
-        app: neutron-agents
+        app: neutron-dhcp-agent
     spec:
       nodeSelector:
         {{ deployment.control_node_label }}: enabled
@@ -38,7 +37,6 @@ spec:
               value: "neutron-server,rabbitmq,nova-api"
             - name: DEPENDENCY_CONFIG
               value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/dhcp-agent.ini,/etc/neutron/dnsmasq.conf,/etc/resolv.conf"
-          ports:
           volumeMounts:
             - name: neutronconf
               mountPath: /configmaps/neutron.conf
@@ -58,49 +56,11 @@ spec:
             - name: usrsbinip
               mountPath: /usr/sbin/ip
             - name: socket
-              mountPath: /var/lib/neutron/kolla/
-        - name: neutron-l3-agent
-          image: {{ deployment.image.l3 }}
-          imagePullPolicy: Always
-          securityContext:
-            privileged: true
-          env:
-            - name: INTERFACE_NAME
-              value: {{ network.minion_interface_name }}
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: COMMAND
-              value: "neutron-l3-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/l3-agent.ini --config-file /etc/neutron/plugins/ml2/ml2-conf.ini"
-            - name: DEPENDENCY_JOBS
-              value: "nova-init,neutron-init,nova-post"
-            - name: DEPENDENCY_SERVICE
-              value: "neutron-server,rabbitmq,nova-api"
-            - name: DEPENDENCY_CONFIG
-              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/l3-agent.ini,/etc/resolv.conf"
-          volumeMounts:
-            - name: neutronconf
-              mountPath: /configmaps/neutron.conf
-            - name: ml2confini
-              mountPath: /configmaps/ml2-conf.ini
-            - name: l3agentini
-              mountPath: /configmaps/l3-agent.ini
-            - name: resolvconf
-              mountPath: /configmaps/resolv.conf
-            - name: libmodules
-              mountPath: /lib/modules
-              readOnly: true
-            - name: runopenvswitch
-              mountPath: /run/openvswitch
-            - name: usrsbinip
-              mountPath: /usr/sbin/ip
-            - name: socket
-              mountPath: /var/lib/neutron/kolla/
+              mountPath: /var/lib/neutron/stackanetes/
+            {% if deployment.engine == "rkt" -%}
+            - name: procsys
+              mountPath: /proc/sys
+            {%- endif %}
       volumes:
         - name: neutronconf
           configMap:
@@ -117,9 +77,6 @@ spec:
         - name: resolvconf
           configMap:
             name: neutron-resolvconf
-        - name: l3agentini
-          configMap:
-            name: neutron-l3agentini
         - name: libmodules
           hostPath:
             path: /lib/modules
@@ -131,4 +88,12 @@ spec:
             path: /usr/bin/ip
         - name: socket
           hostPath:
-            path: /var/lib/neutron/kolla/
+            path: /var/lib/neutron/stackanetes/
+        # TODO(Quentin-M): Remove me
+        # https://github.com/coreos/rkt/issues/3245
+        # https://github.com/coreos/rkt/issues/2694
+        {% if deployment.engine == "rkt" -%}
+        - name: procsys
+          hostPath:
+            path: /proc/sys
+        {%- endif %}

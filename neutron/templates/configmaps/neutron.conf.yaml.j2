@@ -7,6 +7,8 @@ data:
     use_syslog = False
     use_stderr = True
 
+    #TODO(DTadrzak): FIX ME
+    # vif_plugging_is_fatal should be True
     vif_plugging_is_fatal = False
     nova_url = {{ nova.api_url}}/v2
     notify_nova_on_port_status_changes = True
@@ -22,11 +24,15 @@ data:
     dhcp_agents_per_network = 3
     allow_automatic_l3agent_failover = True
 
-    allow_overlapping_ips = true
+    allow_overlapping_ips = True
     core_plugin = ml2
     service_plugins = router
 
-    interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
+    interface_driver = openvswitch
+
+    metadata_proxy_socket = /var/lib/neutron/stackanetes/metadata_proxy
+
+    allow_automatic_l3agent_failover = True
 
     [nova]
     auth_url = {{ keystone.auth_url }}

@@ -21,8 +21,7 @@ data:
     osapi_compute_workers = {{ misc.workers }}
 
     workers = {{ misc.workers }}
-
-    enabled_apis = osapi_compute
+    metadata_workers = {{ misc.workers }}
 
     notification_driver = noop
 
@@ -31,7 +30,7 @@ data:
     network_api_class = nova.network.neutronv2.api.API
     # TODO(DTadrzak): FIX ME
     firewall_driver = nova.virt.firewall.NoopFirewallDriver
-    linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
+    linuxnet_interface_driver = openvswitch
 
     allow_resize_to_same_host = true
 
@@ -76,8 +75,9 @@ data:
     [neutron]
     url = {{ neutron.api_url }}
     auth_strategy = keystone
+
     metadata_proxy_shared_secret = {{ neutron.metadata_secret }}
-    service_metadata_proxy = true
+    service_metadata_proxy = True
 
     auth_url = {{ keystone.auth_url }}
     auth_plugin = password

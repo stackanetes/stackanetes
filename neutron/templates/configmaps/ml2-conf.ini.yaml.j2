@@ -8,9 +8,6 @@ data:
     tenant_network_types = vxlan
     mechanism_drivers = openvswitch,l2population
 
-    [ml2_type_vlan]
-    network_vlan_ranges =
-
     [ml2_type_flat]
     flat_networks = physnet1
 
@@ -21,7 +18,7 @@ data:
     [securitygroup]
     # TODO(DTadrzak): FIX ME
     firewall_driver = noop
-    enable_security_group = False
+    enable_security_group = True
 
     [agent]
     tunnel_types = vxlan

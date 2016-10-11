@@ -17,18 +17,11 @@ data:
         chown root:kvm /dev/kvm
     fi
 
-    # Mount xenfs for libxl to work
-    if [[ $(lsmod | grep xenfs) ]]; then
-        mount -t xenfs xenfs /proc/xen
-    fi
-
-    if [[ ! -d "/var/log/kolla/libvirt" ]]; then
-        mkdir -p /var/log/kolla/libvirt
-    fi
-    if [[ $(stat -c %a /var/log/kolla/libvirt) != "755" ]]; then
-        chmod 755 /var/log/kolla/libvirt
-    fi
-
+    {%- if deployment.engine == "rkt" %}
+    mount -o remount,ro /sys/fs/selinux
+    mount -o remount,gid=5,mode=620,ptmxmode=666 -t devpts devpts /dev/pts
+    {%- endif %}
+    
     {%- if ceph.enabled %}
     bash /tmp/virsh-set-secret.sh &
     {%- endif %}

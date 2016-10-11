@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  config.yaml: |+
+    IdentityEndpoint: {{ keystone.auth_uri }}/v3/
+    Username: {{ keystone.admin_user }}
+    Password: {{ keystone.admin_password }}
+    TenantName: {{ keystone.tenant_name }}
+    DomainID: {{ keystone.domain_name }}

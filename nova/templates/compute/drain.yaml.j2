@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+spec:
+  template:
+    metadata:
+      labels:
+        app: nova-drain
+      {% if deployment.engine == "rkt" -%}
+      annotations:
+        rkt.alpha.kubernetes.io/stage1-name-override: coreos.com/rkt/stage1-fly
+      {%- endif %}
+    spec:
+      nodeSelector:
+        {{ deployment.compute_node_label }}: enabled
+      hostNetwork: true
+      dnsPolicy: ClusterFirst
+      containers:
+        - name: nova-drain
+          image: {{ deployment.image.drain }}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: {{ network.minion_interface_name }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "/drainer -daemon -time-out {{ nova.drain_timeout }} "
+            - name: DEPENDENCY_JOBS
+              value: "nova-init,nova-post"
+            - name: DEPENDENCY_SERVICE
+              value: "keystone-api,glance-api,nova-api"
+            - name: DEPENDENCY_DAEMONSET
+              value: "neutron-openvswitch,nova-compute,nova-libvirt"
+            - name: DEPENDENCY_DEPLOYMENT
+              value: "neutron-agents"
+            - name: DEPENDENCY_CONFIG
+              value: "/config.yaml,/etc/resolv.conf"
+          volumeMounts:
+            - name: drainconf
+              mountPath: /configmaps/config.yaml
+            - name: resolvconf
+              mountPath: /configmaps/resolv.conf
+      volumes:
+        - name: drainconf
+          configMap:
+            name: nova-drainconf
+        - name: resolvconf
+          configMap:
+            name: nova-resolvconf

@@ -16,6 +16,7 @@ kpm.package({
 
   variables: {
     deployment: {
+      engine: "docker",
       control_node_label: "openstack-control-plane",
       compute_node_label: "openstack-compute-node",
 
@@ -26,6 +27,7 @@ kpm.package({
 
         init: $.variables.deployment.image.base % "kolla-toolbox",
         db_sync: $.variables.deployment.image.base % "nova-api",
+        drain: $.variables.deployment.image.base % "nova-drain",
         api: $.variables.deployment.image.base % "nova-api",
         conductor: $.variables.deployment.image.base % "nova-conductor",
         scheduler: $.variables.deployment.image.base % "nova-scheduler",
@@ -65,6 +67,10 @@ kpm.package({
       },
     },
 
+    nova: {
+      drain_timeout: 15,
+    },
+
     database: {
       address: "mariadb",
       port: 3306,
@@ -84,7 +90,9 @@ kpm.package({
       admin_password: "password",
       admin_project_name: "admin",
       admin_region_name: "RegionOne",
-      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'default'}" % [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name],
+      domain_name: "default",
+      tenant_name: "admin",
+      auth: "{'auth_url':'%s', 'username':'%s','password':'%s','project_name':'%s','domain_name':'%s'}" % [$.variables.keystone.auth_url, $.variables.keystone.admin_user, $.variables.keystone.admin_password, $.variables.keystone.admin_project_name, $.variables.keystone.domain_name],
 
       neutron_user: "neutron",
       neutron_password: "password",
@@ -132,6 +140,13 @@ kpm.package({
       file: "configmaps/init.sh.yaml.j2",
       template: (importstr "templates/configmaps/init.sh.yaml.j2"),
       name: "nova-initsh",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/drain-conf.yaml.j2",
+      template: (importstr "templates/configmaps/drain-conf.yaml.j2"),
+      name: "nova-drainconf",
       type: "configmap",
     },
 
@@ -265,9 +280,23 @@ kpm.package({
 
     // Daemonsets.
     {
-      file: "compute/daemonset.yaml.j2",
-      template: (importstr "templates/compute/daemonset.yaml.j2"),
+      file: "compute/compute.yaml.j2",
+      template: (importstr "templates/compute/compute.yaml.j2"),
       name: "nova-compute",
+      type: "daemonset",
+    },
+
+    {
+      file: "compute/libvirt.yaml.j2",
+      template: (importstr "templates/compute/libvirt.yaml.j2"),
+      name: "nova-libvirt",
+      type: "daemonset",
+    },
+
+    {
+      file: "compute/drain.yaml.j2",
+      template: (importstr "templates/compute/drain.yaml.j2"),
+      name: "nova-drain",
       type: "daemonset",
     },
 
