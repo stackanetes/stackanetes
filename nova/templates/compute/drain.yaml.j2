@@ -5,10 +5,6 @@ spec:
     metadata:
       labels:
         app: nova-drain
-      {% if deployment.engine == "rkt" -%}
-      annotations:
-        rkt.alpha.kubernetes.io/stage1-name-override: coreos.com/rkt/stage1-fly
-      {%- endif %}
     spec:
       nodeSelector:
         {{ deployment.compute_node_label }}: enabled
