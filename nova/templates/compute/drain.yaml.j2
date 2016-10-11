@@ -36,12 +36,13 @@ spec:
             - name: DEPENDENCY_DEPLOYMENT
               value: "neutron-agents"
             - name: DEPENDENCY_CONFIG
-              value: "/config.yaml,/etc/resolv.conf"
+              value: "/config.yaml"
           volumeMounts:
             - name: drainconf
               mountPath: /configmaps/config.yaml
-            - name: resolvconf
-              mountPath: /configmaps/resolv.conf
+            - mountPath: /etc/resolv.conf
+              name: resolvconf
+              subPath: resolv.conf
       volumes:
         - name: drainconf
           configMap:

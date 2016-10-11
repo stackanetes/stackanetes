@@ -36,7 +36,7 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "neutron-server,rabbitmq,nova-api"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/metadata-agent.ini,/etc/resolv.conf"
+              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/metadata-agent.ini"
           volumeMounts:
             - name: neutronconf
               mountPath: /configmaps/neutron.conf
@@ -44,9 +44,9 @@ spec:
               mountPath: /configmaps/ml2-conf.ini
             - name: metadataagentini
               mountPath: /configmaps/metadata-agent.ini
-            - name: resolvconf
-              mountPath: /configmaps/resolv.conf
-              readOnly: true
+            - mountPath: /etc/resolv.conf
+              name: resolvconf
+              subPath: resolv.conf
             - name: runopenvswitch
               mountPath: /run/openvswitch
             - name: socket
