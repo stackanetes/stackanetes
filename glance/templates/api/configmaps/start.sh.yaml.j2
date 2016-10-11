@@ -6,6 +6,6 @@ data:
     set -ex
 
     # TODO(DTadrzak): FIX ME
-    cp `find / -not -path "/etc" -name glance-api-paste.ini` /etc/glance/
+    cp `find / -not -path "/etc/*" -name glance-api-paste.ini` /etc/glance/
 
     glance-api
