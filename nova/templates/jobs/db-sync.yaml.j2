@@ -4,9 +4,6 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
-      # TODO(DTadrzak): it must be removed in future
-      securityContext:
-        runAsUser: 0
       containers:
         - name: nova-db-sync
           image: {{ deployment.image.db_sync }}

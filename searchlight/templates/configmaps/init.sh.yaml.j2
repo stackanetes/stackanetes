@@ -4,7 +4,8 @@ data:
   init.sh: |+
     #!/usr/bin/env bash
     set -ex
-
+    export HOME=/tmp
+    
     ansible localhost -vvv -m kolla_keystone_service -a "service_name=searchlight service_type=search description='Openstack Search' endpoint_region={{ keystone.searchlight_region_name }} url='http://searchlight-api:{{ network.port.api }}' interface=internal region_name={{ keystone.admin_region_name }} auth='{{ keystone.auth }}'" -e "{'openstack_searchlight_auth':{{ keystone.auth }}}"
     ansible localhost -vvv -m kolla_keystone_service -a "service_name=searchlight service_type=search description='Openstack Search' endpoint_region={{ keystone.searchlight_region_name }} url='http://searchlight-api:{{ network.port.api }}' interface=public region_name={{ keystone.admin_region_name }} auth='{{ keystone.auth }}' " -e "{'openstack_searchlight_auth':{{ keystone.auth }}}"
     {% if network.ingress.enabled -%}

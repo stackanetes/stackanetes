@@ -9,16 +9,10 @@ spec:
     spec:
       nodeSelector:
         {{ deployment.control_node_label }}: enabled
-      # TODO(DTadrzak): it must be removed in future
-      securityContext:
-        runAsUser: 0
       containers:
         - name: neutron-server
           image: {{ deployment.image.server }}
           imagePullPolicy: Always
-          # TODO(DTadrzak): it must be removed in future
-          securityContext:
-            privileged: true
           env:
             - name: INTERFACE_NAME
               value: "eth0"

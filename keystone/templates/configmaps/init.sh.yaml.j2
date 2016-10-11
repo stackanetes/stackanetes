@@ -4,6 +4,7 @@ data:
   init.sh: |+
     #!/bin/bash
     set -ex
-
+    export HOME=/tmp
+    
     ansible localhost -vvv -m mysql_db -a "login_host='{{ database.address }}' login_port='{{ database.port }}' login_user='{{ database.root_user }}' login_password='{{ database.root_password }}' name='{{ database.keystone_database_name }}'"
     ansible localhost -vvv -m mysql_user -a "login_host='{{ database.address }}' login_port='{{ database.port }}' login_user='{{ database.root_user }}' login_password='{{ database.root_password }}' name='{{ database.keystone_user }}' password='{{ database.keystone_password }}' host='%' priv='{{ database.keystone_database_name }}.*:ALL' append_privs='yes'"

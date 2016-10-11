@@ -4,16 +4,10 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
-      # TODO(DTadrzak): it must be removed in future
-      securityContext:
-        runAsUser: 0
       containers:
         - name: glance-post
           image: {{ deployment.image.post }}
           imagePullPolicy: Always
-          # TODO(DTadrzak): it must be removed in future
-          securityContext:
-            privileged: true
           env:
             - name: INTERFACE_NAME
               value: "eth0"

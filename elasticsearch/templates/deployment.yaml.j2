@@ -12,10 +12,12 @@ spec:
       containers:
       - image: {{ deployment.image.elasticsearch }}
         name: {{ deployment.app_label }}
+        {% if deployment.engine == "rkt" -%}
         # Elasticsearch tries to tweak seccomp and thus get SIGKILL'd by rkt
         # if --insecure-options=seccomp isn't provided.
         securityContext:
           privileged: true
+        {%- endif %}
         ports:
           - containerPort: {{ network.port.api }}
           - containerPort: {{ network.port.cluster }}

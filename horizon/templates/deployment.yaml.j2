@@ -9,14 +9,8 @@ spec:
     spec:
       nodeSelector:
         {{ deployment.control_node_label }}: enabled
-      # TODO(DTadrzak): it must be removed in future
-      securityContext:
-        runAsUser: 0
       containers:
         - name: horizon
-          # TODO(DTadrzak): it must be removed in future
-          securityContext:
-            privileged: true
           image: {{ deployment.image.horizon }}
           imagePullPolicy: Always
           env:
