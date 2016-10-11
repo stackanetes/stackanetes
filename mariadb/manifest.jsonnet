@@ -8,7 +8,7 @@ kpm.package({
   package: {
     name: "stackanetes/mariadb",
     expander: "jinja2",
-    author: "Quentin Machu",
+    author: "Mateusz Blaszkowski",
     version: "0.1.0",
     description: "mariadb",
     license: "Apache 2.0",
@@ -51,9 +51,16 @@ kpm.package({
   resources: [
     // Config maps.
     {
-      file: "configmaps/my.cnf.yaml.j2",
-      template: (importstr "templates/configmaps/my.cnf.yaml.j2"),
-      name: "mariadb-mycnf",
+      file: "configmaps/seed.sh.yaml.j2",
+      template: (importstr "templates/configmaps/seed.sh.yaml.j2"),
+      name: "mariadb-seedsh",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/bootstrap-db.sh.yaml.j2",
+      template: (importstr "templates/configmaps/bootstrap-db.sh.yaml.j2"),
+      name: "bootstrap-db",
       type: "configmap",
     },
 
@@ -64,12 +71,83 @@ kpm.package({
       type: "configmap",
     },
 
-    // Deployments.
     {
-      file: "deployment.yaml.j2",
-      template: (importstr "templates/deployment.yaml.j2"),
+      file: "configmaps/peer-finder.py.yaml.j2",
+      template: (importstr "templates/configmaps/peer-finder.py.yaml.j2"),
+      name: "mariadb-peer-finder",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/charsets.cnf.yaml.j2",
+      template: (importstr "templates/configmaps/charsets.cnf.yaml.j2"),
+      name: "mariadb-charsets",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/engine.cnf.yaml.j2",
+      template: (importstr "templates/configmaps/engine.cnf.yaml.j2"),
+      name: "mariadb-engine",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/galera-my.yaml.j2",
+      template: (importstr "templates/configmaps/galera-my.cnf.yaml.j2"),
+      name: "mariadb-mycnf",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/log.cnf.yaml.j2",
+      template: (importstr "templates/configmaps/log.cnf.yaml.j2"),
+      name: "mariadb-log",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/networking.cnf.yaml.j2",
+      template: (importstr "templates/configmaps/networking.cnf.yaml.j2"),
+      name: "mariadb-networking",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/pid.cnf.yaml.j2",
+      template: (importstr "templates/configmaps/pid.cnf.yaml.j2"),
+      name: "mariadb-pid",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/tuning.cnf.yaml.j2",
+      template: (importstr "templates/configmaps/tuning.cnf.yaml.j2"),
+      name: "mariadb-tuning",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/wsrep.cnf.yaml.j2",
+      template: (importstr "templates/configmaps/wsrep.cnf.yaml.j2"),
+      name: "mariadb-wsrep",
+      type: "configmap",
+    },
+
+    // Jobs.
+    {
+      file: "init.yaml.j2",
+      template: (importstr "templates/init.yaml.j2"),
+      name: "mariadb-init",
+      type: "job",
+    },
+
+    // DaemonSets.
+    {
+      file: "daemonset.yaml.j2",
+      template: (importstr "templates/daemonset.yaml.j2"),
       name: "mariadb",
-      type: "deployment",
+      type: "daemonset",
     },
 
     // Services.
@@ -78,7 +156,7 @@ kpm.package({
       template: (importstr "templates/service.yaml.j2"),
       name: "mariadb",
       type: "service",
-    },
+    }
   ],
 
   deploy: [

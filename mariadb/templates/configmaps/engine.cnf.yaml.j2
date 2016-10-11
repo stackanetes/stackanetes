@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  engine.cnf: |+
+    [mysqld]
+    default-storage-engine=InnoDB
+    innodb=FORCE
+    binlog_format=ROW

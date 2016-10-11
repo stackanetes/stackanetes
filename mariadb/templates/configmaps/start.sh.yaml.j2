@@ -4,34 +4,20 @@ data:
   start.sh: |+
     #!/bin/bash
     set -ex
+    trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
-    # Setup folders and permissions.
     chown mysql: /var/lib/mysql
 
-    mkdir -p /var/log/kolla/mariadb
-    chmod 755 /var/log/kolla/mariadb
+    REPLICAS=$(( {{ deployment.replicas }} ))
 
-    # Initialize system database.
-    su -s /bin/bash mysql - mysql -c 'mysql_install_db'
-
-    # Start mariadb and wait for it to be ready.
-    su -s /bin/bash mysql -c "mysqld_safe --wsrep-new-cluster &"
-
-    TIMEOUT=120
-    while [[ ! -f /var/lib/mysql/mariadb.pid ]]; do
-    if [[ ${TIMEOUT} -gt 0 ]]; then
-        let TIMEOUT-=1
-        sleep 1
+    if [ "$REPLICAS" -eq 1 ] ; then
+        echo "Creating one-instance MariaDB cluster."
+        bash /tmp/bootstrap-db.sh
+        mysqld_safe --defaults-file=/etc/my.cnf.d/my.cnf \
+                    --console \
+                    --wsrep-new-cluster \
+                    --wsrep_cluster_address='gcomm://'
     else
-        exit 1
+        export WSREP_OPTIONS=`python /tmp/peer-finder.py mariadb`
+        exec mysqld --defaults-file=/etc/my.cnf.d/my.cnf --console $WSREP_OPTIONS
     fi
-    done
-
-    # Reset permissions.
-    DB_ROOT_PASSWORD="{{ database.root_password }}" kolla_security_reset
-    mysql -u root --password="{{ database.root_password }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
-    mysql -u root --password="{{ database.root_password }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
-
-    # Restart database.
-    mysqladmin -uroot -p"{{ database.root_password }}" shutdown
-    su -s /bin/bash mysql -c "mysqld_safe --wsrep-new-cluster"

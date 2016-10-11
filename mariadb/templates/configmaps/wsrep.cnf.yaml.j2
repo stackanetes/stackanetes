@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  wsrep.cnf: |+
+    [mysqld]
+    wsrep_cluster_name="{{ database.cluster_name }}"
+    wsrep_provider=/usr/lib/galera/libgalera_smm.so
+    wsrep_provider_options="gcache.size=512M"
+    wsrep_slave_threads=12
+    wsrep_sst_auth=root:{{ database.root_password }}
+    wsrep_sst_method=xtrabackup-v2
+    wsrep_node_name={{ database.node_name }}
+    wsrep_node_address={{ network.ip_address }}:{{ network.port.wsrep }}

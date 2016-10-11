@@ -29,7 +29,7 @@ spec:
             - name: COMMAND
               value: "bash /tmp/start.sh"
             - name: DEPENDENCY_JOBS
-              value: "keystone-init,keystone-db-sync"
+              value: "keystone-init,keystone-db-sync,mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb,rabbitmq"
             - name: DEPENDENCY_CONFIG

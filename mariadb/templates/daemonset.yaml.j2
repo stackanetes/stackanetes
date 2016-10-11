@@ -1,0 +1,107 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+spec:
+  selector:
+    matchLabels:
+      galera: enabled
+  template:
+    metadata:
+      labels:
+        app: mariadb
+        galera: enabled
+    spec:
+      nodeSelector:
+        {{ deployment.control_node_label }}: enabled
+      # TODO(DTadrzak): it must be removed in the future
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: mariadb
+          image: {{ deployment.image.mariadb }}
+          imagePullPolicy: Always
+          env:
+            - name: INTERFACE_NAME
+              value: "eth0"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: COMMAND
+              value: "bash /tmp/start.sh"
+            - name: DEPENDENCY_CONFIG
+              value: "/tmp/start.sh,/tmp/bootstrap-db.sh,/tmp/peer-finder.py,/etc/my.cnf.d/my.cnf,/etc/my.cnf.d/charsets.cnf,/etc/my.cnf.d/engine.cnf,/etc/my.cnf.d/log.cnf,/etc/my.cnf.d/networking.cnf,/etc/my.cnf.d/pid.cnf,/etc/my.cnf.d/tuning.cnf,/etc/my.cnf.d/wsrep.cnf"
+          ports:
+            - containerPort: {{ network.port.mariadb }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ network.port.mariadb }}
+          volumeMounts:
+            - name: mycnfd
+              mountPath: /etc/my.cnf.d
+            - name: startsh
+              mountPath: /configmaps/start.sh
+            - name: bootstrapdb
+              mountPath: /configmaps/bootstrap-db.sh
+            - name: peer-finder
+              mountPath: /configmaps/peer-finder.py
+            - name: charsets
+              mountPath: /configmaps/charsets.cnf
+            - name: engine
+              mountPath: /configmaps/engine.cnf
+            - name: log
+              mountPath: /configmaps/log.cnf
+            - name: mycnf
+              mountPath: /configmaps/my.cnf
+            - name: networking
+              mountPath: /configmaps/networking.cnf
+            - name: pid
+              mountPath: /configmaps/pid.cnf
+            - name: tuning
+              mountPath: /configmaps/tuning.cnf
+            - name: wsrep
+              mountPath: /configmaps/wsrep.cnf
+            - name: mysql
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mycnfd
+          emptyDir: {}
+        - name: startsh
+          configMap:
+            name: mariadb-startsh
+        - name: bootstrapdb
+          configMap:
+            name: bootstrap-db
+        - name: peer-finder
+          configMap:
+            name: mariadb-peer-finder
+        - name: charsets
+          configMap:
+            name: mariadb-charsets
+        - name: engine
+          configMap:
+            name: mariadb-engine
+        - name: log
+          configMap:
+            name: mariadb-log
+        - name: mycnf
+          configMap:
+            name: mariadb-mycnf
+        - name: networking
+          configMap:
+            name: mariadb-networking
+        - name: pid
+          configMap:
+            name: mariadb-pid
+        - name: tuning
+          configMap:
+            name: mariadb-tuning
+        - name: wsrep
+          configMap:
+            name: mariadb-wsrep
+        - name: mysql
+          hostPath:
+            path: /var/lib/mysql-openstack-{{ database.cluster_name }}

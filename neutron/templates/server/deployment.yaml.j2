@@ -33,7 +33,7 @@ spec:
             - name: COMMAND
               value: "neutron-server --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2-conf.ini"
             - name: DEPENDENCY_JOBS
-              value: "neutron-db-sync"
+              value: "neutron-db-sync,mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "rabbitmq,mariadb,keystone-api"
             - name: DEPENDENCY_CONFIG

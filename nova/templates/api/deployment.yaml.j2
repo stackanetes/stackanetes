@@ -33,7 +33,7 @@ spec:
             - name: COMMAND
               value: "nova-api --config-file /etc/nova/nova.conf"
             - name: DEPENDENCY_JOBS
-              value: "nova-db-sync"
+              value: "nova-db-sync,mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb,glance-api,keystone-api"
             - name: DEPENDENCY_CONFIG
