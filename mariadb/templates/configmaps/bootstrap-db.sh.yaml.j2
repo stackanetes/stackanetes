@@ -33,7 +33,7 @@ data:
 
     # Reset permissions.
     # kolla_security_reset requires to be run from home directory
-    cd ~ ; DB_ROOT_PASSWORD="{{ database.root_password }}" kolla_security_reset
+    cd /var/lib/mysql ; DB_ROOT_PASSWORD="{{ database.root_password }}" kolla_security_reset
 
     mysql -u root --password="{{ database.root_password }}" --port="{{ network.port.mariadb }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
     mysql -u root --password="{{ database.root_password }}" --port="{{ network.port.mariadb }}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '{{ database.root_password }}' WITH GRANT OPTION;"
