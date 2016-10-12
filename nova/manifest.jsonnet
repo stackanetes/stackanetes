@@ -128,6 +128,10 @@ kpm.package({
       metadata_secret: "password",
     },
 
+    memcached: {
+      address: "memcached:11211",
+    },
+    
     misc: {
       debug: false,
       workers: 8,

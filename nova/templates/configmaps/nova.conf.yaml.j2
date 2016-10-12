@@ -128,3 +128,9 @@ data:
 
     [serial_console]
     enabled = False
+
+    [cache]
+    enabled = true
+    backend = oslo_cache.memcache_pool
+    memcache_servers = {{ memcached.address }}
+    
