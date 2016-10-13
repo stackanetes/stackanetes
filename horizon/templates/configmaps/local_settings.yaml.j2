@@ -11,7 +11,8 @@ data:
     DEBUG = {{ misc.debug }}
     TEMPLATE_DEBUG = DEBUG
 
-    COMPRESS_OFFLINE = False
+    COMPRESS_OFFLINE = True
+    COMPRESS_CSS_HASHING_METHOD = "hash"
 
     # WEBROOT is the location relative to Webserver root
     # should end with a slash.
