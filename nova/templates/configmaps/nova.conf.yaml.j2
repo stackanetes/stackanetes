@@ -110,6 +110,8 @@ data:
     [libvirt]
     connection_uri = "qemu+tcp://{{ network.ip_address }}/system"
     images_type = qcow2
+    # Enabling live-migration without hostname resolution
+    live_migration_inbound_addr = {{ network.ip_address }}
 
     {% if ceph.enabled %}
     images_rbd_pool = {{ ceph.nova_pool }}
