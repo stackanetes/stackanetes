@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  rabbitmq-definitions.json: |+
+    {
+      "vhosts": [
+        {"name": "/"}
+      ],
+      "users": [
+        {"name": "{{ rabbitmq.admin_user }}", "password": "{{ rabbitmq.admin_password }}", "tags": "administrator"}
+      ],
+      "permissions": [
+        {"user": "{{ rabbitmq.admin_user }}", "vhost": "/", "configure": ".*", "write": ".*", "read": ".*"}
+      ],
+      "policies":[
+        {"vhost": "/", "name": "ha-all", "pattern": ".*", "apply-to": "all", "definition": {"ha-mode":"all"}, "priority":0}
+      ]
+    }

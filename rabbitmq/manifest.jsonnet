@@ -9,7 +9,7 @@ kpm.package({
     name: "stackanetes/rabbitmq",
     expander: "jinja2",
     author: "Quentin Machu",
-    version: "0.1.0",
+    version: "0.2.0",
     description: "rabbitmq",
     license: "Apache 2.0",
   },
@@ -19,9 +19,14 @@ kpm.package({
       control_node_label: "openstack-control-plane",
 
       image: {
-        base: "quay.io/stackanetes/stackanetes-%s:barcelona",
+        base: "quay.io/stackanetes/stackanetes-%s:newton",
         rabbitmq: $.variables.deployment.image.base % "rabbitmq",
       },
+
+      volumes: {
+        rabbitmq_data: "emptyDir: {}"
+      },
+
     },
 
     network: {
@@ -36,20 +41,21 @@ kpm.package({
       },
     },
 
-    # Credentials.
     rabbitmq: {
       admin_user: "rabbitmq",
       admin_password: "password",
       erlang_cookie: "ERLANG_COOKIE",
+      node_startup_timeout: 180,
+      probe_timeout: 10,
     },
   },
 
   resources: [
     // Config maps.
     {
-      file: "configmaps/rabbitmq-clusterer.config.yaml.j2",
-      template: (importstr "templates/configmaps/rabbitmq-clusterer.config.yaml.j2"),
-      name: "rabbitmq-rabbitmqclustererconfig",
+      file: "configmaps/enabled_plugins.yaml.j2",
+      template: (importstr "templates/configmaps/enabled_plugins.yaml.j2"),
+      name: "rabbitmq-enabledplugins",
       type: "configmap",
     },
 
@@ -68,16 +74,31 @@ kpm.package({
     },
 
     {
-      file: "configmaps/start.sh.yaml.j2",
-      template: (importstr "templates/configmaps/start.sh.yaml.j2"),
-      name: "rabbitmq-startsh",
+      file: "configmaps/rabbitmq-definitions.json.yaml.j2",
+      template: (importstr "templates/configmaps/rabbitmq-definitions.json.yaml.j2"),
+      name: "rabbitmq-rabbitmqdefinitions",
       type: "configmap",
     },
 
-    // Deployments.
     {
-      file: "deployment.yaml.j2",
-      template: (importstr "templates/deployment.yaml.j2"),
+      file: "configmaps/rabbitmq-scripts.sh.yaml.j2",
+      template: (importstr "templates/configmaps/rabbitmq-scripts.sh.yaml.j2"),
+      name: "rabbitmq-scripts",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/rabbitmq-erlang.cookie.yaml.j2",
+      template: (importstr "templates/configmaps/rabbitmq-erlang.cookie.yaml.j2"),
+      name: "rabbitmq-erlangcookie",
+      type: "configmap",
+    },
+
+
+    // Deamonset. This needs to be moved to deployment on K8S 1.4 with anit-affinity.
+    {
+      file: "daemonset.yaml.j2",
+      template: (importstr "templates/daemonset.yaml.j2"),
       name: "rabbitmq",
       type: "deployment",
     },
@@ -88,7 +109,7 @@ kpm.package({
       template: (importstr "templates/service.yaml.j2"),
       name: "rabbitmq",
       type: "service",
-    },
+    }
   ],
 
   deploy: [

@@ -2,7 +2,10 @@ apiVersion: v1
 kind: ConfigMap
 data:
   rabbitmq-env.conf: |+
-    RABBITMQ_NODENAME=rabbit
-    RABBITMQ_BOOT_MODULE=rabbit_clusterer
-    RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-pa /usr/lib/rabbitmq/lib/rabbitmq_server-3.5.7/plugins/rabbitmq_clusterer-3.5.x-189b3a81.ez/rabbitmq_clusterer-3.5.x-189b3a81/ebin"
-    ERL_EPMD_PORT={{ network.port.epmd }}
+    RABBITMQ_LOGS=-
+    RABBITMQ_SASL_LOGS=-
+    AUTOCLUSTER_TYPE=etcd
+    AUTOCLUSTER_DELAY=15
+    RABBITMQ_USE_LONGNAME=true
+    RABBITMQ_NODENAME=rabbit@{{ network.ip_address }}
+    AUTOCLUSTER_LOG_LEVEL=debug

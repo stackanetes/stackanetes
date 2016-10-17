@@ -42,6 +42,7 @@ kpm.package({
     { name: "stackanetes/mariadb" },
     { name: "stackanetes/rabbitmq" },
     { name: "stackanetes/memcached" },
+    { name: "stackanetes/etcd" },
     {
       name: "stackanetes/elasticsearch",
       variables: { deployment: { app_label: "searchlight-es" } },

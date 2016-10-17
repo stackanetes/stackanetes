@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -eu
+set -o pipefail
+
+fetch-from-github() {
+    local owner=${1:?}
+    local repo=${2:?}
+    local ref=${3:?}
+    local target=${4:?}
+    curl --silent --show-error -Lo /tmp/github.tar.gz https://github.com/$owner/$repo/archive/$ref.tar.gz
+    unpack-into /tmp/github.tar.gz $target
+    rm -f /tmp/github.tar.gz
+}
+
+unpack-into() {
+    local archive=${1:?}
+    local dest_folder=${2:?}
+    mkdir -p $dest_folder
+    (set -e; cd $dest_folder && tar -x --strip-components=1 -f $archive)
+}
+
+fetch-from-github "$@"
