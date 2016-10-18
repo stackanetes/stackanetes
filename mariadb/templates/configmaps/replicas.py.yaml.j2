@@ -9,7 +9,7 @@ data:
     import sys
     import urllib2
 
-    URL = ('https://kubernetes.default.svc.cluster.local/apis/extensions/v1beta1/daemonsets')
+    URL = ('https://kubernetes.default.svc.{{ network.kubernetes_domain }}/apis/extensions/v1beta1/daemonsets')
     TOKEN_FILE = '/var/run/secrets/kubernetes.io/serviceaccount/token'
 
     def create_ctx():
@@ -40,7 +40,7 @@ data:
     def main():
        reply = get_daemonsets()
        name = "mariadb"
-       namespace = os.environ["NAMESPACE"]
+       namespace = "default" if not os.environ("NAMESPACE") else os.environ("NAMESPACE")
        mariadb = filter(lambda d: d["metadata"]["namespace"] == namespace and d["metadata"]["name"] == name, reply["items"])
        print mariadb[0]["status"]['desiredNumberScheduled']
 
