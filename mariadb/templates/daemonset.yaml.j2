@@ -32,6 +32,8 @@ spec:
                   fieldPath: metadata.namespace
             - name: COMMAND
               value: "bash /tmp/start.sh"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/my.cnf.d/wsrep.cnf"
           ports:
             - containerPort: {{ network.port.mariadb }}
           readinessProbe:
@@ -59,7 +61,7 @@ spec:
               mountPath: /etc/my.cnf.d/log.cnf 
               subPath: log.cnf
             - name: mycnf
-              mountPath: /etc/my.cnf.d/my.cnf 
+              mountPath: /etc/my.cnf 
               subPath: my.cnf
             - name: networking
               mountPath: /etc/my.cnf.d/networking.cnf  
@@ -71,14 +73,13 @@ spec:
               mountPath: /etc/my.cnf.d/tuning.cnf
               subPath: tuning.cnf
             - name: wsrep
-              mountPath: /etc/my.cnf.d/wsrep.cnf
-              subPath: wsrep.cnf
+              mountPath: /configmaps/wsrep.cnf
             - name: mysql
               mountPath: /var/lib/mysql
             - name: replicas
               mountPath: /tmp/replicas.py
               subPath: replicas.py
-        volumes:
+      volumes:
         - name: mycnfd
           emptyDir: {}
         - name: startsh

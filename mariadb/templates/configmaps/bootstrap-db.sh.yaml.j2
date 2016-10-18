@@ -8,11 +8,12 @@ data:
 
     SLEEP_TIMEOUT=5
 
+    sudo  /bin/chown mysql: /var/lib/mysql
     # Initialize system database.
     mysql_install_db --datadir=/var/lib/mysql
 
     # Start mariadb and wait for it to be ready.
-    mysqld_safe --defaults-file=/etc/my.cnf.d/my.cnf \
+    mysqld_safe --defaults-file=/etc/my.cnf \
                 --console \
                 --wsrep-new-cluster \
                 --wsrep_cluster_address='gcomm://' \

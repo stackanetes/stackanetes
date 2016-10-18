@@ -25,6 +25,11 @@ kpm.package({
 
     network: {
       ip_address: "{{ .IP }}",
+      dns:  {
+        servers: ["10.3.0.10"],
+        kubernetes_domain: "cluster.local",
+        other_domains: "",
+      },
 
       port: {
         mariadb: 3306,

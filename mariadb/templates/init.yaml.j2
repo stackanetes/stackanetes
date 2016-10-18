@@ -25,6 +25,8 @@ spec:
                   fieldPath: metadata.namespace
             - name: COMMAND
               value: "bash /tmp/seed.sh"
+            - name: DEPENDENCY_CONFIG
+              value: "/etc/my.cnf.d/wsrep.cnf"
           ports:
             - containerPort: {{ network.port.mariadb }}
           volumeMounts:
@@ -49,7 +51,7 @@ spec:
               mountPath: /etc/my.cnf.d/log.cnf
               subPath: log.cnf
             - name: mycnf
-              mountPath: /etc/my.cnf.d/my.cnf
+              mountPath: /etc/my.cnf
               subPath: my.cnf
             - name: networking
               mountPath: /etc/my.cnf.d/networking.cnf
@@ -61,10 +63,7 @@ spec:
               mountPath: /etc/my.cnf.d/tuning.cnf
               subPath: tuning.cnf
             - name: wsrep
-              mountPath: /etc/my.cnf.d/wsrep.cnf
-              subPath: wsrep.cnf
-            - name: mysql
-              mountPath: /var/lib/mysql
+              mountPath: /configmaps/wsrep.cnf
             - name: replicas
               mountPath: /tmp/replicas.py
               subPath: replicas.py
@@ -107,4 +106,3 @@ spec:
         - name: replicas
           configMap:
             name: mariadb-replicas
-
