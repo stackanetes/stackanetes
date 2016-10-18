@@ -72,10 +72,12 @@ High availability is not yet guaranteed for Elasticsearch (Searchlight).
 
 To setup Kubernetes, the [CoreOS guides] may be used.
 
-Two nodes must be labelled for Stackanetes' usage:
+At least two nodes must be labelled for Stackanetes' usage:
 
     kubectl label node minion1 openstack-control-plane=enabled
     kubectl label node minion2 openstack-compute-node=enabled
+
+Following Galera guidelines, it's required to keep odd number of `openstack-control-plane` nodes. For development setup purposes, it's allowed to build one-node cluster.
 
 [CoreOS guides]: https://coreos.com/kubernetes/docs/latest/
 
