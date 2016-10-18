@@ -41,7 +41,7 @@ data:
        reply = get_daemonsets()
        name = "mariadb"
        namespace = os.environ["NAMESPACE"]
-       mariadb = filter(lambda d: d["metadata"]["namespace"] == namespace and d["metadata"]["name"] == name reply["items"])
+       mariadb = filter(lambda d: d["metadata"]["namespace"] == namespace and d["metadata"]["name"] == name, reply["items"])
        print mariadb[0]["status"]['desiredNumberScheduled']
 
     if __name__ == "__main__":
