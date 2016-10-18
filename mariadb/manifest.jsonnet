@@ -126,12 +126,14 @@ kpm.package({
       name: "mariadb-tuning",
       type: "configmap",
     },
+
     {
       file: "configmaps/replicas.py.yaml.j2",
       template: (importstr "templates/configmaps/replicas.py.yaml.j2"),
       name: "mariadb-replicas",
       type: "configmap",
     },
+
     {
       file: "configmaps/wsrep.cnf.yaml.j2",
       template: (importstr "templates/configmaps/wsrep.cnf.yaml.j2"),
