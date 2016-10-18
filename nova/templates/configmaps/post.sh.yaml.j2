@@ -4,7 +4,8 @@ data:
   post.sh: |+
     #!/bin/bash
     set -ex
-
+    export HOME=/tmp
+    
     ansible localhost -vvv -m kolla_keystone_service -a "service_name=nova service_type=compute description='Openstack Compute' endpoint_region={{ keystone.nova_region_name }} url='http://nova-api:{{ network.port.api }}/v2/%(tenant_id)s' interface=admin region_name={{ keystone.admin_region_name }} auth='{{ keystone.auth }}'" -e "{'openstack_nova_auth':{{ keystone.auth }}}"
     ansible localhost -vvv -m kolla_keystone_service -a "service_name=nova service_type=compute description='Openstack Compute' endpoint_region={{ keystone.nova_region_name }} url='http://nova-api:{{ network.port.api }}/v2/%(tenant_id)s' interface=internal region_name={{ keystone.admin_region_name }} auth='{{ keystone.auth }}'" -e "{'openstack_nova_auth':{{ keystone.auth }}}"
     {% if network.ingress.enabled -%}

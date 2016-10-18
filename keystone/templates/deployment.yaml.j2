@@ -7,9 +7,6 @@ spec:
       labels:
         app: keystone-api
     spec:
-      # TODO(DTadrzak): it must be removed in future
-      securityContext:
-        runAsUser: 0
       nodeSelector:
         {{ deployment.control_node_label }}: enabled
       containers:

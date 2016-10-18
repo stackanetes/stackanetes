@@ -16,6 +16,7 @@ kpm.package({
 
   variables: {
     deployment: {
+      engine: "docker",
       control_node_label: "openstack-control-plane",
       app_label: "elasticsearch",
       image: {
