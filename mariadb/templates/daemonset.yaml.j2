@@ -33,7 +33,7 @@ spec:
             - name: COMMAND
               value: "bash /tmp/start.sh"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/start.sh,/tmp/bootstrap-db.sh,/tmp/peer-finder.py,/etc/my.cnf.d/my.cnf,/etc/my.cnf.d/charsets.cnf,/etc/my.cnf.d/engine.cnf,/etc/my.cnf.d/log.cnf,/etc/my.cnf.d/networking.cnf,/etc/my.cnf.d/pid.cnf,/etc/my.cnf.d/tuning.cnf,/etc/my.cnf.d/wsrep.cnf"
+              value: "/tmp/start.sh,/tmp/bootstrap-db.sh,/tmp/peer-finder.py,/etc/my.cnf.d/my.cnf,/etc/my.cnf.d/charsets.cnf,/etc/my.cnf.d/engine.cnf,/etc/my.cnf.d/log.cnf,/etc/my.cnf.d/networking.cnf,/etc/my.cnf.d/pid.cnf,/etc/my.cnf.d/tuning.cnf,/etc/my.cnf.d/wsrep.cnf,/tmp/replicas.py"
           ports:
             - containerPort: {{ network.port.mariadb }}
           readinessProbe:
@@ -66,6 +66,8 @@ spec:
               mountPath: /configmaps/wsrep.cnf
             - name: mysql
               mountPath: /var/lib/mysql
+            - name: replicas
+              mountPath: /configmaps/replicas.py
       volumes:
         - name: mycnfd
           emptyDir: {}
@@ -102,6 +104,9 @@ spec:
         - name: wsrep
           configMap:
             name: mariadb-wsrep
+        - name: replicas
+          configMap:
+            name: mariadb-replicas
         - name: mysql
           hostPath:
             path: /var/lib/mysql-openstack-{{ database.cluster_name }}

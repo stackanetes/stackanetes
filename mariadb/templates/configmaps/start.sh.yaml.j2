@@ -8,7 +8,7 @@ data:
 
     chown mysql: /var/lib/mysql
 
-    REPLICAS=$(( {{ deployment.replicas }} ))
+    REPLICAS=$(python /tmp/replicas.py)
 
     if [ "$REPLICAS" -eq 1 ] ; then
         echo "Creating one-instance MariaDB cluster."
