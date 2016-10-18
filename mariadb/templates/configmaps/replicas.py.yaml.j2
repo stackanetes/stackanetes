@@ -3,15 +3,11 @@ kind: ConfigMap
 data:
   replicas.py: |+
     #!/usr/bin/env python
-    import sys
-    import os
     import json
-    import urllib2
+    import os
     import ssl
-    import socket
     import sys
-    import time
-
+    import urllib2
 
     URL = ('https://kubernetes.default.svc.cluster.local/apis/extensions/v1beta1/daemonsets')
     TOKEN_FILE = '/var/run/secrets/kubernetes.io/serviceaccount/token'
@@ -25,7 +21,7 @@ data:
     def get_daemonsets():
        url = URL.format()
        try:
-           token = file (TOKEN_FILE, 'r').read()
+           token = file(TOKEN_FILE, 'r').read()
        except KeyError:
            exit("Unable to open a file with token.")
        header = {'Authorization': " Bearer {}".format(token)}
