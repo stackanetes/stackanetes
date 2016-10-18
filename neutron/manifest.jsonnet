@@ -199,13 +199,6 @@ kpm.package({
       type: "configmap",
     },
 
-    {
-      file: "configmaps/resolv.conf.yaml.j2",
-      template: (importstr "templates/configmaps/resolv.conf.yaml.j2"),
-      name: "neutron-resolvconf",
-      type: "configmap",
-    },
-
     // Init.
     {
       file: "init.yaml.j2",

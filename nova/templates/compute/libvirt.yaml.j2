@@ -47,7 +47,7 @@ spec:
             - name: DEPENDENCY_DEPLOYMENT
               value: "neutron-agents"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/libvirt/libvirtd.conf,/tmp/libvirt.sh,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring,/tmp/virsh-set-secret.sh"
+              value: "/etc/libvirt/libvirtd.conf,/tmp/libvirt.sh,/etc/resolv.conf,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring,/tmp/virsh-set-secret.sh"
           volumeMounts:
             - name: libvirtdconf
               mountPath: /configmaps/libvirtd.conf
@@ -65,9 +65,9 @@ spec:
               mountPath: /var/lib/libvirt
             - name: run
               mountPath: /run
-            - mountPath: /etc/resolv.conf
-              name: resolvconf
-              subPath: resolv.conf
+            # We need to wait for https://github.com/kubernetes/kubernetes/issues/34846
+            - name: resolvconf
+              mountPath: /configmaps/resolv.conf
             {% if deployment.engine != "rkt" -%}
             - name: libmodules
               mountPath: /lib/modules
