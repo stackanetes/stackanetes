@@ -28,12 +28,8 @@ data:
        req = urllib2.Request(url=url, headers=header)
 
        ctx = create_ctx()
-       connection = urllib2.urlopen(req, context=ctx)
-       data = connection.read()
-
-       # parse to dict
-       json_acceptable_string = data.replace("'", "\"")
-       output = json.loads(json_acceptable_string)
+       response = urllib2.urlopen(req, context=ctx)
+       output = json.load(response)
 
        return output
 
