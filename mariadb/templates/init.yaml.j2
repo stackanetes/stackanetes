@@ -26,34 +26,47 @@ spec:
             - name: COMMAND
               value: "bash /tmp/seed.sh"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/seed.sh,/tmp/bootstrap-db.sh,/tmp/peer-finder.py,/etc/my.cnf.d/my.cnf,/etc/my.cnf.d/charsets.cnf,/etc/my.cnf.d/engine.cnf,/etc/my.cnf.d/log.cnf,/etc/my.cnf.d/networking.cnf,/etc/my.cnf.d/pid.cnf,/etc/my.cnf.d/tuning.cnf,/etc/my.cnf.d/wsrep.cnf"
+              value: "/etc/my.cnf.d/wsrep.cnf"
           ports:
             - containerPort: {{ network.port.mariadb }}
           volumeMounts:
             - name: mycnfd
               mountPath: /etc/my.cnf.d
             - name: seedsh
-              mountPath: /configmaps/seed.sh
+              mountPath: /tmp/seed.sh
+              subPath: seed.sh
             - name: bootstrapdb
-              mountPath: /configmaps/bootstrap-db.sh
+              mountPath: /tmp/bootstrap-db.sh
+              subPath: bootstrap-db.sh
             - name: peer-finder
-              mountPath: /configmaps/peer-finder.py
+              mountPath: /tmp/peer-finder.py
+              subPath: peer-finder.py
             - name: charsets
-              mountPath: /configmaps/charsets.cnf
+              mountPath: /etc/my.cnf.d/charsets.cnf
+              subPath: charsets.cnf
             - name: engine
-              mountPath: /configmaps/engine.cnf
+              mountPath: /etc/my.cnf.d/engine.cnf
+              subPath: engine.cnf
             - name: log
-              mountPath: /configmaps/log.cnf
+              mountPath: /etc/my.cnf.d/log.cnf
+              subPath: log.cnf
             - name: mycnf
-              mountPath: /configmaps/my.cnf
+              mountPath: /etc/my.cnf
+              subPath: my.cnf
             - name: networking
-              mountPath: /configmaps/networking.cnf
+              mountPath: /etc/my.cnf.d/networking.cnf
+              subPath: networking.cnf
             - name: pid
-              mountPath: /configmaps/pid.cnf
+              mountPath: /etc/my.cnf.d/pid.cnf
+              subPath: pid.cnf
             - name: tuning
-              mountPath: /configmaps/tuning.cnf
+              mountPath: /etc/my.cnf.d/tuning.cnf
+              subPath: tuning.cnf
             - name: wsrep
               mountPath: /configmaps/wsrep.cnf
+            - name: replicas
+              mountPath: /tmp/replicas.py
+              subPath: replicas.py
       volumes:
         - name: mycnfd
           emptyDir: {}
@@ -90,3 +103,6 @@ spec:
         - name: wsrep
           configMap:
             name: mariadb-wsrep
+        - name: replicas
+          configMap:
+            name: mariadb-replicas

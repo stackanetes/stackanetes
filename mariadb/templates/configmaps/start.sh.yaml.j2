@@ -6,18 +6,18 @@ data:
     set -ex
     trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
-    chown mysql: /var/lib/mysql
+    sudo chown mysql: /var/lib/mysql
 
-    REPLICAS=$(( {{ deployment.replicas }} ))
+    REPLICAS=$(python /tmp/replicas.py)
 
     if [ "$REPLICAS" -eq 1 ] ; then
         echo "Creating one-instance MariaDB cluster."
         bash /tmp/bootstrap-db.sh
-        mysqld_safe --defaults-file=/etc/my.cnf.d/my.cnf \
+        mysqld_safe --defaults-file=/etc/my.cnf \
                     --console \
                     --wsrep-new-cluster \
                     --wsrep_cluster_address='gcomm://'
     else
         export WSREP_OPTIONS=`python /tmp/peer-finder.py mariadb`
-        exec mysqld --defaults-file=/etc/my.cnf.d/my.cnf --console $WSREP_OPTIONS
+        exec mysqld --defaults-file=/etc/my.cnf --console $WSREP_OPTIONS
     fi

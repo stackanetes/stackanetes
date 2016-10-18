@@ -21,8 +21,9 @@ data:
             fi
         done
 
+        REPLICAS=$(python /tmp/replicas.py)
         # We need to count seed instance here.
-        MINIMUM_CLUSTER_SIZE=$(( {{ deployment.replicas }} + 1 ))
+        MINIMUM_CLUSTER_SIZE=$(( $REPLICAS  + 1 ))
 
         # wait until we have at least two more members in a cluster.
         while true ; do
@@ -60,7 +61,7 @@ data:
     # the implementation will be switched to Deployment
     # (using anti-affinity feature).
 
-    REPLICAS=$(( {{ deployment.replicas }} ))
+    REPLICAS=$(python /tmp/replicas.py)
 
     if [ "$REPLICAS" -eq 1 ] ; then
         echo "Requested to build one-instance MariaDB cluster. There is no need to run seed. Exiting."
@@ -71,7 +72,7 @@ data:
     fi
 
     bash /tmp/bootstrap-db.sh
-    mysqld_safe --defaults-file=/etc/my.cnf.d/my.cnf \
+    mysqld_safe --defaults-file=/etc/my.cnf \
                 --console \
                 --wsrep-new-cluster \
                 --wsrep_cluster_address='gcomm://' &
