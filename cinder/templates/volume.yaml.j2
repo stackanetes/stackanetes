@@ -31,14 +31,16 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "mariadb,rabbitmq,keystone-api"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/cinder/cinder.conf,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring"
+              value: "/etc/cinder/cinder.conf"
           volumeMounts:
             - name: cinderconf
               mountPath: /configmaps/cinder.conf
             - name: cephconf
-              mountPath: /configmaps/ceph.conf
+              mountPath: /etc/ceph/ceph.conf
+              subPath: ceph.conf
             - name: cephclientcinderkeyring
-              mountPath: /configmaps/ceph.client.{{ ceph.cinder_user }}.keyring
+              mountPath: /etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring
+              subPath: ceph.client.{{ ceph.cinder_user }}.keyring
       volumes:
         - name: cinderconf
           configMap:
