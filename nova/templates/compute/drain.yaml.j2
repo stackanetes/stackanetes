@@ -35,13 +35,12 @@ spec:
               value: "neutron-openvswitch,nova-compute,nova-libvirt"
             - name: DEPENDENCY_DEPLOYMENT
               value: "neutron-agents"
-            - name: DEPENDENCY_CONFIG
-              value: "/config.yaml"
           volumeMounts:
             - name: drainconf
-              mountPath: /configmaps/config.yaml
-            - mountPath: /etc/resolv.conf
-              name: resolvconf
+              mountPath: /config.yaml
+              subPath: config.yaml
+            - name: resolvconf
+              mountPath: /etc/resolv.conf
               subPath: resolv.conf
       volumes:
         - name: drainconf

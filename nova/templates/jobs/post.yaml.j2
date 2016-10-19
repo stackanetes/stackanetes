@@ -4,16 +4,10 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
-      # TODO(DTadrzak): it must be removed in future
-      securityContext:
-        runAsUser: 0
       containers:
         - name: nova-post
           image: {{ deployment.image.post }}
           imagePullPolicy: Always
-          # TODO(DTadrzak): it must be removed in future
-          securityContext:
-            privileged: true
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -30,12 +24,13 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "nova-api,keystone-api"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/post.sh"
+              value: ""
             - name: ANSIBLE_LIBRARY
               value: /usr/share/ansible/
           volumeMounts:
             - name: postsh
-              mountPath: /configmaps/post.sh
+              mountPath: /tmp/post.sh
+              subPath: post.sh
             - name: openrc
               mountPath: /tmp/openrc
               subPath: openrc

@@ -40,16 +40,19 @@ spec:
             - name: DEPENDENCY_DEPLOYMENT
               value: "neutron-agents"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/nova/nova.conf,/tmp/nova.sh,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring"
+              value: "/etc/nova/nova.conf"
           volumeMounts:
             - name: novaconf
               mountPath: /configmaps/nova.conf
             - name: novash
-              mountPath: /configmaps/nova.sh
+              mountPath: /tmp/nova.sh
+              subPath: nova.sh
             - name: cephconf
-              mountPath: /configmaps/ceph.conf
+              mountPath: /etc/ceph/ceph.conf
+              subPath: ceph.conf
             - name: cephclientcinderkeyring
-              mountPath: /configmaps/ceph.client.{{ ceph.cinder_user }}.keyring
+              mountPath: /etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring
+              subPath: ceph.client.{{ ceph.cinder_user }}.keyring
             - mountPath: /lib/modules
               name: libmodules
               readOnly: true
