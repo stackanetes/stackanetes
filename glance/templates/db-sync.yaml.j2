@@ -26,12 +26,13 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "mariadb"
             - name: DEPENDENCY_CONFIG
-              value: "/etc/glance/glance-api.conf,/tmp/db-sync.sh"
+              value: "/etc/glance/glance-api.conf"
           volumeMounts:
             - name: glanceapiconf
               mountPath: /configmaps/glance-api.conf
             - name: dbsyncsh
-              mountPath: /configmaps/db-sync.sh
+              mountPath: /tmp/db-sync.sh
+              subPath: db-sync.sh
       volumes:
         - name: glanceapiconf
           configMap:
