@@ -4,16 +4,10 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
-      # TODO(DTadrzak): it must be removed in future
-      securityContext:
-        runAsUser: 0
       containers:
         - name: neutron-post
           image: {{ deployment.image.post }}
           imagePullPolicy: Always
-          # TODO(DTadrzak): it must be removed in future
-          securityContext:
-            privileged: true
           env:
             - name: INTERFACE_NAME
               value: "eth0"
@@ -31,13 +25,12 @@ spec:
               value: "neutron-db-sync"
             - name: DEPENDENCY_SERVICE
               value: "keystone-api,neutron-server"
-            - name: DEPENDENCY_CONFIG
-              value: "/tmp/post.sh"
             - name: ANSIBLE_LIBRARY
               value: /usr/share/ansible/
           volumeMounts:
             - name: postsh
-              mountPath: /configmaps/post.sh
+              mountPath: /tmp/post.sh
+              subPath: post.sh
       volumes:
         - name: postsh
           configMap:

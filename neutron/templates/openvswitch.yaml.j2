@@ -36,10 +36,11 @@ spec:
             - name: DEPENDENCY_CONTAINER
               value: "openvswitch-db-server,openvswitch-vswitchd"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/neutron-openvswitch-agent.sh,/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini"
+              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini"
           volumeMounts:
             - name: neutronopenvswitchagentsh
-              mountPath: /configmaps/neutron-openvswitch-agent.sh
+              mountPath: /tmp/neutron-openvswitch-agent.sh
+              subPath: neutron-openvswitch-agent.sh
             - name: neutronconf
               mountPath: /configmaps/neutron.conf
             - name: ml2confini
@@ -74,11 +75,10 @@ spec:
               value: "neutron-init,nova-post"
             - name: DEPENDENCY_SERVICE
               value: "neutron-server,rabbitmq,nova-api"
-            - name: DEPENDENCY_CONFIG
-              value: "/tmp/openvswitch-db-server.sh"
           volumeMounts:
             - name: openvswitchdbserversh
-              mountPath: /configmaps/openvswitch-db-server.sh
+              mountPath: /tmp/openvswitch-db-server.sh
+              subPath: openvswitch-db-server.sh
             - mountPath: /etc/resolv.conf
               name: resolvconf
               subPath: resolv.conf
@@ -108,13 +108,13 @@ spec:
               value: "nova-init,neutron-init,nova-post"
             - name: DEPENDENCY_SERVICE
               value: "neutron-server,rabbitmq,nova-api"
-            - name: DEPENDENCY_CONFIG
-              value: "/tmp/openvswitch-vswitchd.sh,/tmp/openvswitch-ensure-configured.sh"
           volumeMounts:
             - name: openvswitchvswitchdsh
-              mountPath: /configmaps/openvswitch-vswitchd.sh
+              mountPath: /tmp/openvswitch-vswitchd.sh
+              subPath: openvswitch-vswitchd.sh
             - name: openvswitchensureconfiguredsh
-              mountPath: /configmaps/openvswitch-ensure-configured.sh
+              mountPath: /tmp/openvswitch-ensure-configured.sh
+              subPath: openvswitch-ensure-configured.sh
             - mountPath: /etc/resolv.conf
               name: resolvconf
               subPath: resolv.conf
