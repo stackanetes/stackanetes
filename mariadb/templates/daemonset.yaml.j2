@@ -37,8 +37,10 @@ spec:
           ports:
             - containerPort: {{ network.port.mariadb }}
           readinessProbe:
-            tcpSocket:
-              port: {{ network.port.mariadb }}
+            exec:
+              command:
+                - python
+                - mariadb-readiness.py
           volumeMounts:
             - name: mycnfd
               mountPath: /etc/my.cnf.d
@@ -79,6 +81,9 @@ spec:
             - name: replicas
               mountPath: /tmp/replicas.py
               subPath: replicas.py
+            - name: readiness
+              mountPath: /mariadb-readiness.py
+              subPath: mariadb-readiness.py
       volumes:
         - name: mycnfd
           emptyDir: {}
@@ -118,6 +123,9 @@ spec:
         - name: replicas
           configMap:
             name: mariadb-replicas
+        - name: readiness
+          configMap:
+            name: mariadb-readiness
         - name: mysql
           hostPath:
             path: /var/lib/mysql-openstack-{{ database.cluster_name }}

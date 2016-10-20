@@ -146,6 +146,13 @@ kpm.package({
       type: "configmap",
     },
 
+    {
+      file: "configmaps/mariadb-readiness.py.yaml.j2",
+      template: (importstr "templates/configmaps/mariadb-readiness.py.yaml.j2"),
+      name: "mariadb-readiness",
+      type: "configmap",
+    },
+
     // Jobs.
     {
       file: "init.yaml.j2",
