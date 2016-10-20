@@ -9,7 +9,7 @@ deployment:
   image:
     # Base path for container images.
     # '%s' is replaced by the application name.
-    base: "quay.io/stackanetes/stackanetes-%s:barcelona"
+    base: "quay.io/stackanetes/stackanetes-%s:newton"
 
 network:
   # Network interface name on the Kubernetes nodes.
