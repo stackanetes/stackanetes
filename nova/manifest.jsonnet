@@ -107,6 +107,7 @@ kpm.package({
       address: "rabbitmq",
       admin_user: "rabbitmq",
       admin_password: "password",
+      port: 5672
     },
 
     ceph: {
