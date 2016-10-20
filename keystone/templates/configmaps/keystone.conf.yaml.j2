@@ -10,5 +10,15 @@ data:
 
     [database]
     connection = mysql+pymysql://{{ database.keystone_user }}:{{ database.keystone_password }}@{{ database.address }}/{{ database.keystone_database_name }}
-    max_pool_size = {{ misc.workers }}
-    max_overflow  = {{ misc.workers }}
+    max_retries = -1
+
+    [memcache]
+    servers = {{ memcached.address }}
+
+    [cache]
+    backend = dogpile.cache.memcached
+    memcache_servers = {{memcached.address}}
+    config_prefix = cache.keystone
+    distributed_lock = True
+    enabled = True
+

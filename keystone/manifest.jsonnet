@@ -9,7 +9,7 @@ kpm.package({
     name: "stackanetes/keystone",
     expander: "jinja2",
     author: "Quentin Machu",
-    version: "0.1.0",
+    version: "0.2.0",
     description: "keystone",
     license: "Apache 2.0",
   },
@@ -62,6 +62,10 @@ kpm.package({
       admin_password: "password",
       admin_project_name: "admin",
       admin_region_name: "RegionOne",
+    },
+
+    memcached: {
+      address: "memcached:11211",
     },
 
     misc: {
