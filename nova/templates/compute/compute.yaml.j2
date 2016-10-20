@@ -37,9 +37,6 @@ spec:
               value: "keystone-api,nova-api"
             - name: DEPENDENCY_DAEMONSET
               value: "neutron-openvswitch,nova-libvirt"
-            # TODO(Piotr Prokop) FIX ME add this dependency to kubernetes-entrypoint
-            - name: DEPENDENCY_DEPLOYMENT
-              value: "neutron-agents"
             - name: DEPENDENCY_CONFIG
               value: "/etc/nova/nova.conf"
           volumeMounts:
