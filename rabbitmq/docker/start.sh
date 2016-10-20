@@ -9,6 +9,7 @@ RABBITS=(
     /usr/bin/rabbitmq-server
 )
 chmod 600 /var/lib/rabbitmq/.erlang.cookie
+date +%s > /tmp/rabbit-startup-marker
 for r in "${RABBITS[@]}"; do
     if [[ ! -x $r ]]; then
         continue

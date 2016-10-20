@@ -26,7 +26,6 @@ data:
     marker-state() {
         if [[ ! -f $MARKER_PATH ]]; then
             echo "missing"
-            date +%s > /tmp/rabbit-startup-marker
             return 0
         fi
         local marker_time
