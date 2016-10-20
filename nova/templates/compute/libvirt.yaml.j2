@@ -41,11 +41,9 @@ spec:
             - name: DEPENDENCY_JOBS
               value: "nova-init,nova-post"
             - name: DEPENDENCY_SERVICE
-              value: "keystone-api,glance-api,nova-api"
+              value: "keystone-api,nova-api"
             - name: DEPENDENCY_DAEMONSET
               value: "neutron-openvswitch"
-            - name: DEPENDENCY_DEPLOYMENT
-              value: "neutron-agents"
             - name: DEPENDENCY_CONFIG
               value: "/etc/libvirt/libvirtd.conf,/etc/resolv.conf,/etc/ceph/ceph.conf,/etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring,/tmp/virsh-set-secret.sh"
           volumeMounts:
