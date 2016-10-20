@@ -25,11 +25,10 @@ spec:
               value: "mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb"
-            - name: DEPENDENCY_CONFIG
-              value: "/tmp/init.sh"
           volumeMounts:
             - name: initsh
-              mountPath: /configmaps/init.sh
+              mountPath: /tmp/init.sh
+              subPath: init.sh
       volumes:
         - name: initsh
           configMap:

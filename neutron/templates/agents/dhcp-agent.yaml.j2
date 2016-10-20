@@ -35,26 +35,24 @@ spec:
               value: "neutron-init,nova-post"
             - name: DEPENDENCY_SERVICE
               value: "neutron-server,rabbitmq,nova-api"
-            - name: DEPENDENCY_CONFIG
-              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/dhcp-agent.ini,/etc/neutron/dnsmasq.conf,/etc/resolv.conf"
           volumeMounts:
             - name: neutronconf
-              mountPath: /configmaps/neutron.conf
+              mountPath: /etc/neutron/neutron.conf
+              subPath: neutron.conf
             - name: ml2confini
-              mountPath: /configmaps/ml2-conf.ini
+              mountPath: /etc/neutron/plugins/ml2/ml2-conf.ini
+              subPath: ml2-conf.ini
             - name: dhcpagentini
-              mountPath: /configmaps/dhcp-agent.ini
+              mountPath: /etc/neutron/dhcp-agent.ini
+              subPath: dhcp-agent.ini
             - name: dnsmasqconf
-              mountPath: /configmaps/dnsmasq.conf
-            - name: resolvconf
-              mountPath: /configmaps/resolv.conf
-            - name: libmodules
-              mountPath: /lib/modules
-              readOnly: true
+              mountPath: /etc/neutron/dnsmasq.conf
+              subPath: dnsmasq.conf
+            - mountPath: /etc/resolv.conf
+              name: resolvconf
+              subPath: resolv.conf
             - name: runopenvswitch
               mountPath: /run/openvswitch
-            - name: usrsbinip
-              mountPath: /usr/sbin/ip
             - name: socket
               mountPath: /var/lib/neutron/stackanetes/
             {% if deployment.engine == "rkt" -%}
@@ -77,15 +75,9 @@ spec:
         - name: resolvconf
           configMap:
             name: neutron-resolvconf
-        - name: libmodules
-          hostPath:
-            path: /lib/modules
         - name: runopenvswitch
           hostPath:
             path: /run/openvswitch
-        - name: usrsbinip
-          hostPath:
-            path: /usr/bin/ip
         - name: socket
           hostPath:
             path: /var/lib/neutron/stackanetes/

@@ -36,21 +36,23 @@ spec:
             - name: DEPENDENCY_CONTAINER
               value: "openvswitch-db-server,openvswitch-vswitchd"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/neutron-openvswitch-agent.sh,/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/resolv.conf"
+              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini"
           volumeMounts:
             - name: neutronopenvswitchagentsh
-              mountPath: /configmaps/neutron-openvswitch-agent.sh
+              mountPath: /tmp/neutron-openvswitch-agent.sh
+              subPath: neutron-openvswitch-agent.sh
             - name: neutronconf
               mountPath: /configmaps/neutron.conf
             - name: ml2confini
               mountPath: /configmaps/ml2-conf.ini
-            - name: resolvconf
-              mountPath: /configmaps/resolv.conf
             - name: libmodules
               mountPath: /lib/modules
               readOnly: true
             - name: run
               mountPath: /run
+            - mountPath: /etc/resolv.conf
+              name: resolvconf
+              subPath: resolv.conf
         - name: openvswitch-db-server
           image: {{ deployment.image.openvswitch_db_server }}
           imagePullPolicy: Always
@@ -73,13 +75,13 @@ spec:
               value: "neutron-init,nova-post"
             - name: DEPENDENCY_SERVICE
               value: "neutron-server,rabbitmq,nova-api"
-            - name: DEPENDENCY_CONFIG
-              value: "/tmp/openvswitch-db-server.sh,/etc/resolv.conf"
           volumeMounts:
             - name: openvswitchdbserversh
-              mountPath: /configmaps/openvswitch-db-server.sh
-            - name: resolvconf
-              mountPath: /configmaps/resolv.conf
+              mountPath: /tmp/openvswitch-db-server.sh
+              subPath: openvswitch-db-server.sh
+            - mountPath: /etc/resolv.conf
+              name: resolvconf
+              subPath: resolv.conf
             - name: varlibopenvswitch
               mountPath: /var/lib/openvswitch/
             - name: run
@@ -106,15 +108,16 @@ spec:
               value: "nova-init,neutron-init,nova-post"
             - name: DEPENDENCY_SERVICE
               value: "neutron-server,rabbitmq,nova-api"
-            - name: DEPENDENCY_CONFIG
-              value: "/tmp/openvswitch-vswitchd.sh,/tmp/openvswitch-ensure-configured.sh,/etc/resolv.conf"
           volumeMounts:
             - name: openvswitchvswitchdsh
-              mountPath: /configmaps/openvswitch-vswitchd.sh
+              mountPath: /tmp/openvswitch-vswitchd.sh
+              subPath: openvswitch-vswitchd.sh
             - name: openvswitchensureconfiguredsh
-              mountPath: /configmaps/openvswitch-ensure-configured.sh
-            - name: resolvconf
-              mountPath: /configmaps/resolv.conf
+              mountPath: /tmp/openvswitch-ensure-configured.sh
+              subPath: openvswitch-ensure-configured.sh
+            - mountPath: /etc/resolv.conf
+              name: resolvconf
+              subPath: resolv.conf
             - name: libmodules
               mountPath: /lib/modules
               readOnly: true

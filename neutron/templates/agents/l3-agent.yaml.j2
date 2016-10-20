@@ -35,17 +35,19 @@ spec:
               value: "nova-init,neutron-init,nova-post"
             - name: DEPENDENCY_SERVICE
               value: "neutron-server,rabbitmq,nova-api"
-            - name: DEPENDENCY_CONFIG
-              value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini,/etc/neutron/l3-agent.ini,/etc/resolv.conf"
           volumeMounts:
             - name: neutronconf
-              mountPath: /configmaps/neutron.conf
+              mountPath: /etc/neutron/neutron.conf
+              subPath: neutron.conf
             - name: ml2confini
-              mountPath: /configmaps/ml2-conf.ini
+              mountPath: /etc/neutron/plugins/ml2/ml2-conf.ini
+              subPath: ml2-conf.ini
             - name: l3agentini
-              mountPath: /configmaps/l3-agent.ini
-            - name: resolvconf
-              mountPath: /configmaps/resolv.conf
+              mountPath: /etc/neutron/l3-agent.ini
+              subPath: l3-agent.ini
+            - mountPath: /etc/resolv.conf
+              name: resolvconf
+              subPath: resolv.conf
             - name: runopenvswitch
               mountPath: /run/openvswitch
             - name: socket

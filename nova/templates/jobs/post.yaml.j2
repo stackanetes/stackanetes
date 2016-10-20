@@ -24,12 +24,13 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "nova-api,keystone-api"
             - name: DEPENDENCY_CONFIG
-              value: "/tmp/post.sh"
+              value: ""
             - name: ANSIBLE_LIBRARY
               value: /usr/share/ansible/
           volumeMounts:
             - name: postsh
-              mountPath: /configmaps/post.sh
+              mountPath: /tmp/post.sh
+              subPath: post.sh
             - name: openrc
               mountPath: /tmp/openrc
               subPath: openrc
