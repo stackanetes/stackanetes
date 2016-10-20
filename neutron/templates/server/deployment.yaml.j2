@@ -29,7 +29,7 @@ spec:
             - name: DEPENDENCY_JOBS
               value: "neutron-db-sync,mariadb-init"
             - name: DEPENDENCY_SERVICE
-              value: "rabbitmq,mariadb,keystone-api"
+              value: "rabbitmq,mariadb,keystone-api,memcached"
             - name: DEPENDENCY_CONFIG
               value: "/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2-conf.ini"
           ports:
