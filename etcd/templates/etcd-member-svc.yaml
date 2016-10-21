@@ -5,11 +5,11 @@ metadata:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   name: etcd
   labels:
-    k8s-app: etcd-rabbit
+    k8s-app: etcd-stackanetes
     shard: "{{shard}}"
 spec:
   selector:
-    k8s-app: etcd-rabbit
+    k8s-app: etcd-stackanetes
     shard: "{{shard}}"
   type: ClusterIP
 #  clusterIP: "None"

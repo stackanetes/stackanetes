@@ -4,12 +4,12 @@ kind: Deployment
 metadata:
   name: etcd
   labels:
-    k8s-app: etcd-rabbit
+    k8s-app: etcd-stackanetes
 spec:
   template:
     metadata:
       labels:
-        k8s-app: etcd-rabbit
+        k8s-app: etcd-stackanetes
         shard: "{{shard}}"
     spec:
       nodeSelector:

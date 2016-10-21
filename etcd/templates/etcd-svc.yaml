@@ -3,10 +3,10 @@ kind: "Service"
 metadata:
   name: etcd
   labels:
-    k8s-app: etcd-rabbit
+    k8s-app: etcd-stackanetes
 spec:
   selector:
-    k8s-app: etcd-rabbit
+    k8s-app: etcd-stackanetes
   type: ClusterIP
   ports:
     - name: etcd-client
