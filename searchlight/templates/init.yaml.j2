@@ -25,13 +25,12 @@ spec:
               value: "mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb,keystone-api"
-            - name: DEPENDENCY_CONFIG
-              value: "/tmp/init.sh"
             - name: ANSIBLE_LIBRARY
               value: "/usr/share/ansible/"
           volumeMounts:
             - name: initsh
-              mountPath: /configmaps/init.sh
+              mountPath: /tmp/init.sh
+              subPath: init.sh
       volumes:
         - name: initsh
           configMap:

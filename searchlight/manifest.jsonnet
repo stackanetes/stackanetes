@@ -62,7 +62,7 @@ kpm.package({
     },
 
     elasticsearch: {
-      address: "",
+      address: "searchlight-es",
     },
 
     misc: {
