@@ -30,8 +30,7 @@ data:
 
     [database]
     connection = mysql+pymysql://{{ database.cinder_user }}:{{ database.cinder_password }}@{{ database.address }}/{{ database.cinder_database_name }}
-    max_pool_size = {{ misc.workers }}
-    max_overflow  = {{ misc.workers }}
+    max_retries = -1
 
     [keystone_authtoken]
     auth_uri = {{ keystone.auth_uri }}

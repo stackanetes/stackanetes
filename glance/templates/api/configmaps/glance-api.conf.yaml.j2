@@ -18,8 +18,7 @@ data:
 
     [database]
     connection = mysql+pymysql://{{ database.glance_user }}:{{ database.glance_password }}@{{ database.address }}/{{ database.glance_database_name }}
-    max_pool_size = {{ misc.workers }}
-    max_overflow  = {{ misc.workers }}
+    max_retries = -1
 
     [keystone_authtoken]
     auth_uri = {{ keystone.auth_uri }}
