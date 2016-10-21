@@ -30,8 +30,6 @@ spec:
               value: "searchlight-init"
             - name: DEPENDENCY_SERVICE
               value: "rabbitmq,keystone-api,{{ elasticsearch.address }}"
-            - name: DEPENDENCY_CONFIG
-              value: "/etc/searchlight/searchlight.conf,/etc/searchlight/api-paste.ini,/etc/searchlight/policy.json"
           ports:
             - containerPort: {{ network.port.api }}
           readinessProbe:
@@ -39,13 +37,14 @@ spec:
               port: {{ network.port.api }}
           volumeMounts:
             - name: searchlightconf
-              mountPath: /configmaps/searchlight.conf
+              mountPath: /etc/searchlight/searchlight.conf
+              subPath: searchlight.conf
             - name: apipasteini
-              mountPath: /configmaps/api-paste.ini
+              mountPath: /etc/searchlight/api-paste.ini
+              subPath: api-paste.ini
             - name: policyjson
-              mountPath: /configmaps/policy.json
-            - name: etcsearchlight
-              mountPath: /etc/searchlight
+              mountPath: /etc/searchlight/policy.json
+              subPath: policy.json
       volumes:
         - name: searchlightconf
           configMap:
@@ -56,5 +55,3 @@ spec:
         - name: policyjson
           configMap:
             name: searchlight-policyjson
-        - name: etcsearchlight
-          emptyDir: {}
