@@ -4,12 +4,12 @@ kind: Deployment
 metadata:
   name: etcd
   labels:
-    k8s-app: etcd
+    k8s-app: etcd-stackanetes
 spec:
   template:
     metadata:
       labels:
-        k8s-app: etcd
+        k8s-app: etcd-stackanetes
         shard: "{{shard}}"
     spec:
       nodeSelector:
@@ -48,6 +48,13 @@ spec:
               containerPort: 4001
             - name: etcd-peer
               containerPort: 2380
+          readinessProbe:
+            exec:
+              command:
+              - /usr/local/bin/etcdctl
+              - cluster-health
+              - 1>/proc/1/fd/1
+              - 2>/proc/2/fd/2
           volumeMounts:
             - name: varetcd
               mountPath: /var/etcd

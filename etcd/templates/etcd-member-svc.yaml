@@ -1,13 +1,15 @@
 apiVersion: "v1"
 kind: "Service"
 metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   name: etcd
   labels:
-    k8s-app: etcd
+    k8s-app: etcd-stackanetes
     shard: "{{shard}}"
 spec:
   selector:
-    k8s-app: etcd
+    k8s-app: etcd-stackanetes
     shard: "{{shard}}"
   type: ClusterIP
 #  clusterIP: "None"
