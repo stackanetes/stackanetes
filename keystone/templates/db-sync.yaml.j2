@@ -25,13 +25,13 @@ spec:
               value: "keystone-init,mariadb-init"
             - name: DEPENDENCY_SERVICE
               value: "mariadb"
-            - name: DEPENDENCY_CONFIG
-              value: "/etc/keystone/keystone.conf,/tmp/db-sync.sh"
           volumeMounts:
             - name: keystoneconf
-              mountPath: /configmaps/keystone.conf
+              mountPath: /etc/keystone/keystone.conf
+              subPath: keystone.conf
             - name: dbsyncsh
-              mountPath: /configmaps/db-sync.sh
+              mountPath: /tmp/db-sync.sh
+              subPath: db-sync.sh
       volumes:
         - name: keystoneconf
           configMap:
