@@ -76,14 +76,10 @@ data:
 
     [database]
     connection = mysql+pymysql://{{ database.nova_user }}:{{ database.nova_password }}@{{ database.address }}/{{ database.nova_database_name }}
-    max_pool_size = {{ misc.workers }}
-    max_overflow  = {{ misc.workers }}
     max_retries = -1
 
     [api_database]
     connection = mysql+pymysql://{{ database.nova_user }}:{{ database.nova_password }}@{{ database.address }}/{{ database.nova_api_database_name }}
-    max_pool_size = {{ misc.workers }}
-    max_overflow  = {{ misc.workers }}
     max_retries = -1
 
     [keystone_authtoken]
