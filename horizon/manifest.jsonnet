@@ -27,7 +27,7 @@ kpm.package({
 
     network: {
       external_ips: [],
-      port: 80,
+      port: 8080,
 
       ingress: {
         enabled: true,
