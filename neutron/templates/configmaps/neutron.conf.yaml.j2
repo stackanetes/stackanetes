@@ -18,8 +18,6 @@ data:
 
     rpc_workers = {{ misc.workers }}
     api_workers = {{ misc.workers }}
-    dhcp_agents_per_network = 3
-    allow_automatic_l3agent_failover = True
 
     allow_overlapping_ips = True
     core_plugin = ml2
@@ -32,8 +30,10 @@ data:
     allow_automatic_l3agent_failover = True
     l3_ha = true
     min_l3_agents_per_router = 1
-    max_l3_agents_per_router = 2
+    max_l3_agents_per_router = 3
     l3_ha_network_type = vxlan
+
+    dhcp_agents_per_network = 3
 
     network_auto_schedule = True
     router_auto_schedule = True
