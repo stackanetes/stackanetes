@@ -10,4 +10,4 @@ data:
     modprobe openvswitch
     ovs-vsctl --no-wait show
     bash /tmp/openvswitch-ensure-configured.sh {{ neutron.bridge_name }} {{ network.minion_interface_name }}
-    exec /usr/sbin/ovs-vswitchd unix:/run/openvswitch/db.sock --mlockall
+    exec /usr/sbin/ovs-vswitchd unix:/run/openvswitch/db.sock --mlockall -vconsole:emer -vconsole:err -vconsole:info
