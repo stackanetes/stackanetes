@@ -5,6 +5,10 @@ Stackanetes deploys standard OpenStack services into containers and uses Kuberne
 
 ## Overview
 
+### Demonstration Video
+
+[![Stackanetes: Technical Preview](https://img.youtube.com/vi/VuGQYIbAhcs/0.jpg)](https://www.youtube.com/watch?v=VuGQYIbAhcs)
+
 ### Services
 
 Stackanetes sets up the following OpenStack components:
