@@ -9,7 +9,7 @@ kpm.package({
     name: "stackanetes/neutron",
     expander: "jinja2",
     author: "Quentin Machu",
-    version: "0.1.0",
+    version: "0.2.0",
     description: "neutron",
     license: "Apache 2.0",
   },
@@ -72,6 +72,10 @@ kpm.package({
       neutron_user: "neutron",
       neutron_password: "password",
       neutron_database_name: "neutron",
+    },
+
+    memcached: {
+      address: "memcached:11211",
     },
 
     rabbitmq: {
