@@ -9,7 +9,7 @@ kpm.package({
     name: "stackanetes/mariadb",
     expander: "jinja2",
     author: "Mateusz Blaszkowski",
-    version: "0.1.0",
+    version: "0.3.0",
     description: "mariadb",
     license: "Apache 2.0",
   },
