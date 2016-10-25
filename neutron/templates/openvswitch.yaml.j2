@@ -32,7 +32,7 @@ spec:
             - name: DEPENDENCY_JOBS
               value: "neutron-post,nova-post"
             - name: DEPENDENCY_SERVICE
-              value: "keystone-api,glance-api,nova-api,neutron-server"
+              value: "keystone-api,rabbitmq,neutron-server"
             - name: DEPENDENCY_CONTAINER
               value: "openvswitch-db-server,openvswitch-vswitchd"
             - name: DEPENDENCY_CONFIG
@@ -71,10 +71,6 @@ spec:
                   fieldPath: metadata.namespace
             - name: COMMAND
               value: "bash /tmp/openvswitch-db-server.sh"
-            - name: DEPENDENCY_JOBS
-              value: "neutron-init,nova-post"
-            - name: DEPENDENCY_SERVICE
-              value: "neutron-server,rabbitmq,nova-api"
           volumeMounts:
             - name: openvswitchdbserversh
               mountPath: /tmp/openvswitch-db-server.sh
@@ -104,10 +100,8 @@ spec:
                   fieldPath: metadata.namespace
             - name: COMMAND
               value: "bash /tmp/openvswitch-vswitchd.sh"
-            - name: DEPENDENCY_JOBS
-              value: "nova-init,neutron-init,nova-post"
-            - name: DEPENDENCY_SERVICE
-              value: "neutron-server,rabbitmq,nova-api"
+            - name: DEPENDENCY_CONTAINER
+              value: "openvswitch-db-server"
           volumeMounts:
             - name: openvswitchvswitchdsh
               mountPath: /tmp/openvswitch-vswitchd.sh

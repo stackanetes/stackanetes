@@ -7,9 +7,6 @@ data:
     use_syslog = False
     use_stderr = True
 
-    #TODO(DTadrzak): FIX ME
-    # vif_plugging_is_fatal should be True
-    vif_plugging_is_fatal = False
     nova_url = {{ nova.api_url}}/v2
     notify_nova_on_port_status_changes = True
     notify_nova_on_port_data_changes = True
@@ -21,8 +18,6 @@ data:
 
     rpc_workers = {{ misc.workers }}
     api_workers = {{ misc.workers }}
-    dhcp_agents_per_network = 3
-    allow_automatic_l3agent_failover = True
 
     allow_overlapping_ips = True
     core_plugin = ml2
@@ -33,6 +28,17 @@ data:
     metadata_proxy_socket = /var/lib/neutron/stackanetes/metadata_proxy
 
     allow_automatic_l3agent_failover = True
+    l3_ha = true
+    min_l3_agents_per_router = 1
+    max_l3_agents_per_router = 3
+    l3_ha_network_type = vxlan
+
+    dhcp_agents_per_network = 3
+
+    network_auto_schedule = True
+    router_auto_schedule = True
+
+    transport_url = rabbit://{{ rabbitmq.admin_user }}:{{ rabbitmq.admin_password }}@{{ rabbitmq.address }}:{{ rabbitmq.port }}
 
     [nova]
     auth_url = {{ keystone.auth_url }}
@@ -48,12 +54,6 @@ data:
     [oslo_concurrency]
     lock_path = /var/lib/neutron/tmp
 
-    [oslo_messaging_rabbit]
-    rabbit_userid = {{ rabbitmq.admin_user }}
-    rabbit_password = {{ rabbitmq.admin_password }}
-    rabbit_ha_queues = true
-    rabbit_hosts = {{ rabbitmq.address }}
-
     [ovs]
     ovsdb_connection = unix:/var/run/openvswitch/db.sock
     ovsdb_interface = vsctl
@@ -64,18 +64,18 @@ data:
 
     [database]
     connection = mysql+pymysql://{{ database.neutron_user }}:{{ database.neutron_password }}@{{ database.address }}/{{ database.neutron_database_name }}
-    max_pool_size = {{ misc.workers }}
-    max_overflow  = {{ misc.workers }}
+    max_retries = -1
 
     [keystone_authtoken]
     auth_uri = {{ keystone.auth_uri }}
     auth_url = {{ keystone.auth_url }}
-    auth_plugin = password
+    auth_type = password
     project_domain_id = default
     user_domain_id = default
     project_name = service
     username = {{ keystone.neutron_user }}
     password = {{ keystone.neutron_password }}
+    memcached_servers = {{ memcached.address }}
 
     [oslo_messaging_notifications]
     driver = noop

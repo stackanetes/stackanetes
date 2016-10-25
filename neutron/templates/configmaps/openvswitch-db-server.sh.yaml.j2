@@ -6,8 +6,8 @@ data:
     set -ex
 
     mkdir -p "/run/openvswitch"
-    if [[ ! -e "/etc/openvswitch/conf.db" ]]; then
-      ovsdb-tool create "/etc/openvswitch/conf.db"
+    if [[ ! -e "/run/openvswitch/conf.db" ]]; then
+      ovsdb-tool create "/run/openvswitch/conf.db"
     fi
 
-    exec /usr/sbin/ovsdb-server /etc/openvswitch/conf.db -vconsole:emer -vsyslog:err -vfile:info --remote=punix:/run/openvswitch/db.sock --log-file=/var/log/openvswitch/ovsdb-server.log
+    exec /usr/sbin/ovsdb-server /run/openvswitch/conf.db -vconsole:emer -vconsole:err -vconsole:info --remote=punix:/run/openvswitch/db.sock
