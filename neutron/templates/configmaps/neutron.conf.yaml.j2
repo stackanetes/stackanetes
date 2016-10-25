@@ -7,16 +7,12 @@ data:
     use_syslog = False
     use_stderr = True
 
-    nova_url = {{ nova.api_url}}/v2
-    notify_nova_on_port_status_changes = True
-    notify_nova_on_port_data_changes = True
     bind_host = {{ network.ip_address }}
     bind_port = {{ network.port.server }}
 
     #lock_path = /var/lock/neutron
     api_paste_config = /usr/share/neutron/api-paste.ini
 
-    rpc_workers = {{ misc.workers }}
     api_workers = {{ misc.workers }}
 
     allow_overlapping_ips = True
@@ -56,7 +52,6 @@ data:
 
     [ovs]
     ovsdb_connection = unix:/var/run/openvswitch/db.sock
-    enable_ipset = False
 
     [agent]
     root_helper = sudo /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
