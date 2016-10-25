@@ -20,7 +20,7 @@ data:
     metadata_workers = {{ misc.workers }}
 
     use_neutron = True
-    firewall_driver = nova.virt.firewall.IptablesFirewallDriver
+    firewall_driver = nova.virt.firewall.NoopFirewallDriver
     linuxnet_interface_driver = openvswitch
 
     allow_resize_to_same_host = True

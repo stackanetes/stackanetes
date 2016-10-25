@@ -56,11 +56,12 @@ data:
 
     [ovs]
     ovsdb_connection = unix:/var/run/openvswitch/db.sock
-    ovsdb_interface = vsctl
-    of_interface=ovs-ofctl
+    enable_ipset = False
 
     [agent]
     root_helper = sudo /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
+    l2_population = true
+    arp_responder = true
 
     [database]
     connection = mysql+pymysql://{{ database.neutron_user }}:{{ database.neutron_password }}@{{ database.address }}/{{ database.neutron_database_name }}
@@ -75,7 +76,6 @@ data:
     project_name = service
     username = {{ keystone.neutron_user }}
     password = {{ keystone.neutron_password }}
-    memcached_servers = {{ memcached.address }}
 
     [oslo_messaging_notifications]
     driver = noop
