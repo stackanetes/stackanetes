@@ -38,6 +38,8 @@ data:
     network_auto_schedule = True
     router_auto_schedule = True
 
+    transport_url = rabbit://{{ rabbitmq.admin_user }}:{{ rabbitmq.admin_password }}@{{ rabbitmq.address }}:{{ rabbitmq.port }}
+
     [nova]
     auth_url = {{ keystone.auth_url }}
     auth_plugin = password
@@ -60,8 +62,6 @@ data:
     [agent]
     root_helper = sudo /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
 
-    transport_url = rabbit://{{ rabbitmq.admin_user }}:{{ rabbitmq.admin_password }}@{{ rabbitmq.address }}:{{ rabbitmq.port }}
-
     [database]
     connection = mysql+pymysql://{{ database.neutron_user }}:{{ database.neutron_password }}@{{ database.address }}/{{ database.neutron_database_name }}
     max_retries = -1
@@ -69,7 +69,7 @@ data:
     [keystone_authtoken]
     auth_uri = {{ keystone.auth_uri }}
     auth_url = {{ keystone.auth_url }}
-    auth_plugin = password
+    auth_type = password
     project_domain_id = default
     user_domain_id = default
     project_name = service
