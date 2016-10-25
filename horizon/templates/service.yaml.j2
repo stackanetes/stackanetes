@@ -5,6 +5,7 @@ spec:
   externalIPs: {{ network.external_ips }}
   {% endif %}
   ports:
-    - port: {{ network.port }}
+    - port: 80
+      targetPort: {{ network.port }}
   selector:
     app: horizon
