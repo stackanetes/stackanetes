@@ -21,8 +21,7 @@ data:
 
     [agent]
     tunnel_types = vxlan
-    # TODO(DTadrzak): FIX ME
-    l2_population = false
+    l2_population = true
     arp_responder = true
 
     [ovs]
@@ -30,7 +29,6 @@ data:
     local_ip = {{ network.ip_address }}
 
     [vxlan]
-    # TODO(DTadrzak): FIX ME
-    l2_population = false
+    l2_population = true
     local_ip = {{ network.ip_address }}
 

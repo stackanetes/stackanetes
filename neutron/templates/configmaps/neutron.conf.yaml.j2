@@ -7,16 +7,12 @@ data:
     use_syslog = False
     use_stderr = True
 
-    nova_url = {{ nova.api_url}}/v2
-    notify_nova_on_port_status_changes = True
-    notify_nova_on_port_data_changes = True
     bind_host = {{ network.ip_address }}
     bind_port = {{ network.port.server }}
 
     #lock_path = /var/lock/neutron
     api_paste_config = /usr/share/neutron/api-paste.ini
 
-    rpc_workers = {{ misc.workers }}
     api_workers = {{ misc.workers }}
 
     allow_overlapping_ips = True
@@ -56,11 +52,11 @@ data:
 
     [ovs]
     ovsdb_connection = unix:/var/run/openvswitch/db.sock
-    ovsdb_interface = vsctl
-    of_interface=ovs-ofctl
 
     [agent]
     root_helper = sudo /var/lib/kolla/venv/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
+    l2_population = true
+    arp_responder = true
 
     [database]
     connection = mysql+pymysql://{{ database.neutron_user }}:{{ database.neutron_password }}@{{ database.address }}/{{ database.neutron_database_name }}
@@ -75,7 +71,6 @@ data:
     project_name = service
     username = {{ keystone.neutron_user }}
     password = {{ keystone.neutron_password }}
-    memcached_servers = {{ memcached.address }}
 
     [oslo_messaging_notifications]
     driver = noop
