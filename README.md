@@ -120,7 +120,7 @@ Few users and pools have to be created. The user and pool names can be customize
 
 #### kpm
 
-[kpm](https://github/coreos/kpm) is the package manager and command-line tool used to deploy stackanetes. It can either be installed from PyPI or directly from source:
+[kpm](https://github.com/coreos/kpm) is the package manager and command-line tool used to deploy stackanetes. It can either be installed from PyPI or directly from source:
 
     # PyPI
     sudo pip install kpm --pre
