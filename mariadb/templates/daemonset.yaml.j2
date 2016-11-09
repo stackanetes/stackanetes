@@ -40,7 +40,7 @@ spec:
             exec:
               command:
                 - python
-                - mariadb-readiness.py
+                - /mariadb-readiness.py
           volumeMounts:
             - name: mycnfd
               mountPath: /etc/my.cnf.d
