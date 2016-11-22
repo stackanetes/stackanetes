@@ -232,6 +232,20 @@ kpm.package({
       type: "configmap",
     },
 
+    {
+      file: "configmaps/init.py.yaml.j2",
+      template: (importstr "templates/configmaps/init.py.yaml.j2"),
+      name: "nova-init-py",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/driver.py.yaml.j2",
+      template: (importstr "templates/configmaps/driver.py.yaml.j2"),
+      name: "nova-driver",
+      type: "configmap",
+    },
+
     // Init.
     {
       file: "jobs/init.yaml.j2",

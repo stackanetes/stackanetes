@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  driver.py: |+
+    """
+    A connection to a hypervisor through libvirt when OpenStack is deployed on top of K8s
+
+    Supports KVM, LXC, QEMU, UML, XEN and Parallels.
+
+    """
+
+    import os
+
+    from nova.virt.libvirt.driver import LibvirtDriver
+    from oslo_serialization import jsonutils
+    from oslo_utils import units
+
+
+    class K8sLibvirtDriver(LibvirtDriver):
+        def get_available_resource(self, nodename):
+            """Retrieve resource information.
+
+            This method is called when nova-compute launches, and
+            as part of a periodic task that records the results in the DB.
+
+            :param nodename: unused in this driver
+            :returns: dictionary containing resource info
+            """
+
+            disk_info_dict = self._get_local_gb_info()
+            data = {}
+
+            # NOTE(dprince): calling capabilities before getVersion works around
+            # an initialization issue with some versions of Libvirt (1.0.5.5).
+            # See: https://bugzilla.redhat.com/show_bug.cgi?id=1000116
+            # See: https://bugs.launchpad.net/nova/+bug/1215593
+            data["supported_instances"] = self._get_instance_capabilities()
+            k8s_mem = os.getenv("MY_MEM_REQUEST")
+
+            # Switch bytes to mb
+            k8s_mem = int(k8s_mem) / (1024 ** 2) if k8s_mem else self._host.get_memory_mb_total()
+
+            data["vcpus"] = int(os.getenv("MY_CPU_REQUEST", self._get_vcpu_total()))
+            data["memory_mb"] = k8s_mem
+            data["local_gb"] = disk_info_dict['total']
+            data["vcpus_used"] = self._get_vcpu_used()
+            data["memory_mb_used"] = self._host.get_memory_mb_used()
+            data["local_gb_used"] = disk_info_dict['used']
+            data["hypervisor_type"] = self._host.get_driver_type()
+            data["hypervisor_version"] = self._host.get_version()
+            data["hypervisor_hostname"] = self._host.get_hostname()
+            # TODO(berrange): why do we bother converting the
+            # libvirt capabilities XML into a special JSON format ?
+            # The data format is different across all the drivers
+            # so we could just return the raw capabilities XML
+            # which 'compare_cpu' could use directly
+            #
+            # That said, arch_filter.py now seems to rely on
+            # the libvirt drivers format which suggests this
+            # data format needs to be standardized across drivers
+            data["cpu_info"] = jsonutils.dumps(self._get_cpu_info())
+
+            disk_free_gb = disk_info_dict['free']
+            disk_over_committed = self._get_disk_over_committed_size_total()
+            available_least = disk_free_gb * units.Gi - disk_over_committed
+            data['disk_available_least'] = available_least / units.Gi
+
+            data['pci_passthrough_devices'] = \
+                self._get_pci_passthrough_devices()
+
+            numa_topology = self._get_host_numa_topology()
+            if numa_topology:
+                data['numa_topology'] = numa_topology._to_json()
+            else:
+                data['numa_topology'] = None
+
+            return data
+

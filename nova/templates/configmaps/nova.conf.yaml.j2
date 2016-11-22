@@ -25,7 +25,7 @@ data:
 
     allow_resize_to_same_host = True
 
-    compute_driver = libvirt.LibvirtDriver
+    compute_driver = k8slibvirt.K8sLibvirtDriver
 
     # Though my_ip is not used directly, lots of other variables use $my_ip
     my_ip = {{ network.ip_address }}

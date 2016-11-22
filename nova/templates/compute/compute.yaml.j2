@@ -18,6 +18,10 @@ spec:
           imagePullPolicy: Always
           securityContext:
             privileged: true
+          resources:
+            requests:
+              memory: "100Gi"
+              cpu: "20"
           env:
             - name: INTERFACE_NAME
               value: {{ network.minion_interface_name }}
@@ -29,6 +33,14 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: MY_CPU_REQUEST
+              valueFrom:
+                resourceFieldRef:
+                  resource: requests.cpu
+            - name: MY_MEM_REQUEST
+              valueFrom:
+                resourceFieldRef:
+                  resource: requests.memory
             - name: COMMAND
               value: "bash /tmp/nova.sh"
             - name: DEPENDENCY_JOBS
@@ -51,6 +63,12 @@ spec:
             - name: cephclientcinderkeyring
               mountPath: /etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring
               subPath: ceph.client.{{ ceph.cinder_user }}.keyring
+            - name: novadriver
+              mountPath: /var/lib/kolla/venv/lib/python2.7/site-packages/nova/virt/k8slibvirt/driver.py
+              subPath: driver.py
+            - name: novainit
+              mountPath: /var/lib/kolla/venv/lib/python2.7/site-packages/nova/virt/k8slibvirt/__init__.py
+              subPath: __init__.py
             - mountPath: /lib/modules
               name: libmodules
               readOnly: true
@@ -87,6 +105,12 @@ spec:
         - name: virshsetsecretsh
           configMap:
             name: nova-virshsetsecretsh
+        - name: novadriver
+          configMap:
+            name: nova-driver
+        - name: novainit
+          configMap:
+            name: nova-init-py
         - name: libmodules
           hostPath:
             path: /lib/modules

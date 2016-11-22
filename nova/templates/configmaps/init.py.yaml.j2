@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  __init__.py: |+
+    from nova.virt.k8slibvirt import driver
+
+    K8sLibvirtDriver = driver.K8sLibvirtDriver
+
+
