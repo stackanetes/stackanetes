@@ -75,6 +75,11 @@ kpm.package({
       virt_type: "kvm",
       
       drain_timeout: 60,
+
+      memory: {
+        request: "8Gi",
+        limit: "16Gi"
+      },
     },
 
     database: {
@@ -235,6 +240,20 @@ kpm.package({
       file: "configmaps/virsh-set-secret.sh.yaml.j2",
       template: (importstr "templates/configmaps/virsh-set-secret.sh.yaml.j2"),
       name: "nova-virshsetsecretsh",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/init.py.yaml.j2",
+      template: (importstr "templates/configmaps/init.py.yaml.j2"),
+      name: "nova-initpy",
+      type: "configmap",
+    },
+
+    {
+      file: "configmaps/driver.py.yaml.j2",
+      template: (importstr "templates/configmaps/driver.py.yaml.j2"),
+      name: "nova-driverpy",
       type: "configmap",
     },
 

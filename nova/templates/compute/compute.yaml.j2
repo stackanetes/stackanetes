@@ -7,6 +7,9 @@ spec:
       labels:
         app: nova-compute
       annotations:
+        {% if deployment.engine == "rkt" -%}
+        rkt.alpha.kubernetes.io/stage1-name-override: coreos.com/rkt/stage1-fly
+        {%- endif %}
         # TODO: When implemented upstream, replace the pod affinity with
         # requiredDuringSchedulingRequiredDuringExecution
         scheduler.alpha.kubernetes.io/affinity: >
@@ -54,6 +57,9 @@ spec:
       securityContext:
         runAsUser: 0
       hostNetwork: true
+      {% if deployment.engine != "rkt" -%}
+      hostPID: true
+      {%- endif %}
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: {{ nova.drain_timeout }}
       containers:
@@ -69,6 +75,11 @@ spec:
             preStop:
               exec:
                 command: ["python", "/tmp/hooks.py", "prestop_compute"]
+          resources:
+            requests:
+              memory: "{{ nova.memory.request }}"
+            limits:
+              memory: "{{ nova.memory.limit }}"
           env:
             - name: INTERFACE_NAME
               value: {{ network.minion_interface_name }}
@@ -80,6 +91,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: MEM_REQUEST
+              valueFrom:
+                resourceFieldRef:
+                  resource: requests.memory
             - name: COMMAND
               value: "bash /tmp/nova.sh"
             - name: DEPENDENCY_JOBS
@@ -102,17 +117,25 @@ spec:
             - name: cephclientcinderkeyring
               mountPath: /etc/ceph/ceph.client.{{ ceph.cinder_user }}.keyring
               subPath: ceph.client.{{ ceph.cinder_user }}.keyring
+            - name: novadriverpy
+              mountPath: /var/lib/kolla/venv/lib/python2.7/site-packages/nova/virt/k8slibvirt/driver.py
+              subPath: driver.py
+            - name: novainitpy
+              mountPath: /var/lib/kolla/venv/lib/python2.7/site-packages/nova/virt/k8slibvirt/__init__.py
+              subPath: __init__.py
+            {% if deployment.engine != "rkt" -%}
             - mountPath: /lib/modules
               name: libmodules
               readOnly: true
+            - mountPath: /sys/fs/cgroup
+              name: cgroup
+            {%- endif %}
             - mountPath: /var/lib/nova
               name: varlibnova
             - mountPath: /var/lib/libvirt
               name: varliblibvirt
             - mountPath: /run
               name: run
-            - mountPath: /sys/fs/cgroup
-              name: cgroup
             - mountPath: /etc/resolv.conf
               name: resolvconf
               subPath: resolv.conf
@@ -144,9 +167,12 @@ spec:
         - name: virshsetsecretsh
           configMap:
             name: nova-virshsetsecretsh
-        - name: libmodules
-          hostPath:
-            path: /lib/modules
+        - name: novadriverpy
+          configMap:
+            name: nova-driverpy
+        - name: novainitpy
+          configMap:
+            name: nova-initpy
         - name: varlibnova
           hostPath:
             path: /var/lib/nova
@@ -156,9 +182,14 @@ spec:
         - name: run
           hostPath:
             path: /run
+        {% if deployment.engine != "rkt" -%}
+        - name: libmodules
+          hostPath:
+            path: /lib/modules
         - name: cgroup
           hostPath:
             path: /sys/fs/cgroup
+        {%- endif %}
         - name: openrcyaml
           configMap:
             name: nova-openrcyaml

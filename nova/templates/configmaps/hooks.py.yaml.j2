@@ -81,17 +81,6 @@ data:
             sys.exit(0)
 
 
-    def check_node_status(hostname):
-        v1 = k8sclient.CoreV1Api()
-        nodes = v1.list_node(watch=False)
-        for node in nodes.items:
-            if hostname == node.metadata.name:
-                return node.spec.unschedulable
-
-        print "Cannot find node {}".format(hostname)
-        sys.exit(1)
-
-
     def get_all_vms_deployed_on_host(nclient, hostname):
         try:
             vms = nclient.servers.findall(**{"OS-EXT-SRV-ATTR:host": hostname})
@@ -152,14 +141,10 @@ data:
 
 
     def prestop_compute(hostname):
-        # check whether node is unschedulable
-        if check_node_status(hostname):
-            print "Node is drained."
-            nova_client = get_nova_client()
-            disable_node(nova_client, hostname)
-            live_migrate_host(nova_client, hostname)
-        else:
-            print "Node is in a schedulable state. Nova-compute is shutting down."
+        print "Node is drained."
+        nova_client = get_nova_client()
+        disable_node(nova_client, hostname)
+        live_migrate_host(nova_client, hostname)
 
 
     def prestop_libvirt(hostname):
