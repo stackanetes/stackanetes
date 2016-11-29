@@ -27,7 +27,6 @@ kpm.package({
 
         init: $.variables.deployment.image.base % "kolla-toolbox",
         db_sync: $.variables.deployment.image.base % "nova-api",
-        drain: $.variables.deployment.image.base % "nova-drain",
         api: $.variables.deployment.image.base % "nova-api",
         conductor: $.variables.deployment.image.base % "nova-conductor",
         scheduler: $.variables.deployment.image.base % "nova-scheduler",
@@ -65,10 +64,6 @@ kpm.package({
           novncproxy: $.variables.network.ingress.host % "novnc.compute",
         }
       },
-    },
-
-    nova: {
-      drain_timeout: 15,
     },
 
     database: {
@@ -152,13 +147,6 @@ kpm.package({
       file: "configmaps/openrc.yaml.j2",
       template: (importstr "templates/configmaps/openrc.yaml.j2"),
       name: "nova-openrc",
-      type: "configmap",
-    },
-
-    {
-      file: "configmaps/drain-conf.yaml.j2",
-      template: (importstr "templates/configmaps/drain-conf.yaml.j2"),
-      name: "nova-drainconf",
       type: "configmap",
     },
 
@@ -302,13 +290,6 @@ kpm.package({
       file: "compute/libvirt.yaml.j2",
       template: (importstr "templates/compute/libvirt.yaml.j2"),
       name: "nova-libvirt",
-      type: "daemonset",
-    },
-
-    {
-      file: "compute/drain.yaml.j2",
-      template: (importstr "templates/compute/drain.yaml.j2"),
-      name: "nova-drain",
       type: "daemonset",
     },
 
