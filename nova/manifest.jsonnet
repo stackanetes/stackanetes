@@ -20,7 +20,7 @@ kpm.package({
       control_node_label: "openstack-control-plane",
       compute_node_label: "openstack-compute-node",
 
-      replicas: 1,
+      control_replicas: 1,
 
       image: {
         base: "quay.io/stackanetes/stackanetes-%s:barcelona",
