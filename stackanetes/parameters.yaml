@@ -3,6 +3,7 @@ deployment:
   engine: docker
   # Number of replicas of HA services to deploy.
   control_replicas: 1
+  compute_replicas: 1
   # Labels of the nodes on which services are deployed.
   control_node_label: "openstack-control-plane"
   compute_node_label: "openstack-compute-node"

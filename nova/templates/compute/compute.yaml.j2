@@ -1,10 +1,53 @@
 apiVersion: extensions/v1beta1
-kind: DaemonSet
+kind: Deployment
 spec:
+  replicas: {{ deployment.compute_replicas }}
   template:
     metadata:
       labels:
         app: nova-compute
+      annotations:
+        # TODO: When implemented upstream, replace the pod affinity with
+        # requiredDuringSchedulingRequiredDuringExecution
+        scheduler.alpha.kubernetes.io/affinity: >
+          {
+            "podAffinity": {
+              "requiredDuringSchedulingIgnoredDuringExecution": [
+                {
+                  "labelSelector": {
+                    "matchExpressions": [
+                      {
+                        "key": "app",
+                        "operator": "In",
+                        "values": [
+                          "nova-libvirt"
+                        ]
+                      }
+                    ]
+                  },
+                  "topologyKey": "kubernetes.io/hostname"
+                }
+              ]
+            },
+            "podAntiAffinity": {
+              "requiredDuringSchedulingIgnoredDuringExecution": [
+                {
+                  "labelSelector": {
+                    "matchExpressions": [
+                      {
+                        "key": "app",
+                        "operator": "In",
+                        "values": [
+                          "nova-compute"
+                        ]
+                      }
+                    ]
+                  },
+                  "topologyKey": "kubernetes.io/hostname"
+                }
+              ]
+            }
+          }
     spec:
       nodeSelector:
         {{ deployment.compute_node_label }}: enabled
@@ -36,7 +79,7 @@ spec:
             - name: DEPENDENCY_SERVICE
               value: "keystone-api,nova-api"
             - name: DEPENDENCY_DAEMONSET
-              value: "neutron-openvswitch,nova-libvirt"
+              value: "neutron-openvswitch"
             - name: DEPENDENCY_CONFIG
               value: "/etc/nova/nova.conf"
           volumeMounts:
