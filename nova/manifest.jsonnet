@@ -21,6 +21,7 @@ kpm.package({
       compute_node_label: "openstack-compute-node",
 
       control_replicas: 1,
+      compute_replicas: 1,
 
       image: {
         base: "quay.io/stackanetes/stackanetes-%s:barcelona",
@@ -131,7 +132,7 @@ kpm.package({
     memcached: {
       address: "memcached:11211",
     },
-    
+
     misc: {
       debug: false,
       workers: 8,
@@ -289,19 +290,18 @@ kpm.package({
       type: "deployment",
     },
 
-    // Daemonsets.
     {
       file: "compute/compute.yaml.j2",
       template: (importstr "templates/compute/compute.yaml.j2"),
       name: "nova-compute",
-      type: "daemonset",
+      type: "deployment",
     },
 
     {
       file: "compute/libvirt.yaml.j2",
       template: (importstr "templates/compute/libvirt.yaml.j2"),
       name: "nova-libvirt",
-      type: "daemonset",
+      type: "deployment",
     },
 
     // Services.
