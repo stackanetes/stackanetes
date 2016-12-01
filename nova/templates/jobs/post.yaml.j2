@@ -31,13 +31,13 @@ spec:
             - name: postsh
               mountPath: /tmp/post.sh
               subPath: post.sh
-            - name: openrc
-              mountPath: /tmp/openrc
-              subPath: openrc
+            - name: openrcyaml
+              mountPath: /tmp/openrc.yaml
+              subPath: openrc.yaml
       volumes:
         - name: postsh
           configMap:
             name: nova-postsh
-        - name: openrc
+        - name: openrcyaml
           configMap:
-            name: nova-openrc
+            name: nova-openrcyaml
