@@ -152,6 +152,13 @@ kpm.package({
     },
 
     {
+      file: "configmaps/hooks.py.yaml.j2",
+      template: (importstr "templates/configmaps/hooks.py.yaml.j2"),
+      name: "nova-hookspy",
+      type: "configmap",
+    },
+
+    {
       file: "configmaps/db-sync.sh.yaml.j2",
       template: (importstr "templates/configmaps/db-sync.sh.yaml.j2"),
       name: "nova-dbsyncsh",

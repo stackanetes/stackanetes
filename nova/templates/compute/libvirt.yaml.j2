@@ -49,6 +49,10 @@ spec:
           imagePullPolicy: Always
           securityContext:
             privileged: true
+          lifecycle:
+            preStop:
+              exec:
+                command: ["python", "/tmp/hooks.py", "prestop_libvirt"]
           env:
             - name: INTERFACE_NAME
               value: {{ network.minion_interface_name }}
@@ -98,6 +102,12 @@ spec:
             - name: cgroup
               mountPath: /sys/fs/cgroup
             {%- endif %}
+            - name: openrcyaml
+              mountPath: /tmp/openrc.yaml
+              subPath: openrc.yaml
+            - name: hookspy
+              mountPath: /tmp/hooks.py
+              subPath: hooks.py
       volumes:
         - name: novaconf
           configMap:
@@ -137,3 +147,9 @@ spec:
           hostPath:
             path: /sys/fs/cgroup
         {%- endif %}
+        - name: openrcyaml
+          configMap:
+            name: nova-openrcyaml
+        - name: hookspy
+          configMap:
+            name: nova-hookspy
