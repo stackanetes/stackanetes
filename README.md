@@ -49,7 +49,7 @@ Stackanetes requires Kubernetes 1.3+ with:
 
 While Glance may operate with local storage, a Ceph cluster is needed for Cinder. Nova's live-migration feature requires proper DNS resolution of the Kubernetes nodes' hostnames.
 
-The [rkt] engine can be used in place of the default runtime with Kubernetes 1.4+ and rkt 1.14+. Note however that a known issue about mount propagation flags may prevent the Kubernetes' service account secret from being mounted properly on the Nova's libvirt pod, causing it to fail at startup.
+The [rkt] engine can be used in place of the default runtime with Kubernetes 1.4+ and rkt 1.20+. Note however that a known issue about mount propagation flags may prevent the Kubernetes' service account secret from being mounted properly on the Nova's libvirt pod, causing it to fail at startup.
 
 [Overlay network]: http://kubernetes.io/docs/admin/networking/
 [DNS add-on]: https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/dns
