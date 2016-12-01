@@ -67,6 +67,10 @@ kpm.package({
       },
     },
 
+    nova: {
+      drain_timeout: 60,
+    },
+
     database: {
       address: "mariadb",
       port: 3306,

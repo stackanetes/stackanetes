@@ -55,6 +55,7 @@ spec:
         runAsUser: 0
       hostNetwork: true
       dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: {{ nova.drain_timeout }}
       containers:
         - name: nova-compute
           image: {{ deployment.image.compute }}

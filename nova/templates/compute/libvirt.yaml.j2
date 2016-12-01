@@ -43,6 +43,7 @@ spec:
       hostPID: true
       {%- endif %}
       dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: {{ nova.drain_timeout }}
       containers:
         - name: nova-libvirt
           image: {{ deployment.image.libvirt }}
