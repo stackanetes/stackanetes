@@ -127,7 +127,9 @@ Few users and pools have to be created. The user and pool names can be customize
 
     # Source
     git clone https://github.com/coreos/kpm.git
-    cd kpm && sudo make install
+    cd kpm 
+    git checkout v0.21.1
+    sudo make install
 
 Moving forward, we'll need to use a kpm registry. The hosted registry `https://beta.kpm.sh` can be used if there is no desire of pushing a modified version of Stackanetes. Otherwise, a private one may be deployed - using kpm itself:
 
