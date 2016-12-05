@@ -76,7 +76,9 @@ data:
             nclient.services.enable(hostname, "nova-compute")
         except exceptions.NotFound as e:
             print "Cannot find node to enable {}: {}".format(hostname, e)
-            sys.exit(1)
+            # On first run, the compute node is unknown, ignore the error
+            # otherwise, Kubernetes won't let the pod start properly.
+            sys.exit(0)
 
 
     def check_node_status(hostname):
