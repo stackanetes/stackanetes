@@ -20,14 +20,14 @@ kpm.package({
       control_node_label: "openstack-control-plane",
       compute_node_label: "openstack-compute-node",
 
-      replicas: 1,
+      control_replicas: 1,
+      compute_replicas: 1,
 
       image: {
         base: "quay.io/stackanetes/stackanetes-%s:barcelona",
 
         init: $.variables.deployment.image.base % "kolla-toolbox",
         db_sync: $.variables.deployment.image.base % "nova-api",
-        drain: $.variables.deployment.image.base % "nova-drain",
         api: $.variables.deployment.image.base % "nova-api",
         conductor: $.variables.deployment.image.base % "nova-conductor",
         scheduler: $.variables.deployment.image.base % "nova-scheduler",
@@ -68,7 +68,7 @@ kpm.package({
     },
 
     nova: {
-      drain_timeout: 15,
+      drain_timeout: 60,
     },
 
     database: {
@@ -132,7 +132,7 @@ kpm.package({
     memcached: {
       address: "memcached:11211",
     },
-    
+
     misc: {
       debug: false,
       workers: 8,
@@ -151,14 +151,14 @@ kpm.package({
     {
       file: "configmaps/openrc.yaml.j2",
       template: (importstr "templates/configmaps/openrc.yaml.j2"),
-      name: "nova-openrc",
+      name: "nova-openrcyaml",
       type: "configmap",
     },
 
     {
-      file: "configmaps/drain-conf.yaml.j2",
-      template: (importstr "templates/configmaps/drain-conf.yaml.j2"),
-      name: "nova-drainconf",
+      file: "configmaps/hooks.py.yaml.j2",
+      template: (importstr "templates/configmaps/hooks.py.yaml.j2"),
+      name: "nova-hookspy",
       type: "configmap",
     },
 
@@ -290,26 +290,18 @@ kpm.package({
       type: "deployment",
     },
 
-    // Daemonsets.
     {
       file: "compute/compute.yaml.j2",
       template: (importstr "templates/compute/compute.yaml.j2"),
       name: "nova-compute",
-      type: "daemonset",
+      type: "deployment",
     },
 
     {
       file: "compute/libvirt.yaml.j2",
       template: (importstr "templates/compute/libvirt.yaml.j2"),
       name: "nova-libvirt",
-      type: "daemonset",
-    },
-
-    {
-      file: "compute/drain.yaml.j2",
-      template: (importstr "templates/compute/drain.yaml.j2"),
-      name: "nova-drain",
-      type: "daemonset",
+      type: "deployment",
     },
 
     // Services.

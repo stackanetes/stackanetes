@@ -1,14 +1,38 @@
 apiVersion: extensions/v1beta1
-kind: DaemonSet
+kind: Deployment
 spec:
+  replicas: {{ deployment.compute_replicas }}
   template:
     metadata:
       labels:
         app: nova-libvirt
-      {% if deployment.engine == "rkt" -%}
       annotations:
+        {% if deployment.engine == "rkt" -%}
         rkt.alpha.kubernetes.io/stage1-name-override: coreos.com/rkt/stage1-fly
-      {%- endif %}
+        {%- endif %}
+        # Note that there is an implicit soft pod affinity coming from the hard
+        # affinity present in nova-compute.
+        scheduler.alpha.kubernetes.io/affinity: >
+          {
+            "podAntiAffinity": {
+              "requiredDuringSchedulingIgnoredDuringExecution": [
+                {
+                  "labelSelector": {
+                    "matchExpressions": [
+                      {
+                        "key": "app",
+                        "operator": "In",
+                        "values": [
+                          "nova-libvirt"
+                        ]
+                      }
+                    ]
+                  },
+                  "topologyKey": "kubernetes.io/hostname"
+                }
+              ]
+            }
+          }
     spec:
       nodeSelector:
         {{ deployment.compute_node_label }}: enabled
@@ -19,12 +43,17 @@ spec:
       hostPID: true
       {%- endif %}
       dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: {{ nova.drain_timeout }}
       containers:
         - name: nova-libvirt
           image: {{ deployment.image.libvirt }}
           imagePullPolicy: Always
           securityContext:
             privileged: true
+          lifecycle:
+            preStop:
+              exec:
+                command: ["python", "/tmp/hooks.py", "prestop_libvirt"]
           env:
             - name: INTERFACE_NAME
               value: {{ network.minion_interface_name }}
@@ -74,6 +103,12 @@ spec:
             - name: cgroup
               mountPath: /sys/fs/cgroup
             {%- endif %}
+            - name: openrcyaml
+              mountPath: /tmp/openrc.yaml
+              subPath: openrc.yaml
+            - name: hookspy
+              mountPath: /tmp/hooks.py
+              subPath: hooks.py
       volumes:
         - name: novaconf
           configMap:
@@ -113,3 +148,9 @@ spec:
           hostPath:
             path: /sys/fs/cgroup
         {%- endif %}
+        - name: openrcyaml
+          configMap:
+            name: nova-openrcyaml
+        - name: hookspy
+          configMap:
+            name: nova-hookspy

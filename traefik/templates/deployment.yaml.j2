@@ -4,7 +4,7 @@ metadata:
   labels:
     app: traefik
 spec:
-  replicas: {{ deployment.replicas }}
+  replicas: {{ deployment.control_replicas }}
   template:
     metadata:
       labels:

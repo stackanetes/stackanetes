@@ -16,7 +16,7 @@ kpm.package({
 
   variables: {
     deployment: {
-      replicas: 1,
+      control_replicas: 1,
 
       image: {
         traefik: "traefik:latest",
