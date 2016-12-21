@@ -68,6 +68,12 @@ kpm.package({
     },
 
     nova: {
+      // Configures the underlying virtualization engine for VM guests.
+      // Useful when native virtualization is not supported for instance, in
+      // which case, qemu can be used. For the list of supported technologies,
+      // see http://docs.openstack.org/newton/config-reference/compute/hypervisors.html
+      virt_type: "kvm",
+      
       drain_timeout: 60,
     },
 
