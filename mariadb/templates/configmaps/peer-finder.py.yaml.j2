@@ -11,7 +11,7 @@ data:
     import time
 
 
-    URL = ('https://kubernetes.default.svc.cluster.local/api/v1/namespaces/{namespace}'
+    URL = ('https://kubernetes.default.svc.{{ network.dns.kubernetes_domain }}/api/v1/namespaces/{namespace}'
            '/endpoints/{service_name}')
     TOKEN_FILE = '/var/run/secrets/kubernetes.io/serviceaccount/token'
 
@@ -49,7 +49,7 @@ data:
 
     def get_my_ip_address():
        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-       s.connect(('kubernetes.default.svc.cluster.local', 0))
+       s.connect(('kubernetes.default.svc.{{ network.dns.kubernetes_domain }}', 0))
        return s.getsockname()[0]
 
 
