@@ -24,10 +24,8 @@ kpm.package({
     },
 
     network: {
-      port: {
-        http: 30080,
-        https: 30443,
-        ui: 8080,
+      ingress: {
+        port: 30080,
       },
     },
   },

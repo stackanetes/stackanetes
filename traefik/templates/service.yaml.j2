@@ -5,9 +5,6 @@ spec:
   ports:
     - name: http
       port: 80
-      nodePort: {{ network.port.http }}
-    - name: https
-      port: 443
-      nodePort: {{ network.port.https }}
+      nodePort: {{ network.ingress.port }}
   selector:
     app: traefik
