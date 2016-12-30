@@ -48,13 +48,6 @@ kpm.package({
       name: "traefik",
       type: "service",
     },
-
-    {
-      file: "service-ui.yaml.j2",
-      template: (importstr "templates/service-ui.yaml.j2"),
-      name: "traefik-ui",
-      type: "service",
-    },
   ],
 
   deploy: [
