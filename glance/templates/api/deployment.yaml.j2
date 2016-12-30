@@ -1,7 +1,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 spec:
+  {% if ceph.enabled -%}
   replicas: {{ deployment.control_replicas }}
+  {% else -%}
+  replicas: 1
+  {% endif -%}
   template:
     metadata:
       labels:
