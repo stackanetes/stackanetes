@@ -120,16 +120,10 @@ Few users and pools have to be created. The user and pool names can be customize
 
 #### kpm
 
-[kpm](https://github.com/coreos/kpm) is the package manager and command-line tool used to deploy stackanetes. It can either be installed from PyPI or directly from source:
+[kpm](https://github.com/coreos/kpm) is the package manager and command-line tool used to deploy stackanetes. The most straight-forward way to install it is to use PyPI:
 
-    # PyPI
-    sudo pip install kpm --pre
-
-    # Source
-    git clone https://github.com/coreos/kpm.git
-    cd kpm 
-    git checkout v0.21.1
-    sudo make install
+    apt-get update && apt-get install -y python-pip python-dev
+    pip install kpm==0.21.1rc2
 
 Moving forward, we'll need to use a kpm registry. The hosted registry `https://beta.kpm.sh` can be used if there is no desire of pushing a modified version of Stackanetes. Otherwise, a private one may be deployed - using kpm itself:
 
