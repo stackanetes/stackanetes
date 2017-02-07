@@ -123,13 +123,7 @@ Few users and pools have to be created. The user and pool names can be customize
 [kpm](https://github.com/coreos/kpm) is the package manager and command-line tool used to deploy stackanetes. The most straight-forward way to install it is to use PyPI:
 
     apt-get update && apt-get install -y python-pip python-dev
-    pip install kpm==0.21.1rc2
-
-Moving forward, we'll need to use a kpm registry. The hosted registry `https://beta.kpm.sh` can be used if there is no desire of pushing a modified version of Stackanetes. Otherwise, a private one may be deployed - using kpm itself:
-
-    kpm deploy coreos/kpm-registry --namespace kpm -H https://beta.kpm.sh
-
-It will then be available on `http://kpm-registry.kpm`.
+    pip install kpm>=0.24.2
 
 ### Deploying
 
@@ -144,17 +138,18 @@ Technically, cloning Stackanetes is not necessary beside getting the default con
 
 All the configuration is done in one place: the `parameters.yaml` file in the `stackanetes` meta-package. The file is self-documented.
 
-While it is no strictly necessary, it is possible to persist changes to that file for reproducible deployments across environments, without the need of sharing the it out of band. To do this, the stackanetes meta-package has to be pushed, which is currently only possible on a private registry - and because a private registry is used, every packages have to be pushed. Pushing may also be needed when modifications are made to Stackanetes. Here is the simplest way to push the meta-package:
+While it is no strictly necessary, it is possible to persist changes to that file for reproducible deployments across environments, without the need of sharing it out of band. To do this, the stackanetes meta-package has to renamed and pushed to the [CNR Registry](https://cnr.kubespray.io). Pushing is also required when any modifications are made to the Stackanetes packages.
 
     cd stackanetes
-    kpm push -H http://kpm-registry.kpm -f
+    kpm login kpm.sh
+    kpm push -f kpm.sh/<USERNAME>
     cd ..
 
 #### Deployment
 
 All we have to do is ask kpm to deploy Stackanetes. In the example below, we specify a namespace, a configuration file containing all non-default parameters (`stackanetes/parameters.yaml` if the changes have been made in place) and the registry where the packages should be pulled.
 
-    kpm deploy stackanetes/stackanetes --namespace openstack --variables stackanetes/parameters.yaml -H https://beta.kpm.sh
+    kpm deploy kpm.sh/stackanetes/stackanetes --namespace openstack --variables stackanetes/parameters.yaml
 
 For a finer-grained deployment story, kpm also supports versioning and release channels.
 
