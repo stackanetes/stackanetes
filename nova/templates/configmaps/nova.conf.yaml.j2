@@ -9,6 +9,7 @@ data:
     ram_allocation_ratio=1.0
     disk_allocation_ratio=1.0
     cpu_allocation_ratio=3.0
+    reserved_host_memory_mb=0
 
     state_path = /var/lib/nova
 
@@ -25,7 +26,7 @@ data:
 
     allow_resize_to_same_host = True
 
-    compute_driver = libvirt.LibvirtDriver
+    compute_driver = k8slibvirt.K8sLibvirtDriver
 
     # Though my_ip is not used directly, lots of other variables use $my_ip
     my_ip = {{ network.ip_address }}

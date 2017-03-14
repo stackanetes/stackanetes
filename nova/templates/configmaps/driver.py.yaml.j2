@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  driver.py: |+
+    import os
+    import types
+    import subprocess
+
+    from nova.virt.libvirt.driver import LibvirtDriver
+    from nova.compute import power_state
+
+    from oslo_log import log as logging
+    from oslo_service import loopingcall
+
+    LOG = logging.getLogger(__name__)
+    SYS_FS_CGROUP = "/sys/fs/cgroup/"
+
+
+    class K8sLibvirtDriver(LibvirtDriver):
+        def _get_compute_cgroup(self):
+            return subprocess.check_output(["bash", "-c", "cat /proc/self/cgroup | head -n 1 | awk -F ':' '{print $3}'"]).strip()
+
+        def _get_guest_pid(self, guest):
+            LOG.info(guest.uuid)
+            return subprocess.check_output(["pgrep", "-f", guest.uuid]).strip()
+
+        def _get_cgroup_value(self, controller, cgroup, file):
+            fpath = os.path.join(SYS_FS_CGROUP, controller, cgroup.lstrip("/"), file)
+            with open(fpath, 'r') as f:
+                return f.readline().strip()
+
+        def _set_cgroup_value(self, controller, cgroup, file, value):
+            fpath = os.path.join(SYS_FS_CGROUP, controller, cgroup.lstrip("/"), file)
+            with open(fpath, 'w') as f:
+                f.write(str(value))
+
+        def get_available_resource(self, nodename):
+            data = super(K8sLibvirtDriver, self).get_available_resource(nodename)
+
+            if os.getenv("MEM_REQUEST"):
+                data["memory_mb"] = int(os.getenv("MEM_REQUEST")) / (1024 ** 2)
+
+                compute_cgroup = self._get_compute_cgroup()
+                if compute_cgroup:
+                    data["memory_mb_used"] = int(self._get_cgroup_value("memory", compute_cgroup, "memory.memsw.usage_in_bytes")) / (1024 ** 2)
+
+            return data
+
+        def _create_domain(self, xml=None, domain=None,
+                           power_on=True, pause=False, post_xml_callback=None):
+            guest = super(K8sLibvirtDriver, self)._create_domain(xml, domain,
+                                                                 power_on, pause,
+                                                                 post_xml_callback)
+
+            if not power_on:
+                return guest
+
+            def _wait_for_boot():
+                state = guest.get_power_state(self._host)
+                if state in (power_state.RUNNING, power_state.PAUSED):
+                    raise loopingcall.LoopingCallDone()
+
+            timer = loopingcall.FixedIntervalLoopingCall(_wait_for_boot)
+            timer.start(interval=0.5).wait()
+
+            compute_cgroup = self._get_compute_cgroup()
+            guest_pid = self._get_guest_pid(guest)
+
+            if not compute_cgroup or not guest_pid:
+                LOG.warning(
+                    "Could not find guest's process or Nova's cgroup",
+                    uuid=guest.uuid)
+                return guest
+
+            LOG.info("Moving guest's process to Nova's cgroup.",
+                     uuid=guest.uuid, pid=guest_pid, cgroup=compute_cgroup)
+
+            self._set_cgroup_value("memory", compute_cgroup, "memory.move_charge_at_immigrate", 0b11)
+            self._set_cgroup_value("memory", compute_cgroup, "tasks", guest_pid)
+
+            return guest
