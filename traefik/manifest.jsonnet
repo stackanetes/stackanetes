@@ -24,10 +24,8 @@ kpm.package({
     },
 
     network: {
-      port: {
-        http: 30080,
-        https: 30443,
-        ui: 8080,
+      ingress: {
+        port: 30080,
       },
     },
   },
@@ -46,13 +44,6 @@ kpm.package({
       file: "service.yaml.j2",
       template: (importstr "templates/service.yaml.j2"),
       name: "traefik",
-      type: "service",
-    },
-
-    {
-      file: "service-ui.yaml.j2",
-      template: (importstr "templates/service-ui.yaml.j2"),
-      name: "traefik-ui",
       type: "service",
     },
   ],
